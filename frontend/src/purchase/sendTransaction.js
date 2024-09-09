@@ -323,7 +323,7 @@ const MyComponent = ({ selectedImagesHandle }) => {
             //RecentBlockhashを取得
             //****************************************************//
             try {
-                transaction.recentBlockhash = (await connection.getRecentBlockhash()).blockhash;
+                transaction.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
 
             } catch (error) {
                 if (DEBUG) {
