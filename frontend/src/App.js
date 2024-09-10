@@ -2,6 +2,8 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import DocsMain from './docs/App';
 import PurchaseMain from './purchase/App';
+import DownloadMain from './download/App';
+import UploadMain from './upload/App';
 
 function Navigation() {
     const location = useLocation();
@@ -20,7 +22,13 @@ function Navigation() {
                         <Link to="/docs" style={styles.link}>Docs</Link>
                     </li>
                     <li style={styles.li}>
+                        <Link to="/upload" style={styles.link}>Upload</Link>
+                    </li>
+                    <li style={styles.li}>
                         <Link to="/purchase" style={styles.link}>Purchase</Link>
+                    </li>
+                    <li style={styles.li}>
+                        <Link to="/download" style={styles.link}>Download</Link>
                     </li>
                 </ul>
             </nav>
@@ -50,7 +58,9 @@ function App() {
                 <Routes>
                     <Route path="/" element={<><Navigation /><Footer /></>} />
                     <Route path="/docs/*" element={<DocsMain />} />
+                    <Route path="/upload" element={<UploadMain />} />
                     <Route path="/purchase" element={<PurchaseMain />} />
+                    <Route path="/download" element={<DownloadMain />} />
                 </Routes>
             </div>
         </Router>
