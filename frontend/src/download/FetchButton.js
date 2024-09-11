@@ -111,7 +111,10 @@ function FetchButton({ db, startDate, endDate, onDownload, publickeyStr, setIsLo
 
                     for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
                         try {
-                            transactionStatus = await connection.getConfirmedTransaction(data.signature);
+                            transactionStatus = await connection.getTransaction(data.signature, {
+                                maxSupportedTransactionVersion: 0,
+                                commitment: 'finalized',
+                              });
                             break;
 
                         } catch (error) {
