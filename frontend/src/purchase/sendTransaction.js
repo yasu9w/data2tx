@@ -402,7 +402,7 @@ const MyComponent = ({ selectedImagesHandle }) => {
 
                 let signature = null;
                 try {
-                    signature = await connection.sendRawTransaction(signedTransactions[0].serialize());
+                    signature = await connection.sendRawTransaction(signedTransactions[0].serialize(),{skipPreflight: true});
 
                 } catch (error) {
                     if (DEBUG) {
