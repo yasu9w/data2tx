@@ -53,7 +53,7 @@ function Footer() {
 
     return (
         <footer style={styles.footer}>
-            <p>© 2024 data2tx. All rights reserved.</p>
+            <p>© 2024 DATA2TX. All rights reserved.</p>
         </footer>
     );
 }
