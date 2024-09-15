@@ -1,6 +1,5 @@
-﻿use borsh::{BorshDeserialize, BorshSerialize};
+﻿use num_traits::FromPrimitive;
 
-use num_traits::FromPrimitive;
 use solana_program::{
     account_info::{next_account_info, AccountInfo},
     instruction::{Instruction},
@@ -20,14 +19,6 @@ use spl_token_2022::{
 use std::{error::Error};
 use std::str::FromStr;
 
-
-/// Define the type of state stored in accounts
-#[derive(BorshSerialize, BorshDeserialize, Debug)]
-pub struct GreetingAccount {
-    /// number of greetings
-    pub counter: u32,
-}
-
 entrypoint!(process_instruction);
 
 use spl_associated_token_account::{instruction::create_associated_token_account};
@@ -46,65 +37,67 @@ where
     })
 }
 
-// Program entrypoint's implementation
 pub fn process_instruction(
-    program_id: &Pubkey, // Public key of the account the hello world program was loaded into
-    accounts: &[AccountInfo], // The account to say hello to
-    _instruction_data: &[u8], // Ignored, all helloworld instructions are hellos
+    _program_id: &Pubkey,
+    accounts: &[AccountInfo],
+    _instruction_data: &[u8],
 ) -> ProgramResult {
     
-    let numAccounts = _instruction_data[0];
-    let numPurchasePics = _instruction_data[1];
-    let bumpPubkey = _instruction_data[2];
+    let num_accounts = _instruction_data[0];
+    let _num_purchase_pics = _instruction_data[1];
+    let seed = _instruction_data[2];
 
     let accounts_iter = &mut accounts.iter();
     
-    let systemProgram = next_account_info(accounts_iter)?;
-    let tokenProgram = next_account_info(accounts_iter)?;
-    let associatedTokenProgram = next_account_info(accounts_iter)?;
-    let mintPubkey = next_account_info(accounts_iter)?;
+    let system_program = next_account_info(accounts_iter)?;
+    let token_program = next_account_info(accounts_iter)?;
+    let associated_token_program = next_account_info(accounts_iter)?;
+    let mint_pubkey = next_account_info(accounts_iter)?;
 
-    let pubkey00AccountInfo = next_account_info(accounts_iter)?;
-    let pubkey00AssociatedTokenAccountInfo = next_account_info(accounts_iter)?;
-    let pubkey01AccountInfo = next_account_info(accounts_iter)?;
-    let pubkey01AssociatedTokenAccountInfo = next_account_info(accounts_iter)?;
+    //00:buyer account
+    let pubkey_00_account_info = next_account_info(accounts_iter)?;
+    let pubkey_00_associated_token_account_info = next_account_info(accounts_iter)?;
+    //01:data2tx account
+    let pubkey_01_account_info = next_account_info(accounts_iter)?;
+    let pubkey_01_associated_token_account_info = next_account_info(accounts_iter)?;
 
+    //check data2tx account
     let expected_pubkey_str = "24MQhhEFtRtU4LTVY8PcdLd2p6SjL9NgJR2MWpMbMa8F";
     let expected_pubkey = match Pubkey::from_str(expected_pubkey_str) {
         Ok(pubkey) => pubkey,
-        Err(_) => return Err(ProgramError::InvalidInstructionData), // 任意のエラー値
+        Err(_) => return Err(ProgramError::InvalidInstructionData),
     };
-    //msg!("expected_pubkey {:?}",expected_pubkey);
-    //msg!("pubkey01AccountInfo.key {:?}",pubkey01AccountInfo.key);
 
-    if pubkey01AccountInfo.key != &expected_pubkey {
-        return Err(ProgramError::Custom(1)); // 任意のエラー値
+    if pubkey_01_account_info.key != &expected_pubkey {
+        return Err(ProgramError::Custom(1));
     }
     
-    let expected_associated_pubkey_str = "9yhqGGuc7fVrE2zmZmC1cm4Lb43eHQD7QVpW3TnEJNUq";
+    //check data2tx associated token account(wSOL)
+    let expected_associated_pubkey_str = "Hp2ibCaKjb1ML6Xd2DLwkdEvQhRD2Vzd3ZXgc3oF9oxT";
     let expected_associated_pubkey = match Pubkey::from_str(expected_associated_pubkey_str) {
         Ok(pubkey) => pubkey,
-        Err(_) => return Err(ProgramError::InvalidInstructionData), // 任意のエラー値
+        Err(_) => return Err(ProgramError::InvalidInstructionData),
     };
 
-    if pubkey01AssociatedTokenAccountInfo.key != &expected_associated_pubkey {
-        return Err(ProgramError::Custom(1)); // 任意のエラー値
+    if pubkey_01_associated_token_account_info.key != &expected_associated_pubkey {
+        return Err(ProgramError::Custom(1));
     }
 
     let mut account_info_array: Vec<&AccountInfo> = Vec::new();
     let mut associated_account_info_array: Vec<&AccountInfo> = Vec::new();
 
-    for n in 2..numAccounts {
+    for _n in 2..num_accounts {
         let account_info = next_account_info(accounts_iter)?;
         account_info_array.push(account_info);
         let associated_account_info = next_account_info(accounts_iter)?;
         associated_account_info_array.push(associated_account_info);
     }
     
-    for n in 2..numAccounts {
+    //output log
+    for n in 2..num_accounts {
         let flag = _instruction_data[3 + n as usize];
-        let startidx = 3 + numAccounts + 8 * (n - 2);
-        let endidx = 3 + numAccounts + 8 * (n - 1);
+        let startidx = 3 + num_accounts + 8 * (n - 2);
+        let endidx = 3 + num_accounts + 8 * (n - 1);
         let filename = &_instruction_data[startidx as usize..endidx as usize];
         if filename.len() == 8 {
             let array: [u8; 8] = [
@@ -118,16 +111,15 @@ pub fn process_instruction(
                 filename[7],
             ];
             let number = u64::from_le_bytes(array);
-            // Supposing pubkey is of type Pubkey
             let pubkey_option = account_info_array.get(n as usize - 2);
             if let Some(pubkey) = pubkey_option {
                 let pubkey_str = (*pubkey.key).to_string();
                 let top_10_pubkey = &pubkey_str[..10];
                 if flag == 1 {
-                    let result = format!("buy image:{}{} from {}   (2Token, create associated account)", number, top_10_pubkey, pubkey_str);
+                    let result = format!("buy image:{}{} from {}   (0.02 wSOL, create associated account)", number, top_10_pubkey, pubkey_str);
                     msg!("{}", result);
                 }else{
-                    let result = format!("buy image:{}{} from {}   (3Token)", number, top_10_pubkey, pubkey_str);
+                    let result = format!("buy image:{}{} from {}   (0.03 wSOL)", number, top_10_pubkey, pubkey_str);
                     msg!("{}", result);
                 }
             } else {
@@ -138,132 +130,87 @@ pub fn process_instruction(
         }
     }
 
-    for n in 2..numAccounts{
+    //transfer token
+    for n in 2..num_accounts{
         let flag = _instruction_data[3 + n as usize];
 
-        let swap_bytes = pubkey00AccountInfo.key.to_bytes();
-        let authority_signature_seeds = [&swap_bytes[..32], &[bumpPubkey]];
+        let swap_bytes = pubkey_00_account_info.key.to_bytes();
+        let authority_signature_seeds = [&swap_bytes[..32], &[seed]];
         let signers = &[&authority_signature_seeds[..]];
 
-        let mut amountSeller = 2_100_000;
-        let amountPlatform = 900_000;
-        let decimals = 6;
+        let mut amount_seller = 21_000_000;
+        let amount_platform = 9_000_000;
+        let decimals = 9;
         
-        let mut pubkey02AccountInfo = pubkey00AccountInfo;
-        let mut pubkey02AssociatedTokenAccountInfo = pubkey00AssociatedTokenAccountInfo;
+        let mut pubkey_02_account_info = pubkey_00_account_info;
+        let mut pubkey_02_associated_token_account_info = pubkey_00_associated_token_account_info;
 
         let account_info_option = account_info_array.get(n as usize - 2);
         if let Some(account_info) = account_info_option {
-            pubkey02AccountInfo = account_info;
+            pubkey_02_account_info = account_info;
         } else {
             msg!("Invalid account_info");
         }
         let associated_account_info_option = associated_account_info_array.get(n as usize - 2);
         if let Some(associated_account_info) = associated_account_info_option {
-            pubkey02AssociatedTokenAccountInfo = associated_account_info;
+            pubkey_02_associated_token_account_info = associated_account_info;
         } else {
             msg!("Invalid associated_account_info");
         }
 
+        // If the seller's associated token account does not exist, 
+        // the buyer will create the seller's associated token account 
+        // and deduct the cost from the payment accordingly.
         if flag == 1 {
             
-            let ixCreateAccount = create_associated_token_account(pubkey00AccountInfo.key, pubkey02AccountInfo.key, mintPubkey.key, tokenProgram.key);
+            let create_account_ix = create_associated_token_account(pubkey_00_account_info.key, pubkey_02_account_info.key, mint_pubkey.key, token_program.key);
 
             invoke_signed_wrapper::<TokenError>(
-                &ixCreateAccount,
-                &[pubkey00AccountInfo.clone(), pubkey02AssociatedTokenAccountInfo.clone(), pubkey02AccountInfo.clone(), mintPubkey.clone(), systemProgram.clone(), tokenProgram.clone(), associatedTokenProgram.clone()],
+                &create_account_ix,
+                &[pubkey_00_account_info.clone(), pubkey_02_associated_token_account_info.clone(), pubkey_02_account_info.clone(), mint_pubkey.clone(), system_program.clone(), token_program.clone(), associated_token_program.clone()],
                 signers,
             );
 
-            amountSeller = amountSeller - 1_000_000;
+            amount_seller = amount_seller - 10_000;
 
         }
 
-        let ixSeller = spl_token_2022::instruction::transfer_checked(
-            tokenProgram.key,
-            pubkey00AssociatedTokenAccountInfo.key,
-            mintPubkey.key,
-            pubkey02AssociatedTokenAccountInfo.key,
-            pubkey00AccountInfo.key,
+        // The buyer transfers the payment to the seller.
+        let seller_ix = spl_token_2022::instruction::transfer_checked(
+            token_program.key,
+            pubkey_00_associated_token_account_info.key,
+            mint_pubkey.key,
+            pubkey_02_associated_token_account_info.key,
+            pubkey_00_account_info.key,
             &[],
-            amountSeller,
+            amount_seller,
             decimals,
         )?;
 
         invoke_signed_wrapper::<TokenError>(
-            &ixSeller,
-            &[pubkey00AssociatedTokenAccountInfo.clone(), mintPubkey.clone(), pubkey02AssociatedTokenAccountInfo.clone(), pubkey00AccountInfo.clone(), tokenProgram.clone()],
+            &seller_ix,
+            &[pubkey_00_associated_token_account_info.clone(), mint_pubkey.clone(), pubkey_02_associated_token_account_info.clone(), pubkey_00_account_info.clone(), token_program.clone()],
             signers,
         );
 
-        let ixPlatform = spl_token_2022::instruction::transfer_checked(
-            tokenProgram.key,
-            pubkey00AssociatedTokenAccountInfo.key,
-            mintPubkey.key,
-            pubkey01AssociatedTokenAccountInfo.key,
-            pubkey00AccountInfo.key,
+        // The buyer transfers the fee to data2tx.
+        let platform_ix = spl_token_2022::instruction::transfer_checked(
+            token_program.key,
+            pubkey_00_associated_token_account_info.key,
+            mint_pubkey.key,
+            pubkey_01_associated_token_account_info.key,
+            pubkey_00_account_info.key,
             &[],
-            amountPlatform,
+            amount_platform,
             decimals,
         )?;
 
         invoke_signed_wrapper::<TokenError>(
-            &ixPlatform,
-            &[pubkey00AssociatedTokenAccountInfo.clone(), mintPubkey.clone(), pubkey01AssociatedTokenAccountInfo.clone(), pubkey00AccountInfo.clone(), tokenProgram.clone()],
+            &platform_ix,
+            &[pubkey_00_associated_token_account_info.clone(), mint_pubkey.clone(), pubkey_01_associated_token_account_info.clone(), pubkey_00_account_info.clone(), token_program.clone()],
             signers,
         );
     }
     
     Ok(())
-}
-
-// Sanity tests
-#[cfg(test)]
-mod test {
-    use super::*;
-    use solana_program::clock::Epoch;
-    use std::mem;
-
-    #[test]
-    fn test_sanity() {
-        let program_id = Pubkey::default();
-        let key = Pubkey::default();
-        let mut lamports = 0;
-        let mut data = vec![0; mem::size_of::<u32>()];
-        let owner = Pubkey::default();
-        let account = AccountInfo::new(
-            &key,
-            false,
-            true,
-            &mut lamports,
-            &mut data,
-            &owner,
-            false,
-            Epoch::default(),
-        );
-        let instruction_data: Vec<u8> = Vec::new();
-
-        let accounts = vec![account];
-
-        assert_eq!(
-            GreetingAccount::try_from_slice(&accounts[0].data.borrow())
-                .unwrap()
-                .counter,
-            0
-        );
-        process_instruction(&program_id, &accounts, &instruction_data).unwrap();
-        assert_eq!(
-            GreetingAccount::try_from_slice(&accounts[0].data.borrow())
-                .unwrap()
-                .counter,
-            1
-        );
-        process_instruction(&program_id, &accounts, &instruction_data).unwrap();
-        assert_eq!(
-            GreetingAccount::try_from_slice(&accounts[0].data.borrow())
-                .unwrap()
-                .counter,
-            2
-        );
-    }
 }
