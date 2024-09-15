@@ -202,7 +202,16 @@ function SOL2WSOLApp() {
     };
 
     return (
-        <div>
+        <div style={{
+            padding: '20px',
+            maxWidth: '1200px',
+            margin: '0 auto',
+            marginTop: '0px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '20px'
+        }}>
             <Header />
             <div style={{ marginTop: '80px' }}></div>
             <h3>Convert SOL to wSOL (fixed at 1SOL)</h3>
