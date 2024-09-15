@@ -188,6 +188,7 @@ const PurchaseApp = React.memo(() => {
     const { useJSMapAPI } = useLock();
 
     const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
+    const apiKeyEmbed = process.env.REACT_APP_GOOGLE_MAPS_API_KEY_EMBED;
     const queryUrl = useQuery();
 
     const queryImageId = queryUrl.get('id');
@@ -307,7 +308,7 @@ const PurchaseApp = React.memo(() => {
     //****************************************************//
 
     const generateEmbedUrl = (center, zoom) => {
-        return `https://www.google.com/maps/embed/v1/view?key=${apiKey}&center=${center.lat},${center.lng}&zoom=${zoom}`;
+        return `https://www.google.com/maps/embed/v1/view?key=${apiKeyEmbed}&center=${center.lat},${center.lng}&zoom=${zoom}`;
     };
 
     const [embedUrl, setEmbedUrl] = useState(generateEmbedUrl(center, zoom));
