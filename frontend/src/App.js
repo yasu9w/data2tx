@@ -5,6 +5,7 @@ import PurchaseMain from './purchase/App';
 import DownloadMain from './download/App';
 import UploadMain from './upload/App';
 import SOL2WSOLMain from './sol2wsol/App';
+import logoImage from './images/logo.png'; 
 
 function Navigation() {
     const location = useLocation();
@@ -16,7 +17,9 @@ function Navigation() {
 
     return (
         <div style={styles.container}>
-            <div style={styles.content}>トップページのコンテンツ</div>
+            <div style={styles.content}>
+                <img src={logoImage} alt="logo" style={styles.image} /> 
+            </div>
             <nav style={styles.nav}>
                 <ul style={styles.ul}>
                     <li style={styles.li}>
@@ -90,6 +93,11 @@ const styles = {
         marginBottom: '20px',
         fontSize: '24px',
         fontWeight: 'bold',
+    },
+    image: {
+        width: '1000px',
+        height: 'auto',
+        marginTop: '20px',
     },
     nav: {
         marginTop: '20px',
