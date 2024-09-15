@@ -10,7 +10,8 @@ import logoImage from './images/logo.png';
 function Navigation() {
     const location = useLocation();
 
-    // トップページ('/')のみにナビゲーションバーを表示
+    const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+
     if (location.pathname !== '/') {
         return null;
     }
@@ -18,7 +19,7 @@ function Navigation() {
     return (
         <div style={styles.container}>
             <div style={styles.content}>
-                <img src={logoImage} alt="logo" style={styles.image} /> 
+                <img src={logoImage} alt="logo" style={styles.image} />
             </div>
             <nav style={styles.nav}>
                 <ul style={styles.ul}>
@@ -26,16 +27,16 @@ function Navigation() {
                         <Link to="/docs" style={styles.link}>Docs</Link>
                     </li>
                     <li style={styles.li}>
-                        <Link to="/upload" style={styles.link}>Upload</Link>
+                        <Link to="/upload" style={isMobile ? styles.disabledLink : styles.link}>Upload</Link>
                     </li>
                     <li style={styles.li}>
-                        <Link to="/purchase" style={styles.link}>Purchase</Link>
+                        <Link to="/purchase" style={isMobile ? styles.disabledLink : styles.link}>Purchase</Link>
                     </li>
                     <li style={styles.li}>
-                        <Link to="/download" style={styles.link}>Download</Link>
+                        <Link to="/download" style={isMobile ? styles.disabledLink : styles.link}>Download</Link>
                     </li>
                     <li style={styles.li}>
-                        <Link to="/sol2wsol" style={styles.link}>SOL2WSOL</Link>
+                        <Link to="/sol2wsol" style={isMobile ? styles.disabledLink : styles.link}>SOL2WSOL</Link>
                     </li>
                 </ul>
             </nav>
@@ -95,7 +96,7 @@ const styles = {
         fontWeight: 'bold',
     },
     image: {
-        width: '1000px',
+        maxWidth: '100%',
         height: 'auto',
         marginTop: '20px',
     },
@@ -123,6 +124,11 @@ const styles = {
         backgroundColor: '#fff',
         marginTop: 'auto',
         borderTop: '1px solid #eaeaea',
+    },
+    disabledLink: {
+        pointerEvents: 'none', // クリックを無効にする
+        color: 'gray', // 視覚的に無効化を示す
+        textDecoration: 'none',
     },
 };
 
