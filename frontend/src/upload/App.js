@@ -1165,8 +1165,8 @@ function UploadApp() {
     function hasAnyAnnotationsAndAllHaveText(annotations1, annotations2) {
         if (annotations1.length > 0 || annotations2.length > 0) {
             return (
-                annotations1.every(annotation => annotation.text.trim() !== '') &&
-                annotations2.every(annotation => annotation.text.trim() !== '')
+                annotations1.every(annotation => annotation.text.trim() !== '' && annotation.text.length <= 50) &&
+                annotations2.every(annotation => annotation.text.trim() !== '' && annotation.text.length <= 50)
             );
         } else {
             return false;
@@ -1563,12 +1563,10 @@ function UploadApp() {
                         <div key={index}>
                             <p>Idx: {index + 1}, x: {annotation.x}, y: {annotation.y}, width: {annotation.width}, height: {annotation.height}, text: {annotation.text}</p>
                             {annotation.text === "" && <p style={{ color: 'red' }}>Error: Text is empty.</p>}
+                            {annotation.text.length > 50 && <p style={{ color: 'red' }}>Warning: Text is too long (over 50 characters).</p>}
                         </div>
                     ))}
                 </div>
-
-
-
 
                 {uploadedImage && checkDateTime(exifInfo.DateTimeOriginal) && checkLatitude(exifInfo.GPSLatitude) && checkLatitude(exifInfo.GPSLongitude) && (
                     <h2>STEP3: Annotation (Subjects to be protected)</h2>
@@ -1615,7 +1613,6 @@ function UploadApp() {
                     )}
                 </div><br />
 
-
                 <div style={{ marginBottom: '100px' }}>
                     {annotations_protected[0] && (
                         <h3>Results</h3>
@@ -1624,6 +1621,7 @@ function UploadApp() {
                         <div key={index}>
                             <p>Idx: {index + 1}, x: {annotation.x}, y: {annotation.y}, width: {annotation.width}, height: {annotation.height}, text: {annotation.text}</p>
                             {annotation.text === "" && <p style={{ color: 'red' }}>Error: Text is empty.</p>}
+                            {annotation.text.length > 50 && <p style={{ color: 'red' }}>Error: Text is too long (over 50 characters).</p>}
                         </div>
                     ))}
                 </div>
