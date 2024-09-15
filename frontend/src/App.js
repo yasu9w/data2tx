@@ -20,6 +20,11 @@ function Navigation() {
         <div style={styles.container}>
             <div style={styles.content}>
                 <img src={logoImage} alt="logo" style={styles.image} />
+                {isMobile && (
+                    <p style={styles.warningMessage}>
+                        Note: Some features are limited on mobile devices.
+                    </p>
+                )}
             </div>
             <nav style={styles.nav}>
                 <ul style={styles.ul}>
@@ -47,7 +52,6 @@ function Navigation() {
 function Footer() {
     const location = useLocation();
 
-    // トップページ('/')のみにフッターを表示
     if (location.pathname !== '/') {
         return null;
     }
@@ -112,9 +116,9 @@ const styles = {
         textAlign: 'left',
     },
     link: {
-        textDecoration: 'underline', // アンダーバーを追加
+        textDecoration: 'underline', // underline
         fontSize: '20px',
-        color: '#0000EE', // リンクを青文字に変更
+        color: '#0000EE', // blue link
         display: 'inline-block',
         transition: 'color 0.2s ease',
     },
@@ -126,9 +130,15 @@ const styles = {
         borderTop: '1px solid #eaeaea',
     },
     disabledLink: {
-        pointerEvents: 'none', // クリックを無効にする
-        color: 'gray', // 視覚的に無効化を示す
+        pointerEvents: 'none',
+        color: 'gray',
         textDecoration: 'none',
+    },
+    warningMessage: {
+        color: 'red',
+        fontSize: '16px',
+        fontWeight: 'bold',
+        marginTop: '10px',
     },
 };
 
