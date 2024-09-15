@@ -210,7 +210,6 @@ function DownloadApp() {
 
                     </div>
                 }
-
                 {results &&
                     <div style={{
                         padding: '20px',
@@ -222,7 +221,8 @@ function DownloadApp() {
                         marginBottom: '100px', 
                         gap: '20px' // 要素間のスペースを追加
                     }}>
-                        <button onClick={() => downloadFiles(results)}>Download All</button>
+                        <button onClick={() => downloadFiles(results)} disabled>Download All (Disabled in Demo)</button>
+                        <p style={{ color: 'red' }}>* The "Download All" button is disabled in the demo version.</p>
                         <div style={{ marginBottom: '10px' }}></div>
 
                         <span><strong>Purchase Date / Filename / Image / Json </strong></span>
