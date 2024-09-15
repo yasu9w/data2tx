@@ -4,6 +4,7 @@ import DocsMain from './docs/App';
 import PurchaseMain from './purchase/App';
 import DownloadMain from './download/App';
 import UploadMain from './upload/App';
+import SOL2WSOLMain from './sol2wsol/App';
 
 function Navigation() {
     const location = useLocation();
@@ -29,6 +30,9 @@ function Navigation() {
                     </li>
                     <li style={styles.li}>
                         <Link to="/download" style={styles.link}>Download</Link>
+                    </li>
+                    <li style={styles.li}>
+                        <Link to="/sol2wsol" style={styles.link}>SOL2WSOL</Link>
                     </li>
                 </ul>
             </nav>
@@ -61,6 +65,7 @@ function App() {
                     <Route path="/upload" element={<UploadMain />} />
                     <Route path="/purchase" element={<PurchaseMain />} />
                     <Route path="/download" element={<DownloadMain />} />
+                    <Route path="/sol2wsol" element={<SOL2WSOLMain />} />
                 </Routes>
             </div>
         </Router>
