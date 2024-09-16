@@ -4,7 +4,7 @@ import Content from '../components/Content';
 
 const markdownContent = {
     en: `
-# Upload
+# Purchase
 
 Here, we will explain how users can purchase images.
 
@@ -52,7 +52,7 @@ Purchased images will be overlaid in gray and will not be available for purchase
 
 `,
     ja: `
-# Upload
+# Purchase
 
 ここでは画像を購入するユーザーが画像を購入する方法を説明します。
 
