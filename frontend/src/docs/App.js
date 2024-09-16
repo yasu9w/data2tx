@@ -4,8 +4,9 @@ import { Routes, Route } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import Home from './pages/Home';
 import GettingStarted from './pages/GettingStarted';
-import APIReference from './pages/APIReference';
-import Tutorials from './pages/Tutorials';
+import Upload from './pages/Upload';
+import Purchase from './pages/Purchase';
+import Download from './pages/Download';
 import './App.css';
 
 function DocsMain() {
@@ -28,8 +29,9 @@ function DocsMain() {
                 <Routes>
                     <Route path="/" element={<Home language={language} sidebarOpen={isSidebarOpen} />} />
                     <Route path="getting-started" element={<GettingStarted language={language} sidebarOpen={isSidebarOpen} />} />
-                    <Route path="api-reference" element={<APIReference language={language} sidebarOpen={isSidebarOpen} />} />
-                    <Route path="tutorials" element={<Tutorials language={language} sidebarOpen={isSidebarOpen} />} />
+                    <Route path="upload" element={<Upload language={language} sidebarOpen={isSidebarOpen} />} />
+                    <Route path="purchase" element={<Purchase language={language} sidebarOpen={isSidebarOpen} />} />
+                    <Route path="download" element={<Download language={language} sidebarOpen={isSidebarOpen} />} />
                 </Routes>
             </div>
         </div>
