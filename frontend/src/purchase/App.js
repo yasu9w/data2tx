@@ -358,7 +358,15 @@ const PurchaseApp = React.memo(() => {
     };
 
     const handleZoomChange = (e) => {
-        setZoom(parseInt(e.target.value, 10));
+        let value = parseInt(e.target.value, 10);
+        if (isNaN(value)) {
+            value = 0;
+        } else if (value < 0) {
+            value = 0;
+        } else if (value > 21) {
+            value = 21;
+        }
+        setZoom(value);
     };
 
     useEffect(() => {
