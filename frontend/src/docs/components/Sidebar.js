@@ -1,6 +1,6 @@
 ﻿// src/components/Sidebar.js
 import React from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { FaBars } from 'react-icons/fa';
 
@@ -49,35 +49,6 @@ const LanguageSwitcher = styled.div`
 `;
 
 const Sidebar = ({ isOpen, toggleSidebar, language, setLanguage, children }) => {
-    const location = useLocation();
-    const navigate = useNavigate();
-
-    const handleTutorialClick = (e) => {
-        if (location.pathname === '/docs/tutorials') {
-            e.preventDefault(); // デフォルトのリンク動作を防ぐ
-            window.scrollTo(0, 0); // チュートリアルページのトップにスクロール
-        }
-    };
-
-    const handleStepClick = (step) => {
-        if (location.pathname !== '/docs/tutorials') {
-            // tutorialsページにリダイレクトしてから指定のステップにスクロール
-            navigate('/docs/tutorials');
-            setTimeout(() => scrollToSection(step), 100);
-        } else {
-            scrollToSection(step);
-        }
-    };
-
-    const scrollToSection = (id) => {
-        const element = document.getElementById(id);
-        if (element) {
-            window.scrollTo({
-                top: element.offsetTop - 20, // 20pxだけ上に余白を持たせる
-                behavior: 'smooth',
-            });
-        }
-    };
 
     const texts = {
         en: {
@@ -85,11 +56,9 @@ const Sidebar = ({ isOpen, toggleSidebar, language, setLanguage, children }) => 
             docs: "Docs",
             home: "Home",
             gettingStarted: "Getting Started",
-            apiReference: "API Reference",
-            tutorials: "Tutorials",
-            step1: "Step 1",
-            step2: "Step 2",
-            step3: "Step 3",
+            upload: "Upload",
+            purchase: "Purchase",
+            download: "Download",
             language: "Language",
             switchToEnglish: "English",
             switchToJapanese: "日本語"
@@ -99,11 +68,9 @@ const Sidebar = ({ isOpen, toggleSidebar, language, setLanguage, children }) => 
             docs: "ドキュメント",
             home: "ホーム",
             gettingStarted: "はじめに",
-            apiReference: "APIリファレンス",
-            tutorials: "チュートリアル",
-            step1: "手順 1",
-            step2: "手順 2",
-            step3: "手順 3",
+            upload: "Upload",
+            purchase: "Purchase",
+            download: "Download",
             language: "言語",
             switchToEnglish: "English",
             switchToJapanese: "日本語"
@@ -130,15 +97,9 @@ const Sidebar = ({ isOpen, toggleSidebar, language, setLanguage, children }) => 
                 <ul style={styles.ul}>
                     <li><Link to="/docs" style={styles.link}>{t.home}</Link></li>
                     <li><Link to="/docs/getting-started" style={styles.link}>{t.gettingStarted}</Link></li>
-                    <li><Link to="/docs/api-reference" style={styles.link}>{t.apiReference}</Link></li>
-                    <li>
-                        <Link to="/docs/tutorials" style={styles.link} onClick={handleTutorialClick}>{t.tutorials}</Link>
-                        <ul style={styles.ul}>
-                            <li><button onClick={() => handleStepClick('step1')} style={styles.subLink}>{t.step1}</button></li>
-                            <li><button onClick={() => handleStepClick('step2')} style={styles.subLink}>{t.step2}</button></li>
-                            <li><button onClick={() => handleStepClick('step3')} style={styles.subLink}>{t.step3}</button></li>
-                        </ul>
-                    </li>
+                    <li><Link to="/docs/upload" style={styles.link}>{t.upload}</Link></li>
+                    <li><Link to="/docs/purchase" style={styles.link}>{t.purchase}</Link></li>
+                    <li><Link to="/docs/download" style={styles.link}>{t.download}</Link></li>
                 </ul>
             </SidebarContainer>
             <MainContent isSidebarOpen={isOpen}>
