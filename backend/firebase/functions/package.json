@@ -6,10 +6,11 @@
     "shell": "firebase functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
-    "logs": "firebase functions:log"
+    "logs": "firebase functions:log",
+    "lint": "eslint ."
   },
   "engines": {
-    "node": "18"
+    "node": "20"
   },
   "main": "index.js",
   "dependencies": {
@@ -57,8 +58,9 @@
     "execa": "^5.1.1",
     "exit": "^0.1.2",
     "fill-range": "^7.0.1",
-    "firebase-admin": "^11.8.0",
-    "firebase-functions": "^4.3.1",
+    "firebase-admin": "^12.5.0",
+    "firebase-functions": "^4.4.1",
+    "firebase-functions-test": "^3.3.0",
     "get-stream": "^6.0.1",
     "glob": "^7.2.3",
     "has-flag": "^4.0.0",
@@ -133,7 +135,7 @@
     "yallist": "^3.1.1"
   },
   "devDependencies": {
-    "firebase-functions-test": "^3.1.0"
+    "eslint": "^9.10.0"
   },
   "private": true
 }
