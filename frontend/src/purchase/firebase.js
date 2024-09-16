@@ -13,7 +13,11 @@ export const firebaseConfig = {
     measurementId: process.env.REACT_APP_MEASUREMENT_ID
 };
 
-firebase.initializeApp(firebaseConfig);
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+} else {
+    firebase.app();
+}
 
 var db_obj = firebase.firestore();
 var storageBucket_original = firebase.app().storage(process.env.REACT_APP_STORAGE_BUCKET_ORIGINAL);

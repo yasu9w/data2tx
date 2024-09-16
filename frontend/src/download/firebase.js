@@ -23,7 +23,11 @@ export const firebaseConfig = {
     measurementId: "G-DK4YBM24EL"
 };
 
-firebase.initializeApp(firebaseConfig);
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+} else {
+    firebase.app();
+}
 
 //var auth_obj = firebase.auth();
 //var storage_obj = firebase.storage();
