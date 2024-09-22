@@ -327,13 +327,17 @@ function UploadApp() {
     let startX = 0; // タッチ開始時のX座標
     let startY = 0; // タッチ開始時のY座標
     let isScrolling = false; // スクロール中かどうかのフラグ
+    let isCreatingAnnotation = false; // 枠の作成が開始されたかどうかのフラグ
+    const MIN_MOVE_THRESHOLD = 5; // 枠作成を開始するための最小移動距離
 
     const handleTouchStart = (e) => {
         if (e.touches.length === 2) {
             isPinchZoom = true; // 二本指の場合はピンチズームと判定
+            isCreatingAnnotation = false; // ピンチズームの場合は枠作成を無効化
         } else if (e.touches.length === 1) {
             isPinchZoom = false;
             isScrolling = false; // スクロールフラグをリセット
+            isCreatingAnnotation = false; // 枠作成フラグをリセット
 
             // タッチ開始時の座標を記録
             startX = e.touches[0].clientX;
@@ -358,10 +362,15 @@ function UploadApp() {
             const diffX = Math.abs(currentX - startX); // X方向の移動距離
             const diffY = Math.abs(currentY - startY); // Y方向の移動距離
 
-            if (diffY > diffX + 10) { // 縦方向の動きが横方向より10px以上大きい場合
-                isScrolling = true; // スクロール操作と判定
-            } else if (diffX > diffY + 10) { // 横方向の動きが縦方向より10px以上大きい場合
-                isScrolling = false; // 枠の操作と判定
+            if (!isCreatingAnnotation && diffX > MIN_MOVE_THRESHOLD && diffY > MIN_MOVE_THRESHOLD) {
+                // 最小移動距離を超えたら枠作成を開始
+                isCreatingAnnotation = true;
+                if (e.target.closest('.annotation, img')) {
+                    handleStart(e); // 枠の作成開始
+                }
+            }
+
+            if (isCreatingAnnotation) {
                 e.preventDefault(); // スクロールを抑制
                 if (e.target.closest('.annotation, img')) {
                     handleMove(e); // 枠の移動処理を実行
@@ -377,6 +386,7 @@ function UploadApp() {
         if (e.touches.length < 2) {
             isPinchZoom = false; // 指が一本以下になったらピンチズームを解除
         }
+        isCreatingAnnotation = false; // 枠作成フラグをリセット
     };
 
 
