@@ -1,20 +1,26 @@
 .App {
   display: flex; /* フレックスレイアウトを使用 */
-  align-items: flex-start; /* コンテンツを上揃えにする */
+  flex-direction: column; /* スマホ表示時にサイドバーとコンテンツを縦に並べる */
+  align-items: stretch; /* 子要素が親要素の幅に合わせて伸縮する */
+  min-height: 100vh; /* 全体の高さを画面に合わせる */
+  overflow-x: hidden; /* 横スクロールを無効化する */
 }
 
 .sidebar {
-  width: 250px; /* サイドバーの幅を指定 */
-  min-width: 200px; /* 最小幅を設定 */
+  width: 100%; /* 初期状態で全幅にする */
+  max-width: 250px; /* デスクトップ時の最大幅を設定 */
   background-color: #282c34; /* サイドバーの背景色 */
   color: white; /* サイドバーの文字色 */
   padding: 20px; /* サイドバー内の余白 */
+  box-sizing: border-box; /* paddingを含めた幅を指定 */
 }
 
 .content {
   flex: 1; /* コンテンツ部分が残りの幅を占めるようにする */
   padding: 20px; /* コンテンツに適切な余白を追加 */
   text-align: left; /* テキストを左寄せにする */
+  width: 100%; /* コンテンツを全幅にする */
+  box-sizing: border-box; /* paddingを含めた幅を指定 */
 }
 
 /* 画像のサイズ調整と拡大表示用のスタイル */
@@ -43,7 +49,6 @@
   z-index: 999; /* 拡大した画像の下に表示 */
 }
 
-/* 他のスタイルはそのまま */
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -94,4 +99,23 @@ th, td {
 
 th {
   background-color: #f4f4f4;
+}
+
+/* スマホ表示に対応するメディアクエリ */
+@media (max-width: 768px) {
+  .App {
+    flex-direction: column; /* スマホ表示時にサイドバーとコンテンツを縦に並べる */
+  }
+  .sidebar {
+    width: 100%; /* スマホ表示時はサイドバーを全幅に */
+    min-width: 0; /* 最小幅をリセット */
+    padding: 10px; /* サイドバーの余白を調整 */
+  }
+  .content {
+    width: 100%; /* コンテンツを全幅に */
+    padding: 10px; /* コンテンツの余白を調整 */
+  }
+  table {
+    font-size: 14px; /* テーブルのフォントサイズを調整 */
+  }
 }
