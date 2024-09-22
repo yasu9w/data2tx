@@ -69,6 +69,17 @@ function UploadApp() {
     ////// 画像読み込みに関する処理
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    const adjustAnnotationsToImage = () => {
+        const { width, height } = imgRef.current.getBoundingClientRect();
+        setAnnotations((annotations) => annotations.map((ann) => ({
+            ...ann,
+            x: (ann.x / imageDimensions.width) * width,
+            y: (ann.y / imageDimensions.height) * height,
+            width: (ann.width / imageDimensions.width) * width,
+            height: (ann.height / imageDimensions.height) * height
+        })));
+    };
+
     const handleImage = async (event) => {
         const selectedImage = event.target.files[0];
         setImage(selectedImage);
@@ -156,17 +167,6 @@ function UploadApp() {
                     Longitude: ''
                 });
             }
-
-            const adjustAnnotationsToImage = () => {
-                const { width, height } = imgRef.current.getBoundingClientRect();
-                setAnnotations((annotations) => annotations.map((ann) => ({
-                    ...ann,
-                    x: (ann.x / imageDimensions.width) * width,
-                    y: (ann.y / imageDimensions.height) * height,
-                    width: (ann.width / imageDimensions.width) * width,
-                    height: (ann.height / imageDimensions.height) * height
-                })));
-            };
 
             const reader = new FileReader();
             reader.onloadend = () => {
