@@ -328,7 +328,7 @@ function UploadApp() {
     let startY = 0; // タッチ開始時のY座標
     let isScrolling = false; // スクロール中かどうかのフラグ
     let isCreatingAnnotation = false; // 枠の作成が開始されたかどうかのフラグ
-    const MIN_MOVE_THRESHOLD = 5; // 枠作成を開始するための最小移動距離
+    const MIN_MOVE_THRESHOLD = 30; // 枠作成を開始するための最小移動距離
 
     const handleTouchStart = (e) => {
         if (e.touches.length === 2) {
