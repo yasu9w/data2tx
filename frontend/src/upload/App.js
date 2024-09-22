@@ -333,6 +333,10 @@ function UploadApp() {
     let isResizingAnnotation = false; // 既存枠をリサイズ中かどうか
     const MIN_MOVE_THRESHOLD = 30; // 枠作成を開始するための最小移動距離
 
+    // 現在の操作状態を記録する変数
+    let currentAnnotationStartX = 0;
+    let currentAnnotationStartY = 0;
+
     const handleTouchStart = (e) => {
         if (e.touches.length === 2) {
             // 二本指での操作はピンチズームとみなす
@@ -346,11 +350,11 @@ function UploadApp() {
             isCreatingAnnotation = false;
             isMovingExistingAnnotation = false;
             isResizingAnnotation = false;
-    
+
             // タッチ開始位置の記録
             startX = e.touches[0].clientX;
             startY = e.touches[0].clientY;
-    
+
             // 既存の枠操作をチェック
             const target = e.target.closest('.annotation');
             if (target) {
@@ -366,48 +370,49 @@ function UploadApp() {
             }
         }
     };
-    
 
     const handleTouchMove = (e) => {
         if (isPinchZoom) {
             return; // ピンチズーム中は他の操作を無効化
         }
-    
+
         if (e.touches.length === 1) {
             const currentX = e.touches[0].clientX;
             const currentY = e.touches[0].clientY;
-    
+
             const diffX = Math.abs(currentX - startX); // X方向の移動距離
             const diffY = Math.abs(currentY - startY); // Y方向の移動距離
-    
+
             // リサイズ中
             if (isResizingAnnotation) {
                 e.preventDefault();
                 handleResizerMove(e); // リサイズ処理を実行
                 return;
             }
-    
+
             // 既存枠を移動中
             if (isMovingExistingAnnotation) {
                 e.preventDefault();
                 handleAnnotationMove(e); // 移動処理を実行
                 return;
             }
-    
+
             // 縦方向のスクロールを優先
             if (diffY > diffX + MIN_MOVE_THRESHOLD) {
                 isScrolling = true;
                 return;
             }
-    
+
             // 新規枠作成開始判定
             if (!isCreatingAnnotation && diffX > MIN_MOVE_THRESHOLD && diffY > MIN_MOVE_THRESHOLD) {
                 isCreatingAnnotation = true;
                 if (e.target.closest('img')) {
+                    currentAnnotationStartX = startX;
+                    currentAnnotationStartY = startY;
                     handleStart(e); // 新規枠作成開始
                 }
             }
-    
+
             // 新規枠の作成
             if (isCreatingAnnotation) {
                 e.preventDefault(); // スクロールを抑制
@@ -630,14 +635,18 @@ function UploadApp() {
         if (resizingIndex === null || !isMouseDown) return;
         const { left, top, width: imageWidth, height: imageHeight } = imgRef.current.getBoundingClientRect();
         const offsetX = (e.clientX || e.touches[0].clientX) - left;
-        const offsetY = (e.clientX || e.touches[0].clientX) - top;
+        const offsetY = (e.clientY || e.touches[0].clientY) - top;
         const maxWidth = imageWidth - annotations[resizingIndex].x;
         const maxHeight = imageHeight - annotations[resizingIndex].y;
-
+    
+        // 修正: 幅と高さの両方を正しく計算
+        const newWidth = Math.floor(Math.min(maxWidth, Math.max(0, offsetX - annotations[resizingIndex].x)));
+        const newHeight = Math.floor(Math.min(maxHeight, Math.max(0, offsetY - annotations[resizingIndex].y)));
+    
         setAnnotations(annotations.map((ann, i) => i === resizingIndex ? {
             ...ann,
-            width: Math.floor(Math.min(maxWidth, Math.max(0, offsetX - ann.x))),
-            height: Math.floor(Math.min(maxHeight, Math.max(0, offsetY - ann.y)))
+            width: newWidth,
+            height: newHeight
         } : ann));
     };
 
