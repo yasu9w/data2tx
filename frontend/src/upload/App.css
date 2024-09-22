@@ -61,3 +61,7 @@
   user-select: none;
   -webkit-user-drag: none;
 }
+
+.button {
+  touch-action: auto;
+}

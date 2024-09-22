@@ -330,27 +330,34 @@ function UploadApp() {
             isPinchZoom = true; // 二本指の場合はピンチズームと判定
         } else if (e.touches.length === 1) {
             isPinchZoom = false;
-            handleStart(e);
+            if (e.target.closest('.annotation, img')) { // 枠や画像上の場合のみ処理
+                e.preventDefault();
+                handleStart(e);
+            }
         }
     };
 
     const handleTouchMove = (e) => {
-        if (!isPinchZoom && e.touches.length === 1) {
+        if (isPinchZoom) {
+            // ピンチズーム操作中は他の処理を行わない
+            return;
+        }
+
+        if (e.touches.length === 1 && e.target.closest('.annotation, img')) { 
+            e.preventDefault(); // 画像や枠上のみスクロール抑制
             handleMove(e);
-        } else if (isPinchZoom && e.touches.length === 2) {
-            // ピンチズーム操作中
-            e.preventDefault(); // 画面スクロールを抑制し、ピンチズームのみを許可
         }
     };
 
     const handleTouchEnd = (e) => {
-        if (!isPinchZoom) {
-            handleEnd(e);
+        if (!isPinchZoom && e.target.closest('.annotation, img')) { 
+            handleEnd(e); 
         }
         if (e.touches.length < 2) {
             isPinchZoom = false; // 指が一本以下になったらピンチズームを解除
         }
     };
+
 
     // マウス・タッチ押下で新規BBOXを設置
     const handleStart = (e) => {
