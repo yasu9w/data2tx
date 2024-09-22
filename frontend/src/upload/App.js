@@ -323,20 +323,23 @@ function UploadApp() {
     ////// 新規BBOX追加　anntation
     /////////////////////////////////////////////////////////////
 
-    //マウス押下されたら新規BBOXを設置
-    const handleMouseDown = (e) => {
-        const offsetX = e.nativeEvent.offsetX;
-        const offsetY = e.nativeEvent.offsetY;
+    // マウス・タッチ押下で新規BBOXを設置
+    const handleStart = (e) => {
+        e.preventDefault();
+        const offsetX = e.clientX || e.touches[0].clientX;
+        const offsetY = e.clientY || e.touches[0].clientY;
 
-        setCurrentAnnotation({ x: offsetX, y: offsetY, width: 0, height: 0 });
+        const { left, top } = imgRef.current.getBoundingClientRect();
+        setCurrentAnnotation({ x: offsetX - left, y: offsetY - top, width: 0, height: 0 });
     };
 
-    //マウス押下状態でマウスが移動したらBBOXの大きさを更新
-    const handleMouseMove = (e) => {
+    // マウス・タッチ押下状態で移動したらBBOXの大きさを更新
+    const handleMove = (e) => {
+        e.preventDefault();
         if (!currentAnnotation) return;
         const { left, top, width: imageWidth, height: imageHeight } = imgRef.current.getBoundingClientRect();
-        const offsetX = e.clientX - left;
-        const offsetY = e.clientY - top;
+        const offsetX = (e.clientX || e.touches[0].clientX) - left;
+        const offsetY = (e.clientY || e.touches[0].clientY) - top;
 
         const validX = Math.max(0, Math.min(offsetX, imageWidth));
         const validY = Math.max(0, Math.min(offsetY, imageHeight));
@@ -348,8 +351,8 @@ function UploadApp() {
         }));
     };
 
-    //マウス押下状態が解除されたらcurrentAnnotationをAnnotationsに追加、currentAnnotationは初期化
-    const handleMouseUp = () => {
+    // マウス・タッチ押下解除でBBOXを追加、currentAnnotationを初期化
+    const handleEnd = () => {
         if (currentAnnotation) {
             const { width, height } = currentAnnotation;
             if (width >= MIN_WIDTH && height >= MIN_HEIGHT) {
@@ -412,22 +415,24 @@ function UploadApp() {
         setAnnotations(annotations.map((ann, i) => i === index ? { ...ann, text } : ann));
     };
 
-    //BBOXをマウス押下で選択
-    const handleAnnotationMouseDown = (index, e) => {
+    // BBOXをマウス・タッチ押下で選択
+    const handleAnnotationStart = (index, e) => {
         e.stopPropagation();
+        e.preventDefault();
         const { left, top } = imgRef.current.getBoundingClientRect();
-        const offsetX = e.clientX + window.scrollX - left - annotations[index].x;
-        const offsetY = e.clientY + window.scrollY - top - annotations[index].y;
+        const offsetX = (e.clientX || e.touches[0].clientX) + window.scrollX - left - annotations[index].x;
+        const offsetY = (e.clientY || e.touches[0].clientY) + window.scrollY - top - annotations[index].y;
         setDraggingIndex(index);
         setDraggingOffset({ x: offsetX, y: offsetY });
     };
 
-    //BBOXをマウス押下、マウス移動でBBOXを移動
-    const handleAnnotationMouseMove = (e) => {
+    // BBOXをマウス・タッチ移動で更新
+    const handleAnnotationMove = (e) => {
+        e.preventDefault();
         if (draggingIndex === null) return;
         const { left, top, width: imageWidth, height: imageHeight } = imgRef.current.getBoundingClientRect();
-        const offsetX = e.clientX + window.scrollX - left - draggingOffset.x;
-        const offsetY = e.clientY + window.scrollY - top - draggingOffset.y;
+        const offsetX = (e.clientX || e.touches[0].clientX) + window.scrollX - left - draggingOffset.x;
+        const offsetY = (e.clientY || e.touches[0].clientY) + window.scrollY - top - draggingOffset.y;
 
         const annotation = annotations[draggingIndex];
         const validX = Math.floor(Math.max(0, Math.min(offsetX, imageWidth - annotation.width)));
@@ -440,8 +445,8 @@ function UploadApp() {
         } : ann));
     };
 
-    //マウス押下解除で、BBOX選択を解除
-    const handleAnnotationMouseUp = () => {
+    // マウス・タッチ押下解除で選択解除
+    const handleAnnotationEnd = () => {
         setDraggingIndex(null);
     };
 
@@ -522,37 +527,57 @@ function UploadApp() {
         setIsMouseDown(false);
     };
 
+    // リサイザーをマウス・タッチ押下で選択
+    const handleResizerStart = (index, e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        setResizingIndex(index);
+        setIsMouseDown(true);
+    };
+
+    // リサイザーをマウス・タッチ移動でサイズ変更
+    const handleResizerMove = (e) => {
+        e.preventDefault();
+        if (resizingIndex === null || !isMouseDown) return;
+        const { left, top, width: imageWidth, height: imageHeight } = imgRef.current.getBoundingClientRect();
+        const offsetX = (e.clientX || e.touches[0].clientX) - left;
+        const offsetY = (e.clientX || e.touches[0].clientX) - top;
+        const maxWidth = imageWidth - annotations[resizingIndex].x;
+        const maxHeight = imageHeight - annotations[resizingIndex].y;
+
+        setAnnotations(annotations.map((ann, i) => i === resizingIndex ? {
+            ...ann,
+            width: Math.floor(Math.min(maxWidth, Math.max(0, offsetX - ann.x))),
+            height: Math.floor(Math.min(maxHeight, Math.max(0, offsetY - ann.y)))
+        } : ann));
+    };
+
+    // マウス・タッチ押下解除で選択解除
+    const handleResizerEnd = () => {
+        setResizingIndex(null);
+        setIsMouseDown(false);
+    };
+    
     //リサイザー処理で設定したisMouseDownに応じて、リスナー
     useEffect(() => {
-
-        const handleTouchMove = (event) => {
-            handleResizerMouseMove(event.touches[0]);
-        };
-
-        const handleTouchEnd = (event) => {
-            handleResizerMouseUp(event);
-        };
-
+        // イベントリスナーの登録
         if (isMouseDown) {
-            window.addEventListener('mousemove', handleResizerMouseMove);
-            window.addEventListener('mouseup', handleResizerMouseUp);
-
-            window.addEventListener('touchmove', handleTouchMove);
-            window.addEventListener('touchend', handleTouchEnd);
+            window.addEventListener('mousemove', handleResizerMove);
+            window.addEventListener('mouseup', handleResizerEnd);
+            window.addEventListener('touchmove', handleResizerMove, { passive: false });
+            window.addEventListener('touchend', handleResizerEnd);
         } else {
-            window.removeEventListener('mousemove', handleResizerMouseMove);
-            window.removeEventListener('mouseup', handleResizerMouseUp);
-
-            window.removeEventListener('touchmove', handleTouchMove);
-            window.removeEventListener('touchend', handleTouchEnd);
+            window.removeEventListener('mousemove', handleResizerMove);
+            window.removeEventListener('mouseup', handleResizerEnd);
+            window.removeEventListener('touchmove', handleResizerMove);
+            window.removeEventListener('touchend', handleResizerEnd);
         }
 
         return () => {
-            window.removeEventListener('mousemove', handleResizerMouseMove);
-            window.removeEventListener('mouseup', handleResizerMouseUp);
-
-            window.removeEventListener('touchmove', handleTouchMove);
-            window.removeEventListener('touchend', handleTouchEnd);
+            window.removeEventListener('mousemove', handleResizerMove);
+            window.removeEventListener('mouseup', handleResizerEnd);
+            window.removeEventListener('touchmove', handleResizerMove);
+            window.removeEventListener('touchend', handleResizerEnd);
         };
     }, [isMouseDown]);
 
@@ -1551,9 +1576,12 @@ function UploadApp() {
                 )}
                 <div
                     style={{ position: 'relative', display: 'inline-block' }}
-                    onMouseDown={handleMouseDown}
-                    onMouseMove={handleMouseMove}
-                    onMouseUp={handleMouseUp}
+                    onMouseDown={handleStart}
+                    onMouseMove={handleMove}
+                    onMouseUp={handleEnd}
+                    onTouchStart={handleStart}
+                    onTouchMove={handleMove}
+                    onTouchEnd={handleEnd}
                 >
                     {uploadedImage && checkDateTime(exifInfo.DateTimeOriginal) && checkLatitude(exifInfo.GPSLatitude) && checkLatitude(exifInfo.GPSLongitude) && (
                         <img
@@ -1570,10 +1598,14 @@ function UploadApp() {
                             annotation={ann}
                             onDelete={() => deleteAnnotation(index)}
                             onUpdateText={(text) => updateAnnotationText(index, text)}
-                            onMouseDown={(e) => handleAnnotationMouseDown(index, e)}
-                            onMouseMove={handleAnnotationMouseMove}
-                            onMouseUp={handleAnnotationMouseUp}
-                            onResizerMouseDown={(e) => handleResizerMouseDown(index, e)}
+                            onMouseDown={(e) => handleAnnotationStart(index, e)}
+                            onMouseMove={handleAnnotationMove}
+                            onMouseUp={handleAnnotationEnd}
+                            onTouchStart={(e) => handleAnnotationStart(index, e)}
+                            onTouchMove={handleAnnotationMove}
+                            onTouchEnd={handleAnnotationEnd}
+                            onResizerMouseDown={(e) => handleResizerStart(index, e)}
+                            onResizerTouchStart={(e) => handleResizerStart(index, e)} // 追加
                         />
                     ))}
                     {currentAnnotation && (
@@ -1651,11 +1683,11 @@ function UploadApp() {
                     {annotations_protected[0] && (
                         <h3>Results</h3>
                     )}
-                    {annotations_protected.map((annotation, index) => (
+                    {annotations.map((annotation, index) => (
                         <div key={index}>
                             <p>Idx: {index + 1}, x: {annotation.x}, y: {annotation.y}, width: {annotation.width}, height: {annotation.height}, text: {annotation.text}</p>
                             {annotation.text === "" && <p style={{ color: 'red' }}>Error: Text is empty.</p>}
-                            {annotation.text.length > 50 && <p style={{ color: 'red' }}>Error: Text is too long (over 50 characters).</p>}
+                            {annotation.text.length > 50 && <p style={{ color: 'red' }}>Warning: Text is too long (over 50 characters).</p>}
                         </div>
                     ))}
                 </div>
@@ -1674,7 +1706,7 @@ function UploadApp() {
     );
 }
 
-function Annotation({ annotation, onDelete, onUpdateText, onMouseDown, onMouseMove, onMouseUp, onResizerMouseDown }) {
+function Annotation({ annotation, onDelete, onUpdateText, onMouseDown, onMouseMove, onMouseUp, onTouchStart, onTouchMove, onTouchEnd, onResizerMouseDown, onResizerTouchStart }) {
     const handleClick = (e) => {
         e.stopPropagation();
         onDelete();
@@ -1700,10 +1732,14 @@ function Annotation({ annotation, onDelete, onUpdateText, onMouseDown, onMouseMo
             onMouseDown={onMouseDown}
             onMouseMove={onMouseMove}
             onMouseUp={onMouseUp}
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
         >
             <button
                 style={{ position: 'absolute', right: -10, top: -10 }}
                 onMouseDown={handleClick}
+                onTouchStart={handleClick} // 追加
             >
                 X
             </button>
@@ -1712,6 +1748,7 @@ function Annotation({ annotation, onDelete, onUpdateText, onMouseDown, onMouseMo
                 value={annotation.text}
                 onChange={handleTextChange}
                 onMouseDown={handleTextMouseDown}
+                onTouchStart={handleTextMouseDown} // 追加
                 style={{
                     position: 'absolute',
                     bottom: -20,
@@ -1728,6 +1765,7 @@ function Annotation({ annotation, onDelete, onUpdateText, onMouseDown, onMouseMo
                     cursor: 'se-resize'
                 }}
                 onMouseDown={onResizerMouseDown}
+                onTouchStart={onResizerTouchStart} // 追加
             />
         </div>
     );
