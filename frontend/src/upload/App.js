@@ -324,28 +324,49 @@ function UploadApp() {
     /////////////////////////////////////////////////////////////
 
     let isPinchZoom = false; // ピンチズームが有効かを判定するフラグ
+    let startX = 0; // タッチ開始時のX座標
+    let startY = 0; // タッチ開始時のY座標
+    let isScrolling = false; // スクロール中かどうかのフラグ
 
     const handleTouchStart = (e) => {
         if (e.touches.length === 2) {
             isPinchZoom = true; // 二本指の場合はピンチズームと判定
         } else if (e.touches.length === 1) {
             isPinchZoom = false;
-            if (e.target.closest('.annotation, img')) { // 枠や画像上の場合のみ処理
-                e.preventDefault();
-                handleStart(e);
+            isScrolling = false; // スクロールフラグをリセット
+
+            // タッチ開始時の座標を記録
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+
+            if (e.target.closest('.annotation, img')) {
+                e.preventDefault(); // 枠操作を行うため、デフォルト動作を抑制
+                handleStart(e); // 枠の作成開始
             }
         }
     };
 
     const handleTouchMove = (e) => {
         if (isPinchZoom) {
-            // ピンチズーム操作中は他の処理を行わない
-            return;
+            return; // ピンチズーム操作中は他の処理を行わない
         }
 
-        if (e.touches.length === 1 && e.target.closest('.annotation, img')) { 
-            e.preventDefault(); // 画像や枠上のみスクロール抑制
-            handleMove(e);
+        if (e.touches.length === 1) {
+            const currentX = e.touches[0].clientX;
+            const currentY = e.touches[0].clientY;
+
+            const diffX = Math.abs(currentX - startX); // X方向の移動距離
+            const diffY = Math.abs(currentY - startY); // Y方向の移動距離
+
+            if (diffY > diffX + 10) { // 縦方向の動きが横方向より10px以上大きい場合
+                isScrolling = true; // スクロール操作と判定
+            } else if (diffX > diffY + 10) { // 横方向の動きが縦方向より10px以上大きい場合
+                isScrolling = false; // 枠の操作と判定
+                e.preventDefault(); // スクロールを抑制
+                if (e.target.closest('.annotation, img')) {
+                    handleMove(e); // 枠の移動処理を実行
+                }
+            }
         }
     };
 
