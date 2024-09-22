@@ -326,11 +326,9 @@ function UploadApp() {
     // 初期フラグ設定
     let startX = 0; // タッチ開始時のX座標
     let startY = 0; // タッチ開始時のY座標
-    let isScrolling = false; // スクロール中かどうか
     let isCreatingAnnotation = false; // 新規枠作成中かどうか
     let isMovingExistingAnnotation = false; // 既存枠を移動中かどうか
     let isResizingAnnotation = false; // 既存枠をリサイズ中かどうか
-    const MIN_MOVE_THRESHOLD = 30; // 枠作成を開始するための最小移動距離
 
     // 現在の操作状態を記録する変数
     let currentAnnotationStartX = 0;
@@ -338,7 +336,6 @@ function UploadApp() {
 
     const handleTouchStart = (e) => {
         if (e.touches.length === 1) {
-            isScrolling = false;
             isCreatingAnnotation = false;
             isMovingExistingAnnotation = false;
             isResizingAnnotation = false;
@@ -366,12 +363,6 @@ function UploadApp() {
     const handleTouchMove = (e) => {
 
         if (e.touches.length === 1) {
-            const currentX = e.touches[0].clientX;
-            const currentY = e.touches[0].clientY;
-
-            const diffX = Math.abs(currentX - startX); // X方向の移動距離
-            const diffY = Math.abs(currentY - startY); // Y方向の移動距離
-
             // リサイズ中
             if (isResizingAnnotation) {
                 e.preventDefault();
@@ -384,22 +375,6 @@ function UploadApp() {
                 e.preventDefault();
                 handleAnnotationMove(e); // 移動処理を実行
                 return;
-            }
-
-            // 縦方向のスクロールを優先
-            if (diffY > diffX + MIN_MOVE_THRESHOLD) {
-                isScrolling = true;
-                return;
-            }
-
-            // 新規枠作成開始判定
-            if (!isCreatingAnnotation && diffX > MIN_MOVE_THRESHOLD && diffY > MIN_MOVE_THRESHOLD) {
-                isCreatingAnnotation = true;
-                if (e.target.closest('img')) {
-                    currentAnnotationStartX = startX;
-                    currentAnnotationStartY = startY;
-                    handleStart(e); // 新規枠作成開始
-                }
             }
 
             // 新規枠の作成
@@ -424,7 +399,6 @@ function UploadApp() {
         }
     
         // フラグのリセット
-        isScrolling = false;
         isCreatingAnnotation = false;
         isMovingExistingAnnotation = false;
         isResizingAnnotation = false;
