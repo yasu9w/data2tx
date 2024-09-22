@@ -86,6 +86,7 @@ const styles = {
         display: 'flex',
         flexDirection: 'column',
         minHeight: '100vh',
+        backgroundColor: '#ffffff',
     },
     container: {
         flex: '1',
@@ -94,6 +95,7 @@ const styles = {
         alignItems: 'center',
         justifyContent: 'center',
         textAlign: 'center',
+        backgroundColor: '#ffffff',
     },
     content: {
         marginBottom: '20px',

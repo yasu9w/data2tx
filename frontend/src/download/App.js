@@ -158,6 +158,7 @@ function DownloadApp() {
 
 
             <div style={{
+                backgroundColor: '#ffffff',
                 padding: '20px',
                 maxWidth: '1200px',
                 margin: '0 auto',
