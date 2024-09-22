@@ -52,6 +52,15 @@ img {
   touch-action: none;
   user-select: none;
   -webkit-user-drag: none;
+  pointer-events: none; /* アノテーションのクリックを無効化 */
+}
+
+/* annotation-container を追加 */
+.annotation-container {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .annotation-protected {

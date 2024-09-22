@@ -157,6 +157,17 @@ function UploadApp() {
                 });
             }
 
+            const adjustAnnotationsToImage = () => {
+                const { width, height } = imgRef.current.getBoundingClientRect();
+                setAnnotations((annotations) => annotations.map((ann) => ({
+                    ...ann,
+                    x: (ann.x / imageDimensions.width) * width,
+                    y: (ann.y / imageDimensions.height) * height,
+                    width: (ann.width / imageDimensions.width) * width,
+                    height: (ann.height / imageDimensions.height) * height
+                })));
+            };
+
             const reader = new FileReader();
             reader.onloadend = () => {
                 setUploadedImage(reader.result);
@@ -175,6 +186,8 @@ function UploadApp() {
                     }
                     setImageDimensions({ width, height });
                     setImageDimensionsProtected({ width, height });
+                    // 画像読み込み後にアノテーションを調整
+                    adjustAnnotationsToImage();
                 }
                 img.src = reader.result;
 
@@ -690,6 +703,17 @@ function UploadApp() {
             window.removeEventListener('touchend', handleTouchEnd);
         };
     }, []);
+
+    useEffect(() => {
+        const handleResize = () => {
+            adjustAnnotationsToImage(); // 画像のリサイズ時にアノテーションを調整
+        };
+        window.addEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, [imageDimensions]); // imageDimensions に依存
+
     /////////////////////////////////////////////////////////////
     ////// 追加済みBBOXのリサイズ　anntation protected
     /////////////////////////////////////////////////////////////
@@ -1684,7 +1708,8 @@ function UploadApp() {
                     <h2>STEP2: Annotation</h2>
                 )}
                 <div
-                    style={{ position: 'relative', display: 'inline-block' }}
+                    className="annotation-container"
+                    style={{ width: imageDimensions.width, height: imageDimensions.height }}
                     onMouseDown={handleStart}
                     onMouseMove={handleMove}
                     onMouseUp={handleEnd}
