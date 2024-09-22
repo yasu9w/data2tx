@@ -1,6 +1,9 @@
 .App {
   text-align: center;
   color: white;
+  width: 100vw; /* ビューポートの幅に合わせる */
+  height: 100vh; /* ビューポートの高さに合わせる */
+  overflow-x: hidden; /* 横スクロールを無効化 */
 }
 
 .App-logo {
@@ -65,4 +68,24 @@
 
 .button {
   touch-action: auto;
+}
+
+@media (max-width: 768px) {
+  .App {
+    flex-direction: column;
+    width: 100%;
+  }
+  .App-header {
+    min-height: auto; /* スマホ表示時は高さを調整 */
+    padding: 10px;
+  }
+  .sidebar {
+    width: 100%; /* スマホ表示時はサイドバーを全幅に */
+    min-width: 0;
+    padding: 10px;
+  }
+  .content {
+    width: 100%; /* コンテンツを全幅に */
+    padding: 10px;
+  }
 }

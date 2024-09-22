@@ -11,3 +11,16 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%; /* 高さも100%にして、背景が全体に適用されるようにする */
+  overflow-x: hidden; /* 横スクロールを無効化 */
+  background-color: #ffffff; /* 全体の背景色を白に設定 */
+}
+
+html, body, .App {
+  background-color: #ffffff !important; /* 強制的に背景色を白に設定 */
+}
