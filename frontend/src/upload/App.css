@@ -28,38 +28,42 @@
   color: white;
 }
 
-/*
-.App-link {
-  color: #61dafb;
-}
-*/
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* 画像に関するスタイルを追加 */
+img {
+  max-width: 100%; /* 画像の幅が親要素を超えないようにする */
+  height: auto; /* 画像の高さを自動調整 */
+  display: block; /* 画像の下に余白ができるのを防ぐ */
+  object-fit: contain; /* 画像が親要素に収まるように調整 */
 }
 
+/* 必要に応じて画像専用のクラスを追加 */
+.responsive-image {
+  max-width: 100%; /* 画像の最大幅を親要素の幅に合わせる */
+  height: auto; /* 高さを自動調整 */
+  display: block; /* ブロック要素として扱い、下に余白を作らない */
+  object-fit: contain; /* 画像の比率を保ちながらリサイズ */
+}
+
+/* .annotation クラスの修正 */
 .annotation {
-    border: 2px solid red;
-    position: absolute;
-    background-color: rgba(255, 0, 0, 0.2);
-    touch-action: none;
-    user-select: none;
-    -webkit-user-drag: none;
+  border: 2px solid red;
+  position: absolute;
+  background-color: rgba(255, 0, 0, 0.2);
+  touch-action: none;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 .annotation-protected {
-    border: 2px solid gray;
-    position: absolute;
-    background-color: rgba(128, 128, 128, 0.5);
-    touch-action: none;
-    user-select: none;
-    -webkit-user-drag: none;
+  border: 2px solid gray;
+  position: absolute;
+  background-color: rgba(128, 128, 128, 0.5);
+  touch-action: none;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
+/* 画像や特定の要素に対してドラッグ操作を無効化 */
 #targetElement, img {
   touch-action: none;
   user-select: none;
@@ -67,9 +71,10 @@
 }
 
 .button {
-  touch-action: auto;
+  touch-action: auto; /* ボタンはタッチ操作可能 */
 }
 
+/* スマホ表示用のスタイル */
 @media (max-width: 768px) {
   .App {
     flex-direction: column;
@@ -77,15 +82,6 @@
   }
   .App-header {
     min-height: auto; /* スマホ表示時は高さを調整 */
-    padding: 10px;
-  }
-  .sidebar {
-    width: 100%; /* スマホ表示時はサイドバーを全幅に */
-    min-width: 0;
-    padding: 10px;
-  }
-  .content {
-    width: 100%; /* コンテンツを全幅に */
     padding: 10px;
   }
 }
