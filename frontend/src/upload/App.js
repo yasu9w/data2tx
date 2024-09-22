@@ -324,7 +324,6 @@ function UploadApp() {
     /////////////////////////////////////////////////////////////
 
     // 初期フラグ設定
-    let isPinchZoom = false; // ピンチズームが有効かどうか
     let startX = 0; // タッチ開始時のX座標
     let startY = 0; // タッチ開始時のY座標
     let isScrolling = false; // スクロール中かどうか
@@ -338,14 +337,7 @@ function UploadApp() {
     let currentAnnotationStartY = 0;
 
     const handleTouchStart = (e) => {
-        if (e.touches.length === 2) {
-            // 二本指での操作はピンチズームとみなす
-            isPinchZoom = true;
-            isCreatingAnnotation = false;
-            isMovingExistingAnnotation = false;
-            isResizingAnnotation = false;
-        } else if (e.touches.length === 1) {
-            isPinchZoom = false;
+        if (e.touches.length === 1) {
             isScrolling = false;
             isCreatingAnnotation = false;
             isMovingExistingAnnotation = false;
@@ -372,9 +364,6 @@ function UploadApp() {
     };
 
     const handleTouchMove = (e) => {
-        if (isPinchZoom) {
-            return; // ピンチズーム中は他の操作を無効化
-        }
 
         if (e.touches.length === 1) {
             const currentX = e.touches[0].clientX;
@@ -435,7 +424,6 @@ function UploadApp() {
         }
     
         // フラグのリセット
-        isPinchZoom = false;
         isScrolling = false;
         isCreatingAnnotation = false;
         isMovingExistingAnnotation = false;
