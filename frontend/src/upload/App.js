@@ -33,8 +33,8 @@ function UploadApp() {
 
     const [image, setImage] = useState("");
     const [uploadedImage, setUploadedImage] = useState(null);
-    const imgRef = useRef();
-    const imgRef_protected = useRef();
+    const imgRef = useRef(null);
+    const imgRef_protected = useRef(null);
 
     const [exifInfo, setExifInfo] = useState({
         DateTimeOriginal: '',
@@ -1684,7 +1684,15 @@ function UploadApp() {
                     <h2>STEP2: Annotation</h2>
                 )}
                 <div
-                    style={{ position: 'relative', display: 'inline-block' }}
+                    style={{
+                        position: 'relative',
+                        display: 'flex', // 中央揃えのためにflexを使用
+                        justifyContent: 'center', // 水平方向に中央揃え
+                        alignItems: 'center', // 垂直方向に中央揃え
+                        width: '100%', // 親要素の幅を100%に設定
+                        maxWidth: '100vw', // ビューポートの幅を超えないように設定
+                        overflow: 'hidden' // 画像がはみ出さないようにする
+                    }}
                     onMouseDown={handleStart}
                     onMouseMove={handleMove}
                     onMouseUp={handleEnd}
@@ -1698,7 +1706,12 @@ function UploadApp() {
                             src={uploadedImage}
                             alt=""
                             draggable="false"
-                            style={{ width: imageDimensions.width, height: imageDimensions.height }}
+                            style={{
+                                width: '100%', // 画像の幅を親要素に合わせる
+                                maxWidth: '720px', // 最大幅を設定
+                                height: 'auto', // 高さを自動調整
+                                objectFit: 'contain' // 画像の比率を保って表示
+                            }}
                         />
                     )}
                     {annotations.map((ann, index) => (
