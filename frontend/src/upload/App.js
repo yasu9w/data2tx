@@ -323,6 +323,35 @@ function UploadApp() {
     ////// 新規BBOX追加　anntation
     /////////////////////////////////////////////////////////////
 
+    let isPinchZoom = false; // ピンチズームが有効かを判定するフラグ
+
+    const handleTouchStart = (e) => {
+        if (e.touches.length === 2) {
+            isPinchZoom = true; // 二本指の場合はピンチズームと判定
+        } else if (e.touches.length === 1) {
+            isPinchZoom = false;
+            handleStart(e);
+        }
+    };
+
+    const handleTouchMove = (e) => {
+        if (!isPinchZoom && e.touches.length === 1) {
+            handleMove(e);
+        } else if (isPinchZoom && e.touches.length === 2) {
+            // ピンチズーム操作中
+            e.preventDefault(); // 画面スクロールを抑制し、ピンチズームのみを許可
+        }
+    };
+
+    const handleTouchEnd = (e) => {
+        if (!isPinchZoom) {
+            handleEnd(e);
+        }
+        if (e.touches.length < 2) {
+            isPinchZoom = false; // 指が一本以下になったらピンチズームを解除
+        }
+    };
+
     // マウス・タッチ押下で新規BBOXを設置
     const handleStart = (e) => {
         e.preventDefault();
@@ -417,6 +446,7 @@ function UploadApp() {
 
     // BBOXをマウス・タッチ押下で選択
     const handleAnnotationStart = (index, e) => {
+        if (isPinchZoom) return;
         e.stopPropagation();
         e.preventDefault();
         const { left, top } = imgRef.current.getBoundingClientRect();
@@ -428,6 +458,7 @@ function UploadApp() {
 
     // BBOXをマウス・タッチ移動で更新
     const handleAnnotationMove = (e) => {
+        if (isPinchZoom) return;
         e.preventDefault();
         if (draggingIndex === null) return;
         const { left, top, width: imageWidth, height: imageHeight } = imgRef.current.getBoundingClientRect();
@@ -508,6 +539,7 @@ function UploadApp() {
 
     // リサイザーをマウス・タッチ移動でサイズ変更
     const handleResizerMove = (e) => {
+        if (isPinchZoom) return;
         e.preventDefault();
         if (resizingIndex === null || !isMouseDown) return;
         const { left, top, width: imageWidth, height: imageHeight } = imgRef.current.getBoundingClientRect();
@@ -552,6 +584,17 @@ function UploadApp() {
         };
     }, [isMouseDown]);
 
+    useEffect(() => {
+        window.addEventListener('touchstart', handleTouchStart, { passive: false });
+        window.addEventListener('touchmove', handleTouchMove, { passive: false });
+        window.addEventListener('touchend', handleTouchEnd, { passive: false });
+    
+        return () => {
+            window.removeEventListener('touchstart', handleTouchStart);
+            window.removeEventListener('touchmove', handleTouchMove);
+            window.removeEventListener('touchend', handleTouchEnd);
+        };
+    }, []);
     /////////////////////////////////////////////////////////////
     ////// 追加済みBBOXのリサイズ　anntation protected
     /////////////////////////////////////////////////////////////
