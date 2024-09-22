@@ -524,17 +524,35 @@ function UploadApp() {
 
     //リサイザー処理で設定したisMouseDownに応じて、リスナー
     useEffect(() => {
+
+        const handleTouchMove = (event) => {
+            handleResizerMouseMove(event.touches[0]);
+        };
+
+        const handleTouchEnd = (event) => {
+            handleResizerMouseUp(event);
+        };
+
         if (isMouseDown) {
             window.addEventListener('mousemove', handleResizerMouseMove);
             window.addEventListener('mouseup', handleResizerMouseUp);
+
+            window.addEventListener('touchmove', handleTouchMove);
+            window.addEventListener('touchend', handleTouchEnd);
         } else {
             window.removeEventListener('mousemove', handleResizerMouseMove);
             window.removeEventListener('mouseup', handleResizerMouseUp);
+
+            window.removeEventListener('touchmove', handleTouchMove);
+            window.removeEventListener('touchend', handleTouchEnd);
         }
 
         return () => {
             window.removeEventListener('mousemove', handleResizerMouseMove);
             window.removeEventListener('mouseup', handleResizerMouseUp);
+
+            window.removeEventListener('touchmove', handleTouchMove);
+            window.removeEventListener('touchend', handleTouchEnd);
         };
     }, [isMouseDown]);
 
@@ -569,17 +587,33 @@ function UploadApp() {
     };
 
     useEffect(() => {
+
+        const handleTouchMove_protected = (event) => {
+            handleResizerMouseMove_protected(event.touches[0]);
+        };
+
+        const handleTouchEnd_protected = (event) => {
+            handleResizerMouseUp_protected(event);
+        };
         if (isMouseDown_protected) {
             window.addEventListener('mousemove', handleResizerMouseMove_protected);
             window.addEventListener('mouseup', handleResizerMouseUp_protected);
+
+            window.addEventListener('touchmove', handleTouchMove_protected);
+            window.addEventListener('touchend', handleTouchEnd_protected);
         } else {
             window.removeEventListener('mousemove', handleResizerMouseMove_protected);
             window.removeEventListener('mouseup', handleResizerMouseUp_protected);
+
+            window.removeEventListener('touchmove', handleTouchMove_protected);
+            window.removeEventListener('touchend', handleTouchEnd_protected);
         }
 
         return () => {
             window.removeEventListener('mousemove', handleResizerMouseMove_protected);
             window.removeEventListener('mouseup', handleResizerMouseUp_protected);
+            window.removeEventListener('touchmove', handleTouchMove_protected);
+            window.removeEventListener('touchend', handleTouchEnd_protected);
         };
     }, [isMouseDown_protected]);
 
