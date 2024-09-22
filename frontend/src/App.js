@@ -10,7 +10,8 @@ import logoImage from './images/logo.png';
 function Navigation() {
     const location = useLocation();
 
-    const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+    //const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+    const isMobile = false;
 
     if (location.pathname !== '/') {
         return null;
