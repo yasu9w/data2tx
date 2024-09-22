@@ -498,35 +498,6 @@ function UploadApp() {
     ////// 追加済みBBOXのリサイズ　anntation
     /////////////////////////////////////////////////////////////
 
-    //リサイザーをマウス押下で選択
-    const handleResizerMouseDown = (index, e) => {
-        e.stopPropagation();
-        setResizingIndex(index);
-        setIsMouseDown(true);
-    };
-
-    //リサイザーをマウス押下、マウス移動でBBOXサイズを変更
-    const handleResizerMouseMove = (e) => {
-        if (resizingIndex === null || !isMouseDown) return;
-        const { left, top, width: imageWidth, height: imageHeight } = imgRef.current.getBoundingClientRect();
-        const offsetX = e.clientX - left;
-        const offsetY = e.clientY - top;
-        const maxWidth = imageWidth - annotations[resizingIndex].x;
-        const maxHeight = imageHeight - annotations[resizingIndex].y;
-
-        setAnnotations(annotations.map((ann, i) => i === resizingIndex ? {
-            ...ann,
-            width: Math.floor(Math.min(maxWidth, Math.max(0, offsetX - ann.x))),
-            height: Math.floor(Math.min(maxHeight, Math.max(0, offsetY - ann.y)))
-        } : ann));
-    };
-
-    //マウス押下解除で、リサイザー選択を解除
-    const handleResizerMouseUp = () => {
-        setResizingIndex(null);
-        setIsMouseDown(false);
-    };
-
     // リサイザーをマウス・タッチ押下で選択
     const handleResizerStart = (index, e) => {
         e.stopPropagation();

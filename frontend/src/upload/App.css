@@ -42,10 +42,22 @@
     border: 2px solid red;
     position: absolute;
     background-color: rgba(255, 0, 0, 0.2);
+    touch-action: none;
+    user-select: none;
+    -webkit-user-drag: none;
 }
 
 .annotation-protected {
     border: 2px solid gray;
     position: absolute;
     background-color: rgba(128, 128, 128, 0.5);
+    touch-action: none;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+#targetElement, img {
+  touch-action: none;
+  user-select: none;
+  -webkit-user-drag: none;
 }
