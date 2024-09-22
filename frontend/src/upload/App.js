@@ -525,7 +525,6 @@ function UploadApp() {
 
     // BBOXをマウス・タッチ押下で選択
     const handleAnnotationStart = (index, e) => {
-        if (isPinchZoom) return;
         e.stopPropagation();
         e.preventDefault();
         const { left, top } = imgRef.current.getBoundingClientRect();
@@ -537,7 +536,6 @@ function UploadApp() {
 
     // BBOXをマウス・タッチ移動で更新
     const handleAnnotationMove = (e) => {
-        if (isPinchZoom) return;
         e.preventDefault();
         if (draggingIndex === null) return;
         const { left, top, width: imageWidth, height: imageHeight } = imgRef.current.getBoundingClientRect();
@@ -618,7 +616,6 @@ function UploadApp() {
 
     // リサイザーをマウス・タッチ移動でサイズ変更
     const handleResizerMove = (e) => {
-        if (isPinchZoom) return;
         e.preventDefault();
         if (resizingIndex === null || !isMouseDown) return;
         const { left, top, width: imageWidth, height: imageHeight } = imgRef.current.getBoundingClientRect();
