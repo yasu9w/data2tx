@@ -69,17 +69,28 @@ function UploadApp() {
     ////// 画像読み込みに関する処理
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    const adjustAnnotationsToImage = () => {
-        const { width, height } = imgRef.current.getBoundingClientRect();
-        setAnnotations((annotations) => annotations.map((ann) => ({
-            ...ann,
-            x: (ann.x / imageDimensions.width) * width,
-            y: (ann.y / imageDimensions.height) * height,
-            width: (ann.width / imageDimensions.width) * width,
-            height: (ann.height / imageDimensions.height) * height
-        })));
+    const updateAnnotationsWithScale = (scaleX, scaleY) => {
+        setAnnotations((annotations) =>
+            annotations.map((ann) => ({
+                ...ann,
+                x: ann.x * scaleX,
+                y: ann.y * scaleY,
+                width: ann.width * scaleX,
+                height: ann.height * scaleY,
+            }))
+        );
+    
+        setAnnotations_protected((annotations_protected) =>
+            annotations_protected.map((ann) => ({
+                ...ann,
+                x: ann.x * scaleX,
+                y: ann.y * scaleY,
+                width: ann.width * scaleX,
+                height: ann.height * scaleY,
+            }))
+        );
     };
-
+    
     const handleImage = async (event) => {
         const selectedImage = event.target.files[0];
         setImage(selectedImage);
@@ -705,15 +716,31 @@ function UploadApp() {
     }, []);
 
     useEffect(() => {
-        const handleResize = () => {
-            adjustAnnotationsToImage(); // 画像のリサイズ時にアノテーションを調整
-        };
-        window.addEventListener('resize', handleResize);
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, [imageDimensions]); // imageDimensions に依存
+        // imgRef.currentがまだ存在しない場合を防止
+        if (!imgRef.current) return;
+    
+        const { width: newWidth, height: newHeight } = imageDimensions;
+    
+        // 画像の元の幅と高さをEXIF情報から取得
+        const originalWidth = exifInfo.ExifImageWidth;
+        const originalHeight = exifInfo.ExifImageHeight;
+    
+        // 元の幅や高さが存在しない場合、スケーリングを行わない
+        if (originalWidth <= 0 || originalHeight <= 0) return;
+    
+        // スケールを計算
+        const scaleX = newWidth / originalWidth;
+        const scaleY = newHeight / originalHeight;
+    
+        // アノテーションをスケーリング
+        updateAnnotationsWithScale(scaleX, scaleY);
+    }, [imageDimensions]);
 
+    useEffect(() => {
+        if (!imgRef.current) return;
+        // imgRef.currentが正しく参照されている場合に処理を続行
+    }, [imageDimensions]);
+    
     /////////////////////////////////////////////////////////////
     ////// 追加済みBBOXのリサイズ　anntation protected
     /////////////////////////////////////////////////////////////
@@ -1707,16 +1734,7 @@ function UploadApp() {
                 {uploadedImage && checkDateTime(exifInfo.DateTimeOriginal) && checkLatitude(exifInfo.GPSLatitude) && checkLatitude(exifInfo.GPSLongitude) && (
                     <h2>STEP2: Annotation</h2>
                 )}
-                <div
-                    className="annotation-container"
-                    style={{ width: imageDimensions.width, height: imageDimensions.height }}
-                    onMouseDown={handleStart}
-                    onMouseMove={handleMove}
-                    onMouseUp={handleEnd}
-                    onTouchStart={handleStart}
-                    onTouchMove={handleMove}
-                    onTouchEnd={handleEnd}
-                >
+                <div className="image-container">
                     {uploadedImage && checkDateTime(exifInfo.DateTimeOriginal) && checkLatitude(exifInfo.GPSLatitude) && checkLatitude(exifInfo.GPSLongitude) && (
                         <img
                             ref={imgRef}
@@ -1753,7 +1771,7 @@ function UploadApp() {
                             }}
                         />
                     )}
-                </div><br />
+                </div>
 
                 <div>
                     {annotations[0] && (

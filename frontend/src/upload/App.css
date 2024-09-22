@@ -80,17 +80,13 @@ img {
 }
 
 .button {
-  touch-action: auto; /* ボタンはタッチ操作可能 */
+  touch-action: auto;
 }
 
-/* スマホ表示用のスタイル */
-@media (max-width: 768px) {
-  .App {
-    flex-direction: column;
-    width: 100%;
-  }
-  .App-header {
-    min-height: auto; /* スマホ表示時は高さを調整 */
-    padding: 10px;
-  }
+.image-container {
+  position: relative;
+  display: inline-block;
+  width: 100%; /* 画像のリサイズに追従 */
+  max-width: 720px; /* 必要に応じて画像の最大幅を設定 */
+  height: auto; /* 画像の高さは幅に合わせて自動調整 */
 }
