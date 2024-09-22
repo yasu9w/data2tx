@@ -323,86 +323,120 @@ function UploadApp() {
     ////// 新規BBOX追加　anntation
     /////////////////////////////////////////////////////////////
 
-    let isPinchZoom = false; // ピンチズームが有効かを判定するフラグ
+    // 初期フラグ設定
+    let isPinchZoom = false; // ピンチズームが有効かどうか
     let startX = 0; // タッチ開始時のX座標
     let startY = 0; // タッチ開始時のY座標
-    let isScrolling = false; // スクロール中かどうかのフラグ
-    let isCreatingAnnotation = false; // 枠の作成が開始されたかどうかのフラグ
-    let isMovingExistingAnnotation = false; // 既存枠の移動中かどうかのフラグ
+    let isScrolling = false; // スクロール中かどうか
+    let isCreatingAnnotation = false; // 新規枠作成中かどうか
+    let isMovingExistingAnnotation = false; // 既存枠を移動中かどうか
+    let isResizingAnnotation = false; // 既存枠をリサイズ中かどうか
     const MIN_MOVE_THRESHOLD = 30; // 枠作成を開始するための最小移動距離
 
     const handleTouchStart = (e) => {
         if (e.touches.length === 2) {
-            isPinchZoom = true; // 二本指の場合はピンチズームと判定
-            isCreatingAnnotation = false; // ピンチズームの場合は枠作成を無効化
+            // 二本指での操作はピンチズームとみなす
+            isPinchZoom = true;
+            isCreatingAnnotation = false;
+            isMovingExistingAnnotation = false;
+            isResizingAnnotation = false;
         } else if (e.touches.length === 1) {
             isPinchZoom = false;
-            isScrolling = false; // スクロールフラグをリセット
-            isCreatingAnnotation = false; // 枠作成フラグをリセット
-            isMovingExistingAnnotation = false; // リセット
-
-            // タッチ開始時の座標を記録
+            isScrolling = false;
+            isCreatingAnnotation = false;
+            isMovingExistingAnnotation = false;
+            isResizingAnnotation = false;
+    
+            // タッチ開始位置の記録
             startX = e.touches[0].clientX;
             startY = e.touches[0].clientY;
-
-            // 既存の枠を操作し始めたかをチェック
-            if (e.target.closest('.annotation')) {
-                isMovingExistingAnnotation = true; // 既存の枠の移動を開始
+    
+            // 既存の枠操作をチェック
+            const target = e.target.closest('.annotation');
+            if (target) {
+                if (e.target.closest('.resizer')) {
+                    // リサイザー部分をタッチした場合はリサイズ開始
+                    isResizingAnnotation = true;
+                    handleResizerStart(target.dataset.index, e);
+                } else {
+                    // 既存枠全体をタッチした場合は移動開始
+                    isMovingExistingAnnotation = true;
+                    handleAnnotationStart(target.dataset.index, e);
+                }
             }
         }
     };
+    
 
     const handleTouchMove = (e) => {
         if (isPinchZoom) {
-            return; // ピンチズーム操作中は他の処理を行わない
+            return; // ピンチズーム中は他の操作を無効化
         }
-
+    
         if (e.touches.length === 1) {
             const currentX = e.touches[0].clientX;
             const currentY = e.touches[0].clientY;
-
+    
             const diffX = Math.abs(currentX - startX); // X方向の移動距離
             const diffY = Math.abs(currentY - startY); // Y方向の移動距離
-
-            // 既存の枠を操作している場合
-            if (isMovingExistingAnnotation) {
-                e.preventDefault(); // スクロールを抑制
-                if (e.target.closest('.annotation')) {
-                    handleMove(e); // 既存枠の移動処理を実行
-                }
+    
+            // リサイズ中
+            if (isResizingAnnotation) {
+                e.preventDefault();
+                handleResizerMove(e); // リサイズ処理を実行
                 return;
             }
-
+    
+            // 既存枠を移動中
+            if (isMovingExistingAnnotation) {
+                e.preventDefault();
+                handleAnnotationMove(e); // 移動処理を実行
+                return;
+            }
+    
+            // 縦方向のスクロールを優先
+            if (diffY > diffX + MIN_MOVE_THRESHOLD) {
+                isScrolling = true;
+                return;
+            }
+    
+            // 新規枠作成開始判定
             if (!isCreatingAnnotation && diffX > MIN_MOVE_THRESHOLD && diffY > MIN_MOVE_THRESHOLD) {
-                // 最小移動距離を超えたら枠作成を開始
                 isCreatingAnnotation = true;
-                if (e.target.closest('.annotation, img')) {
-                    handleStart(e); // 枠の作成開始
+                if (e.target.closest('img')) {
+                    handleStart(e); // 新規枠作成開始
                 }
             }
-
+    
+            // 新規枠の作成
             if (isCreatingAnnotation) {
                 e.preventDefault(); // スクロールを抑制
-                if (e.target.closest('.annotation, img')) {
-                    handleMove(e); // 枠の移動処理を実行
+                if (e.target.closest('img')) {
+                    handleMove(e); // 新規枠の移動処理
                 }
             }
         }
     };
 
     const handleTouchEnd = (e) => {
-        if (isMovingExistingAnnotation && e.target.closest('.annotation')) {
-            handleEnd(e); // 既存枠の移動処理を完了
+        if (isResizingAnnotation) {
+            handleResizerEnd(); // リサイズ終了
         }
-        if (isCreatingAnnotation && e.target.closest('.annotation, img')) {
-            handleEnd(e); // 新規枠の作成を完了
+        if (isMovingExistingAnnotation) {
+            handleAnnotationEnd(); // 既存枠の移動終了
         }
-        if (e.touches.length < 2) {
-            isPinchZoom = false; // 指が一本以下になったらピンチズームを解除
+        if (isCreatingAnnotation && e.target.closest('img')) {
+            handleEnd(); // 新規枠の作成終了
         }
-        isCreatingAnnotation = false; // 新規枠作成フラグをリセット
-        isMovingExistingAnnotation = false; // 既存枠の移動フラグをリセット
+    
+        // フラグのリセット
+        isPinchZoom = false;
+        isScrolling = false;
+        isCreatingAnnotation = false;
+        isMovingExistingAnnotation = false;
+        isResizingAnnotation = false;
     };
+    
 
     // マウス・タッチ押下で新規BBOXを設置
     const handleStart = (e) => {
