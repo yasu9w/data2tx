@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react
 import DocsMain from './docs/App';
 import PurchaseMain from './purchase/App';
 import DownloadMain from './download/App';
-import UploadMainMobile from './uploadMobile/App';
+import UploadMobileMain from './uploadMobile/App';
 import SOL2WSOLMain from './sol2wsol/App';
 import logoImage from './images/logo.png'; 
 
