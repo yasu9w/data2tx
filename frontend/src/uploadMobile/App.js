@@ -166,12 +166,12 @@ function UploadMobileApp() {
                     let width, height;
                     if (this.width > this.height) {
                         const aspectRatio = this.width / this.height;
-                        width = 720;
-                        height = 720 / aspectRatio;
+                        width = 360; //PC:720 -> mobile:360
+                        height = 360 / aspectRatio; //PC:720 -> mobile:360
                     } else {
                         const aspectRatio = this.height / this.width;
-                        height = 720;
-                        width = 720 / aspectRatio;
+                        height = 360; //PC:720 -> mobile:360
+                        width = 360 / aspectRatio; //PC:720 -> mobile:360
                     }
                     setImageDimensions({ width, height });
                     setImageDimensionsProtected({ width, height });
@@ -1261,7 +1261,7 @@ function UploadMobileApp() {
         }
 
         try {
-            const resizedImage = await resizeAndAnnotateImage(image, 720, 720, annotations, annotations_protected);
+            const resizedImage = await resizeAndAnnotateImage(image, 360, 360, annotations, annotations_protected); //PC:720 -> mobile:360
             const resizedImageSmall = await resizeImage(resizedImage, 360, 360);
             await uploadResizedImageSmall(storageRefs.resizedImagesRefSmall, resizedImageSmall);
             setUploadingMessage("Upload thumbnail image completed.")
