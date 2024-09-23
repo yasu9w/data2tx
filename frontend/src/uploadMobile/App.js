@@ -17,13 +17,13 @@ import { sign } from 'tweetnacl';
 
 const DEBUG = true;
 
-const UploadMain = () => (
+const UploadMobileMain = () => (
     <WalletContextProvider>
-        <UploadApp />
+        <UploadMobileApp />
     </WalletContextProvider>
 )
 
-function UploadAppMobile() {
+function UploadMobileApp() {
 
     const { disconnect, publicKey } = useWallet();
 
@@ -2164,4 +2164,4 @@ function AnnotationProtected({
 }
 
 
-export default UploadMainMobile;
+export default UploadMobileMain;
