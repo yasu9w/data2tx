@@ -330,10 +330,6 @@ function UploadApp() {
     let isMovingExistingAnnotation = false; // 既存枠を移動中かどうか
     let isResizingAnnotation = false; // 既存枠をリサイズ中かどうか
 
-    // 現在の操作状態を記録する変数
-    let currentAnnotationStartX = 0;
-    let currentAnnotationStartY = 0;
-
     const handleTouchStart = (e) => {
         if (e.touches.length === 1) {
             isCreatingAnnotation = false;
@@ -448,6 +444,7 @@ function UploadApp() {
     ////// 新規BBOX追加　anntation protected
     /////////////////////////////////////////////////////////////
 
+    /*
     const handleMouseDown_protected = (e) => {
         const offsetX = e.nativeEvent.offsetX;
         const offsetY = e.nativeEvent.offsetY;
@@ -480,7 +477,121 @@ function UploadApp() {
         }
         setCurrentAnnotation_protected(null);
     };
+    */
+    // 初期フラグ設定
+    let startX_protected = 0; // タッチ開始時のX座標
+    let startY_protected = 0; // タッチ開始時のY座標
+    let isCreatingAnnotation_protected = false; // 新規枠作成中かどうか
+    let isMovingExistingAnnotation_protected = false; // 既存枠を移動中かどうか
+    let isResizingAnnotation_protected = false; // 既存枠をリサイズ中かどうか
 
+    const handleTouchStart_protected = (e) => {
+        if (e.touches.length === 1) {
+            isCreatingAnnotation_protected = false;
+            isMovingExistingAnnotation_protected = false;
+            isResizingAnnotation_protected = false;
+
+            // タッチ開始位置の記録
+            startX_protected = e.touches[0].clientX;
+            startY_protected = e.touches[0].clientY;
+
+            // 既存の枠操作をチェック
+            const target = e.target.closest('.annotation_protected');
+            if (target) {
+                if (e.target.closest('.resizer_protected')) {
+                    // リサイザー部分をタッチした場合はリサイズ開始
+                    isResizingAnnotation_protected = true;
+                    handleResizerStart_protected(target.dataset.index, e);
+                } else {
+                    // 既存枠全体をタッチした場合は移動開始
+                    isMovingExistingAnnotation_protected = true;
+                    handleAnnotationStart_protected(target.dataset.index, e);
+                }
+            }
+        }
+    };
+
+    const handleTouchMove_protected = (e) => {
+        if (e.touches.length === 1) {
+            // リサイズ中
+            if (isResizingAnnotation_protected) {
+                e.preventDefault();
+                handleResizerMove_protected(e); // リサイズ処理を実行
+                return;
+            }
+
+            // 既存枠を移動中
+            if (isMovingExistingAnnotation_protected) {
+                e.preventDefault();
+                handleAnnotationMove_protected(e); // 移動処理を実行
+                return;
+            }
+
+            // 新規枠の作成
+            if (isCreatingAnnotation_protected) {
+                e.preventDefault(); // スクロールを抑制
+                if (e.target.closest('img')) {
+                    handleMove_protected(e); // 新規枠の移動処理
+                }
+            }
+        }
+    };
+
+    const handleTouchEnd_protected = (e) => {
+        if (isResizingAnnotation_protected) {
+            handleResizerEnd_protected(); // リサイズ終了
+        }
+        if (isMovingExistingAnnotation_protected) {
+            handleAnnotationEnd_protected(); // 既存枠の移動終了
+        }
+        if (isCreatingAnnotation_protected && e.target.closest('img')) {
+            handleEnd_protected(); // 新規枠の作成終了
+        }
+
+        // フラグのリセット
+        isCreatingAnnotation_protected = false;
+        isMovingExistingAnnotation_protected = false;
+        isResizingAnnotation_protected = false;
+    };
+
+    // マウス・タッチ押下で新規BBOXを設置
+    const handleStart_protected = (e) => {
+        e.preventDefault();
+        const offsetX = e.clientX || e.touches[0].clientX;
+        const offsetY = e.clientY || e.touches[0].clientY;
+
+        const { left, top } = imgRef_protected.current.getBoundingClientRect();
+        setCurrentAnnotation_protected({ x: offsetX - left, y: offsetY - top, width: 0, height: 0 });
+    };
+
+    // マウス・タッチ押下状態で移動したらBBOXの大きさを更新
+    const handleMove_protected = (e) => {
+        e.preventDefault();
+        if (!currentAnnotation_protected) return;
+        const { left, top, width: imageWidth, height: imageHeight } = imgRef_protected.current.getBoundingClientRect();
+        const offsetX = (e.clientX || e.touches[0].clientX) - left;
+        const offsetY = (e.clientY || e.touches[0].clientY) - top;
+
+        const validX = Math.max(0, Math.min(offsetX, imageWidth));
+        const validY = Math.max(0, Math.min(offsetY, imageHeight));
+
+        setCurrentAnnotation_protected((prevAnnotation) => ({
+            ...prevAnnotation,
+            width: validX - prevAnnotation.x,
+            height: Math.floor(validY - prevAnnotation.y),
+        }));
+    };
+
+    // マウス・タッチ押下解除でBBOXを追加、currentAnnotationを初期化
+    const handleEnd_protected = () => {
+        if (currentAnnotation_protected) {
+            const { width, height } = currentAnnotation_protected;
+            if (width >= MIN_WIDTH && height >= MIN_HEIGHT) {
+                setAnnotations_protected((annotations_protected) => [...annotations_protected, { ...currentAnnotation_protected, text: '' }]);
+            }
+        }
+        setCurrentAnnotation_protected(null);
+    };
 
 
     /////////////////////////////////////////////////////////////
@@ -544,6 +655,7 @@ function UploadApp() {
         setAnnotations_protected(annotations_protected.map((ann, i) => i === index ? { ...ann, text } : ann));
     };
 
+    /*
     const handleAnnotationMouseDown_protected = (index, e) => {
         e.stopPropagation();
         const { left, top } = imgRef_protected.current.getBoundingClientRect();
@@ -573,8 +685,41 @@ function UploadApp() {
     const handleAnnotationMouseUp_protected = () => {
         setDraggingIndex_protected(null);
     };
+    */
+    // BBOXをマウス・タッチ押下で選択
+    const handleAnnotationStart_protected = (index, e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        const { left, top } = imgRef_protected.current.getBoundingClientRect();
+        const offsetX = (e.clientX || e.touches[0].clientX) + window.scrollX - left - annotations_protected[index].x;
+        const offsetY = (e.clientY || e.touches[0].clientY) + window.scrollY - top - annotations_protected[index].y;
+        setDraggingIndex_protected(index);
+        setDraggingOffset_protected({ x: offsetX, y: offsetY });
+    };
 
+    // BBOXをマウス・タッチ移動で更新
+    const handleAnnotationMove_protected = (e) => {
+        e.preventDefault();
+        if (draggingIndex_protected === null) return;
+        const { left, top, width: imageWidth, height: imageHeight } = imgRef_protected.current.getBoundingClientRect();
+        const offsetX = (e.clientX || e.touches[0].clientX) + window.scrollX - left - draggingOffset_protected.x;
+        const offsetY = (e.clientY || e.touches[0].clientY) + window.scrollY - top - draggingOffset_protected.y;
 
+        const annotation_protected = annotations_protected[draggingIndex_protected];
+        const validX = Math.floor(Math.max(0, Math.min(offsetX, imageWidth - annotation_protected.width)));
+        const validY = Math.floor(Math.max(0, Math.min(offsetY, imageHeight - annotation_protected.height)));
+
+        setAnnotations_protected(annotations_protected.map((ann, i) => i === draggingIndex_protected ? {
+            ...ann,
+            x: validX,
+            y: validY
+        } : ann));
+    };
+
+    // マウス・タッチ押下解除で選択解除
+    const handleAnnotationEnd_protected = () => {
+        setDraggingIndex_protected(null);
+    };
 
     /////////////////////////////////////////////////////////////
     ////// 追加済みBBOXのリサイズ　anntation
@@ -652,7 +797,7 @@ function UploadApp() {
     /////////////////////////////////////////////////////////////
     ////// 追加済みBBOXのリサイズ　anntation protected
     /////////////////////////////////////////////////////////////
-
+    /*
     const handleResizerMouseDown_protected = (index, e) => {
         e.stopPropagation();
         setResizingIndex_protected(index);
@@ -678,7 +823,42 @@ function UploadApp() {
         setResizingIndex_protected(null);
         setIsMouseDown_protected(false);
     };
+    */
+    // リサイザーをマウス・タッチ押下で選択
+    const handleResizerStart_protected = (index, e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        setResizingIndex_protected(index);
+        setIsMouseDown_protected(true);
+    };
 
+    // リサイザーをマウス・タッチ移動でサイズ変更
+    const handleResizerMove_protected = (e) => {
+        e.preventDefault();
+        if (resizingIndex_protected === null || !isMouseDown_protected) return;
+        const { left, top, width: imageWidth, height: imageHeight } = imgRef_protected.current.getBoundingClientRect();
+        const offsetX = (e.clientX || e.touches[0].clientX) - left;
+        const offsetY = (e.clientY || e.touches[0].clientY) - top;
+        const maxWidth = imageWidth - annotations_protected[resizingIndex_protected].x;
+        const maxHeight = imageHeight - annotations_protected[resizingIndex_protected].y;
+
+        const newWidth = Math.floor(Math.min(maxWidth, Math.max(0, offsetX - annotations_protected[resizingIndex_protected].x)));
+        const newHeight = Math.floor(Math.min(maxHeight, Math.max(0, offsetY - annotations_protected[resizingIndex_protected].y)));
+
+        setAnnotations_protected(annotations_protected.map((ann, i) => i === resizingIndex_protected ? {
+            ...ann,
+            width: newWidth,
+            height: newHeight
+        } : ann));
+    };
+
+    // マウス・タッチ押下解除で選択解除
+    const handleResizerEnd_protected = () => {
+        setResizingIndex_protected(null);
+        setIsMouseDown_protected(false);
+    };
+
+    /*
     useEffect(() => {
 
         const handleTouchMove_protected = (event) => {
@@ -709,8 +889,42 @@ function UploadApp() {
             window.removeEventListener('touchend', handleTouchEnd_protected);
         };
     }, [isMouseDown_protected]);
+    */
 
+    // リサイザー処理で設定したisMouseDownに応じて、リスナー
+    useEffect(() => {
+        if (isMouseDown_protected) {
+            window.addEventListener('mousemove', handleResizerMove_protected);
+            window.addEventListener('mouseup', handleResizerEnd_protected);
+            window.addEventListener('touchmove', handleResizerMove_protected, { passive: false });
+            window.addEventListener('touchend', handleResizerEnd_protected);
+        } else {
+            window.removeEventListener('mousemove', handleResizerMove_protected);
+            window.removeEventListener('mouseup', handleResizerEnd_protected);
+            window.removeEventListener('touchmove', handleResizerMove_protected);
+            window.removeEventListener('touchend', handleResizerEnd_protected);
+        }
 
+        return () => {
+            window.removeEventListener('mousemove', handleResizerMove_protected);
+            window.removeEventListener('mouseup', handleResizerEnd_protected);
+            window.removeEventListener('touchmove', handleResizerMove_protected);
+            window.removeEventListener('touchend', handleResizerEnd_protected);
+        };
+    }, [isMouseDown_protected]);
+
+    // タッチイベント用のuseEffect
+    useEffect(() => {
+        window.addEventListener('touchstart', handleTouchStart_protected, { passive: false });
+        window.addEventListener('touchmove', handleTouchMove_protected, { passive: false });
+        window.addEventListener('touchend', handleTouchEnd_protected, { passive: false });
+
+        return () => {
+            window.removeEventListener('touchstart', handleTouchStart_protected);
+            window.removeEventListener('touchmove', handleTouchMove_protected);
+            window.removeEventListener('touchend', handleTouchEnd_protected);
+        };
+    }, []);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////// sign、uploadに関する処理
@@ -1719,10 +1933,21 @@ function UploadApp() {
                     <h2>STEP3: Annotation (Subjects to be protected)</h2>
                 )}
                 <div
-                    style={{ position: 'relative', display: 'inline-block' }}
-                    onMouseDown={handleMouseDown_protected}
-                    onMouseMove={handleMouseMove_protected}
-                    onMouseUp={handleMouseUp_protected}
+                    style={{
+                        position: 'relative',
+                        display: 'flex', // 中央揃えのためにflexを使用
+                        justifyContent: 'center', // 水平方向に中央揃え
+                        alignItems: 'center', // 垂直方向に中央揃え
+                        width: '100%', // 親要素の幅を100%に設定
+                        maxWidth: '100vw', // ビューポートの幅を超えないように設定
+                        overflow: 'hidden' // 画像がはみ出さないようにする
+                    }}
+                    onMouseDown={handleStart_protected}
+                    onMouseMove={handleMove_protected}
+                    onMouseUp={handleEnd_protected}
+                    onTouchStart={handleStart_protected}
+                    onTouchMove={handleMove_protected}
+                    onTouchEnd={handleEnd_protected}
                 >
                     {uploadedImage && checkDateTime(exifInfo.DateTimeOriginal) && checkLatitude(exifInfo.GPSLatitude) && checkLatitude(exifInfo.GPSLongitude) && (
                         <img
@@ -1730,7 +1955,12 @@ function UploadApp() {
                             src={uploadedImage}
                             alt=""
                             draggable="false"
-                            style={{ width: imageDimensionsProtected.width, height: imageDimensionsProtected.height }}
+                            style={{
+                                width: '100%',
+                                maxWidth: '720px',
+                                height: 'auto',
+                                objectFit: 'contain'
+                            }}
                         />
                     )}
                     {annotations_protected.map((ann, index) => (
@@ -1739,10 +1969,14 @@ function UploadApp() {
                             annotation={ann}
                             onDelete={() => deleteAnnotation_protected(index)}
                             onUpdateText={(text) => updateAnnotationText_protected(index, text)}
-                            onMouseDown={(e) => handleAnnotationMouseDown_protected(index, e)}
-                            onMouseMove={handleAnnotationMouseMove_protected}
-                            onMouseUp={handleAnnotationMouseUp_protected}
-                            onResizerMouseDown={(e) => handleResizerMouseDown_protected(index, e)}
+                            onMouseDown={(e) => handleAnnotationStart_protected(index, e)}
+                            onMouseMove={handleAnnotationMove_protected}
+                            onMouseUp={handleAnnotationEnd_protected}
+                            onTouchStart={(e) => handleAnnotationStart_protected(index, e)} // 追加
+                            onTouchMove={handleAnnotationMove_protected} // 追加
+                            onTouchEnd={handleAnnotationEnd_protected} // 追加
+                            onResizerMouseDown={(e) => handleResizerStart_protected(index, e)}
+                            onResizerTouchStart={(e) => handleResizerStart_protected(index, e)} // 追加
                         />
                     ))}
                     {currentAnnotation_protected && (
@@ -1878,10 +2112,14 @@ function AnnotationProtected({ annotation, onDelete, onUpdateText, onMouseDown, 
             onMouseDown={onMouseDown}
             onMouseMove={onMouseMove}
             onMouseUp={onMouseUp}
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
         >
             <button
                 style={{ position: 'absolute', right: -10, top: -10 }}
                 onMouseDown={handleClick}
+                onTouchStart={handleClick} // 追加
             >
                 X
             </button>
@@ -1890,6 +2128,7 @@ function AnnotationProtected({ annotation, onDelete, onUpdateText, onMouseDown, 
                 value={annotation.text}
                 onChange={handleTextChange}
                 onMouseDown={handleTextMouseDown}
+                onTouchStart={handleTextMouseDown} // 追加
                 style={{
                     position: 'absolute',
                     bottom: -20,
@@ -1906,6 +2145,7 @@ function AnnotationProtected({ annotation, onDelete, onUpdateText, onMouseDown, 
                     cursor: 'se-resize'
                 }}
                 onMouseDown={onResizerMouseDown}
+                onTouchStart={onResizerTouchStart} // 追加
             />
         </div>
     );
