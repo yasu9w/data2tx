@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import DocsMain from './docs/App';
 import PurchaseMain from './purchase/App';
 import DownloadMain from './download/App';
