@@ -22,11 +22,6 @@ function Navigation() {
         <div style={styles.container}>
             <div style={styles.content}>
                 <img src={logoImage} alt="logo" style={styles.image} />
-                {isMobile && (
-                    <p style={styles.warningMessage}>
-                        Note: Some features are limited on mobile devices.
-                    </p>
-                )}
             </div>
             <nav style={styles.nav}>
                 <ul style={styles.ul}>
