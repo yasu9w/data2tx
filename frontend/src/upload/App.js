@@ -2086,7 +2086,19 @@ function Annotation({ annotation, onDelete, onUpdateText, onMouseDown, onMouseMo
     );
 }
 
-function AnnotationProtected({ annotation, onDelete, onUpdateText, onMouseDown, onMouseMove, onMouseUp, onResizerMouseDown }) {
+function AnnotationProtected({ 
+    annotation, 
+    onDelete, 
+    onUpdateText, 
+    onMouseDown, 
+    onMouseMove, 
+    onMouseUp, 
+    onTouchStart, // 追加
+    onTouchMove, // 追加
+    onTouchEnd, // 追加
+    onResizerMouseDown, 
+    onResizerTouchStart // 追加 
+}) {
     const handleClick = (e) => {
         e.stopPropagation();
         onDelete();
@@ -2112,9 +2124,9 @@ function AnnotationProtected({ annotation, onDelete, onUpdateText, onMouseDown, 
             onMouseDown={onMouseDown}
             onMouseMove={onMouseMove}
             onMouseUp={onMouseUp}
-            onTouchStart={onTouchStart}
-            onTouchMove={onTouchMove}
-            onTouchEnd={onTouchEnd}
+            onTouchStart={onTouchStart} // 追加
+            onTouchMove={onTouchMove} // 追加
+            onTouchEnd={onTouchEnd} // 追加
         >
             <button
                 style={{ position: 'absolute', right: -10, top: -10 }}
