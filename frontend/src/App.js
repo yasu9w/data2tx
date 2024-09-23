@@ -33,7 +33,7 @@ function Navigation() {
                         <Link to="/docs" style={styles.link}>Docs</Link>
                     </li>
                     <li style={styles.li}>
-                        <Link to="/upload" style={isMobile ? styles.disabledLink : styles.link}>UploadMainMobile</Link>
+                        <Link to="/upload" style={isMobile ? styles.disabledLink : styles.link}>Upload Mobile</Link>
                     </li>
                     <li style={styles.li}>
                         <Link to="/purchase" style={isMobile ? styles.disabledLink : styles.link}>Purchase</Link>
@@ -71,7 +71,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<><Navigation /><Footer /></>} />
                     <Route path="/docs/*" element={<DocsMain />} />
-                    <Route path="/upload" element={<UploadMainMobile />} />
+                    <Route path="/upload" element={<UploadMobileMain />} />
                     <Route path="/purchase" element={<PurchaseMain />} />
                     <Route path="/download" element={<DownloadMain />} />
                     <Route path="/sol2wsol" element={<SOL2WSOLMain />} />

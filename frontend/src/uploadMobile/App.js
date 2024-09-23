@@ -1857,15 +1857,7 @@ function UploadMobileApp() {
                     <h2>STEP2: Annotation</h2>
                 )}
                 <div
-                    style={{
-                        position: 'relative',
-                        display: 'flex', // 中央揃えのためにflexを使用
-                        justifyContent: 'center', // 水平方向に中央揃え
-                        alignItems: 'center', // 垂直方向に中央揃え
-                        width: '100%', // 親要素の幅を100%に設定
-                        maxWidth: '100vw', // ビューポートの幅を超えないように設定
-                        overflow: 'hidden' // 画像がはみ出さないようにする
-                    }}
+                    style={{ position: 'relative', display: 'inline-block' }}
                     onMouseDown={handleStart}
                     onMouseMove={handleMove}
                     onMouseUp={handleEnd}
@@ -1879,12 +1871,7 @@ function UploadMobileApp() {
                             src={uploadedImage}
                             alt=""
                             draggable="false"
-                            style={{
-                                width: '100%', // 画像の幅を親要素に合わせる
-                                maxWidth: '720px', // 最大幅を設定
-                                height: 'auto', // 高さを自動調整
-                                objectFit: 'contain' // 画像の比率を保って表示
-                            }}
+                            style={{ width: imageDimensions.width, height: imageDimensions.height }}
                         />
                     )}
                     {annotations.map((ann, index) => (
@@ -1933,15 +1920,7 @@ function UploadMobileApp() {
                     <h2>STEP3: Annotation (Subjects to be protected)</h2>
                 )}
                 <div
-                    style={{
-                        position: 'relative',
-                        display: 'flex', // 中央揃えのためにflexを使用
-                        justifyContent: 'center', // 水平方向に中央揃え
-                        alignItems: 'center', // 垂直方向に中央揃え
-                        width: '100%', // 親要素の幅を100%に設定
-                        maxWidth: '100vw', // ビューポートの幅を超えないように設定
-                        overflow: 'hidden' // 画像がはみ出さないようにする
-                    }}
+                    style={{ position: 'relative', display: 'inline-block' }}
                     onMouseDown={handleStart_protected}
                     onMouseMove={handleMove_protected}
                     onMouseUp={handleEnd_protected}
@@ -1955,12 +1934,7 @@ function UploadMobileApp() {
                             src={uploadedImage}
                             alt=""
                             draggable="false"
-                            style={{
-                                width: '100%',
-                                maxWidth: '720px',
-                                height: 'auto',
-                                objectFit: 'contain'
-                            }}
+                            style={{ width: imageDimensions.width, height: imageDimensions.height }}
                         />
                     )}
                     {annotations_protected.map((ann, index) => (
