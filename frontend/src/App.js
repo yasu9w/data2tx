@@ -8,6 +8,7 @@ import UploadMain from './upload/App'; // PC用のアップロードコンポー
 import SOL2WSOLMain from './sol2wsol/App';
 import logoImage from './images/logo.png'; 
 
+//test
 function Navigation() {
     const location = useLocation();
 
