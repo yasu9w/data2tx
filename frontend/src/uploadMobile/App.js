@@ -23,7 +23,7 @@ const UploadMain = () => (
     </WalletContextProvider>
 )
 
-function UploadApp() {
+function UploadAppMobile() {
 
     const { disconnect, publicKey } = useWallet();
 
@@ -2164,4 +2164,4 @@ function AnnotationProtected({
 }
 
 
-export default UploadMain;
+export default UploadMainMobile;

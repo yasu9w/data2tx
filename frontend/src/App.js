@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react
 import DocsMain from './docs/App';
 import PurchaseMain from './purchase/App';
 import DownloadMain from './download/App';
-import UploadMain from './upload/App';
+import UploadMainMobile from './uploadMobile/App';
 import SOL2WSOLMain from './sol2wsol/App';
 import logoImage from './images/logo.png'; 
 
@@ -33,7 +33,7 @@ function Navigation() {
                         <Link to="/docs" style={styles.link}>Docs</Link>
                     </li>
                     <li style={styles.li}>
-                        <Link to="/upload" style={isMobile ? styles.disabledLink : styles.link}>Upload</Link>
+                        <Link to="/upload" style={isMobile ? styles.disabledLink : styles.link}>UploadMainMobile</Link>
                     </li>
                     <li style={styles.li}>
                         <Link to="/purchase" style={isMobile ? styles.disabledLink : styles.link}>Purchase</Link>
@@ -71,7 +71,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<><Navigation /><Footer /></>} />
                     <Route path="/docs/*" element={<DocsMain />} />
-                    <Route path="/upload" element={<UploadMain />} />
+                    <Route path="/upload" element={<UploadMainMobile />} />
                     <Route path="/purchase" element={<PurchaseMain />} />
                     <Route path="/download" element={<DownloadMain />} />
                     <Route path="/sol2wsol" element={<SOL2WSOLMain />} />
