@@ -1998,7 +1998,7 @@ function UploadApp() {
                     {annotations_protected[0] && (
                         <h3>Results</h3>
                     )}
-                    {annotations.map((annotation, index) => (
+                    {annotations_protected.map((annotation, index) => (
                         <div key={index}>
                             <p>Idx: {index + 1}, x: {annotation.x}, y: {annotation.y}, width: {annotation.width}, height: {annotation.height}, text: {annotation.text}</p>
                             {annotation.text === "" && <p style={{ color: 'red' }}>Error: Text is empty.</p>}
