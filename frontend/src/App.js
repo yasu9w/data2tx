@@ -33,15 +33,19 @@ function Navigation() {
                             {isMobile ? "Upload Mobile" : "Upload"} {/* モバイルとPCでテキストを変更 */}
                         </Link>
                     </li>
-                    <li style={styles.li}>
-                        <Link to="/purchase" style={styles.link}>Purchase</Link>
-                    </li>
-                    <li style={styles.li}>
-                        <Link to="/download" style={styles.link}>Download</Link>
-                    </li>
-                    <li style={styles.li}>
-                        <Link to="/sol2wsol" style={styles.link}>SOL2WSOL</Link>
-                    </li>
+                    {!isMobile && (
+                        <>
+                            <li style={styles.li}>
+                                <Link to="/purchase" style={styles.link}>Purchase</Link>
+                            </li>
+                            <li style={styles.li}>
+                                <Link to="/download" style={styles.link}>Download</Link>
+                            </li>
+                            <li style={styles.li}>
+                                <Link to="/sol2wsol" style={styles.link}>SOL2WSOL</Link>
+                            </li>
+                        </>
+                    )}
                 </ul>
             </nav>
         </div>
