@@ -25,9 +25,9 @@ function Navigation() {
             </div>
             <nav style={styles.nav}>
                 <ul style={styles.ul}>
-                    <li style={styles.li}>
+                    {/* <li style={styles.li}>
                         <Link to="/docs" style={styles.link}>Docs</Link>
-                    </li>
+                    </li>　*/}
                     <li style={styles.li}>
                         <Link to="/upload" style={styles.link}>
                             {isMobile ? "Upload Mobile" : "Upload"} {/* モバイルとPCでテキストを変更 */}
@@ -70,14 +70,18 @@ function App() {
             <div style={styles.appContainer}>
                 <Routes>
                     <Route path="/" element={<><Navigation /><Footer /></>} />
-                    <Route path="/docs/*" element={<DocsMain />} />
+                    {/* <Route path="/docs/*" element={<DocsMain />} />　*/}
                     <Route 
                         path="/upload" 
                         element={isMobile ? <UploadMobileMain /> : <UploadMain />} // モバイルとPCで表示コンポーネントを切り替え
                     />
-                    <Route path="/purchase" element={<PurchaseMain />} />
-                    <Route path="/download" element={<DownloadMain />} />
-                    <Route path="/sol2wsol" element={<SOL2WSOLMain />} />
+                    {!isMobile && (
+                        <>
+                            <Route path="/purchase" element={<PurchaseMain />} />
+                            <Route path="/download" element={<DownloadMain />} />
+                            <Route path="/sol2wsol" element={<SOL2WSOLMain />} />
+                        </>
+                    )}
                 </Routes>
             </div>
         </Router>
