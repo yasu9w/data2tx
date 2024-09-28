@@ -89,6 +89,7 @@ const styles = {
         display: 'flex',
         flexDirection: 'column',
         minHeight: '100vh',
+        backgroundColor: '#ffffff', // 背景を白に設定
     },
     container: {
         flex: '1',
