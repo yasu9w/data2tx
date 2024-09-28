@@ -225,15 +225,7 @@ function DownloadApp() {
                         marginBottom: '100px', 
                         gap: '20px' // 要素間のスペースを追加
                     }}>
-                        <button onClick={() => downloadFiles(results)} disabled>Download All (Disabled in Demo)</button>
-                        <p style={{
-                            color: 'red',
-                            wordWrap: 'break-word', // テキストを折り返す
-                            overflowWrap: 'break-word', // テキストを折り返す
-                            wordBreak: 'break-all', // 長い単語を途中で折り返す
-                            whiteSpace: 'normal' // テキストの改行を有効にする
-                        }}>* The "Download All" button is disabled in the demo version.</p>
-                        <div style={{ marginBottom: '10px' }}></div>
+                        <button onClick={() => downloadFiles(results)}>Download All (Disabled in Demo)</button>
 
                         <span><strong>Purchase Date / Filename / Image / Json </strong></span>
                         {results.map((result, index) => (
