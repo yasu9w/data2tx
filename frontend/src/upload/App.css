@@ -77,3 +77,11 @@ body {
 input, textarea {
   font-size: 16px; /* フォントサイズを16px以上に設定してズームを防止 */
 }
+
+.main-content {
+  width: 100%; /* 幅を画面いっぱいに設定 */
+  max-width: 100%; /* 最大幅を100%に設定 */
+  margin: 0 auto; /* 自動的に中央揃え */
+  padding: 0 20px; /* 左右に余白を設定 */
+  box-sizing: border-box; /* パディングとボーダーを含める */
+}
