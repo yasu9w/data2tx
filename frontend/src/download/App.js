@@ -225,7 +225,7 @@ function DownloadApp() {
                         marginBottom: '100px', 
                         gap: '20px' // 要素間のスペースを追加
                     }}>
-                        <button onClick={() => downloadFiles(results)}>Download All (Disabled in Demo)</button>
+                        <button onClick={() => downloadFiles(results)}>Download All</button>
 
                         <span><strong>Purchase Date / Filename / Image / Json </strong></span>
                         {results.map((result, index) => (
