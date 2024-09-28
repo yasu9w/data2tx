@@ -165,7 +165,11 @@ function DownloadApp() {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: '20px' // 要素間のスペースを追加
+                gap: '20px',
+                wordWrap: 'break-word', // 全体のテキスト折り返しを有効にする
+                overflowWrap: 'break-word', // テキスト折り返しを有効にする
+                wordBreak: 'break-all', // 長い単語を途中で折り返す
+                whiteSpace: 'normal' // テキストの改行を有効にする
             }}>
 
                 {!publicKey &&
@@ -222,17 +226,25 @@ function DownloadApp() {
                         gap: '20px' // 要素間のスペースを追加
                     }}>
                         <button onClick={() => downloadFiles(results)} disabled>Download All (Disabled in Demo)</button>
-                        <p style={{ color: 'red' }}>* The "Download All" button is disabled in the demo version.</p>
+                        <p style={{
+                            color: 'red',
+                            wordWrap: 'break-word', // テキストを折り返す
+                            overflowWrap: 'break-word', // テキストを折り返す
+                            wordBreak: 'break-all', // 長い単語を途中で折り返す
+                            whiteSpace: 'normal' // テキストの改行を有効にする
+                        }}>* The "Download All" button is disabled in the demo version.</p>
                         <div style={{ marginBottom: '10px' }}></div>
 
                         <span><strong>Purchase Date / Filename / Image / Json </strong></span>
-
                         {results.map((result, index) => (
                             result && result.url && result.urlJson ? (
                                 <div key={index} style={{ 
                                     display: 'flex', 
                                     alignItems: 'center',
-                                    flexWrap: 'wrap' // Flexコンテナ内のアイテムを折り返す
+                                    flexWrap: 'wrap', // Flexコンテナ内のアイテムを折り返す
+                                    wordBreak: 'break-all', // 長い単語を途中で折り返す
+                                    overflowWrap: 'break-word', // テキストを折り返す
+                                    whiteSpace: 'normal' // テキストの改行を有効にする
                                 }}>
                                     <span style={{ 
                                         width: '100px', 
@@ -247,8 +259,24 @@ function DownloadApp() {
                                         wordBreak: 'break-all', // 長い単語を途中で折り返す
                                         maxWidth: '300px' // 必要に応じて適切な幅を設定
                                     }}><strong>{result.filename}</strong></span>
-                                    <span style={{ marginLeft: '10px' }}><a href={result.url} target="_blank" rel="noopener noreferrer">image</a></span>
-                                    <span style={{ marginLeft: '10px' }}><a href={result.urlJson} target="_blank" rel="noopener noreferrer">json</a></span>
+                                    <span style={{ 
+                                        marginLeft: '10px',
+                                        maxWidth: '100px', // 適切な幅を設定
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                        whiteSpace: 'nowrap' // テキストの折り返しを防止
+                                    }}>
+                                        <a href={result.url} target="_blank" rel="noopener noreferrer">image</a>
+                                    </span>
+                                    <span style={{ 
+                                        marginLeft: '10px',
+                                        maxWidth: '100px', // 適切な幅を設定
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                        whiteSpace: 'nowrap' // テキストの折り返しを防止
+                                    }}>
+                                        <a href={result.urlJson} target="_blank" rel="noopener noreferrer">json</a>
+                                    </span>
                                 </div>
                             ) : null
                         ))}
