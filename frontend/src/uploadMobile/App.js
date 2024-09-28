@@ -1547,7 +1547,7 @@ function UploadMobileApp() {
     };
 
     const Header = React.memo(() => {
-
+        // ここではすべてモバイルとして想定しているので `isMobile` は不要です。
         return (
             <div style={{
                 position: 'fixed',
@@ -1566,7 +1566,11 @@ function UploadMobileApp() {
                     maxWidth: '1200px',
                     margin: '0 auto'
                 }}>
-                    <h1 style={{ textTransform: 'uppercase', margin: 0 }}>
+                    <h1 style={{ 
+                        textTransform: 'uppercase', 
+                        margin: 0,
+                        fontSize: '16px' // モバイル用のフォントサイズを設定
+                    }}>
                         UPLOAD PAGE
                     </h1>
                     <div>
