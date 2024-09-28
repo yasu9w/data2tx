@@ -20,6 +20,8 @@ if (!firebase.apps.length) {
 }
 
 var db_obj = firebase.firestore();
+var storageBucket_preview = firebase.app().storage(process.env.REACT_APP_STORAGE_BUCKET_PREVIEW);
 
 export default firebase;
 export const db = db_obj;
+export const storage_preview = storageBucket_preview;
