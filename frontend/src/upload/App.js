@@ -1474,16 +1474,7 @@ function UploadApp() {
 
 
     return (
-        <div style={{
-            padding: '20px',
-            width: '100%',
-            margin: '0 auto',
-            marginTop: '60px', // ヘッダーの高さ分の余白を確保
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '20px' // 要素間のスペースを追加
-        }}>
+        <div>
 
             <Overlay />
             <Header />

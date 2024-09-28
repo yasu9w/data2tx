@@ -73,7 +73,3 @@ body {
   -ms-user-select: none; /* IE 10+ 用 */
   user-select: none; /* 標準プロパティ */
 }
-
-input, textarea {
-  font-size: 16px; /* フォントサイズを16px以上に設定してズームを防止 */
-}
