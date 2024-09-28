@@ -3,24 +3,14 @@ import "firebase/compat/auth";
 import "firebase/compat/storage";
 import "firebase/compat/firestore";
 
-//export const firebaseConfig = {
-//    apiKey: "AIzaSyDdU1xPtz5HXh -Be_5lzZYAzSvrX3q3FZw", //process.env.API_KEY,
-//    authDomain: "aifoods-f8902.firebaseapp.com", //process.env.AUTH_DOMAIN,
-//    projectId: "aifoods-f8902", //process.env.PROJECT_ID,
-//    storageBucket: "aifoods-f8902.appspot.com", //process.env.STORAGE_BUCKET,
-//    messagingSenderId: "443980374690", //process.env.MESSAGING_SENDER_ID,
-//    appId: "1:443980374690:web:42d279f5c40b1c6198edfb", //process.env.APP_ID,
-//    measurementId: "G-3K0704R9X8", //process.env.MEASUREMENT_ID,
-//};
-
 export const firebaseConfig = {
-    apiKey: "AIzaSyDIT3jFmwd9nJemQEPkoQGyMa4HxWUBv5w",
-    authDomain: "aifoods3.firebaseapp.com",
-    projectId: "aifoods3",
-    storageBucket: "aifoods3.appspot.com",
-    messagingSenderId: "413794843993",
-    appId: "1:413794843993:web:61532b845f91195932e048",
-    measurementId: "G-DK4YBM24EL"
+    apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+    authDomain: process.env.REACT_APP_AUTHDOMAIN,
+    projectId: process.env.REACT_APP_PROJECT_ID,
+    storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+    messagingSenderId: process.env.REACT_APP_MESSAGEING_SENDER_ID,
+    appId: process.env.REACT_APP_APP_ID,
+    measurementId: process.env.REACT_APP_MEASUREMENT_ID
 };
 
 if (!firebase.apps.length) {
