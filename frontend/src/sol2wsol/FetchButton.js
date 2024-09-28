@@ -1,5 +1,4 @@
 ﻿import React from 'react';
-import { storage_preview } from "./firebase";
 
 //import * as geofire from 'geofire-common';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
