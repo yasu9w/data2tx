@@ -229,9 +229,24 @@ function DownloadApp() {
 
                         {results.map((result, index) => (
                             result && result.url && result.urlJson ? (
-                                <div key={index} style={{ display: 'flex', alignItems: 'center'}}>
-                                    <span style={{ width: '100px', display: 'inline-block', overflow: 'hidden', textOverflow: 'ellipsis' }}>{result.date1}</span>
-                                    <span style={{ marginLeft: '10px' }}><strong>{result.filename}</strong></span>
+                                <div key={index} style={{ 
+                                    display: 'flex', 
+                                    alignItems: 'center',
+                                    flexWrap: 'wrap' // Flexコンテナ内のアイテムを折り返す
+                                }}>
+                                    <span style={{ 
+                                        width: '100px', 
+                                        display: 'inline-block', 
+                                        overflow: 'hidden', 
+                                        textOverflow: 'ellipsis',
+                                        whiteSpace: 'nowrap' // テキストの折り返しを防止（必要に応じて削除）
+                                    }}>{result.date1}</span>
+                                    <span style={{ 
+                                        marginLeft: '10px',
+                                        overflowWrap: 'break-word', // テキストを単語ごとに折り返す
+                                        wordBreak: 'break-all', // 長い単語を途中で折り返す
+                                        maxWidth: '300px' // 必要に応じて適切な幅を設定
+                                    }}><strong>{result.filename}</strong></span>
                                     <span style={{ marginLeft: '10px' }}><a href={result.url} target="_blank" rel="noopener noreferrer">image</a></span>
                                     <span style={{ marginLeft: '10px' }}><a href={result.urlJson} target="_blank" rel="noopener noreferrer">json</a></span>
                                 </div>
