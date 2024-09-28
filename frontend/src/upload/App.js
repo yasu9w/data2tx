@@ -1474,7 +1474,7 @@ function UploadApp() {
 
 
     return (
-        <div>
+        <div className="main-content">
 
             <Overlay />
             <Header />
