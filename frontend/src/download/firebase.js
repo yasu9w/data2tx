@@ -19,15 +19,7 @@ if (!firebase.apps.length) {
     firebase.app();
 }
 
-//var auth_obj = firebase.auth();
-//var storage_obj = firebase.storage();
 var db_obj = firebase.firestore();
-var storageBucket_original = firebase.app().storage("gs://aifoods-original");
-var storageBucket_preview = firebase.app().storage("gs://aifoods-preview");
 
 export default firebase;
-//export const auth = auth_obj;
-//export const storage = storage_obj;
 export const db = db_obj;
-export const storage_original = storageBucket_original;
-export const storage_preview = storageBucket_preview;
