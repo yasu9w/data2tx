@@ -1474,7 +1474,7 @@ function UploadApp() {
 
 
     return (
-        <div className="main-content">
+        <div>
 
             <Overlay />
             <Header />
@@ -1482,7 +1482,7 @@ function UploadApp() {
 
             <div style={{
                 padding: '20px',
-                maxWidth: '1200px',
+                width: '100%',
                 margin: '0 auto',
                 marginTop: '60px', // ヘッダーの高さ分の余白を確保
                 display: 'flex',
