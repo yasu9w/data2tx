@@ -1862,7 +1862,7 @@ function UploadMobileApp() {
                 <div>
                     <h2>STEP1: Load Image</h2>
                     <p style={{ color: 'red', fontSize: '14px' }}>
-                        Only images taken with GPS ON can be loaded.
+                        To load an image, it must include GPS data.
                     </p>
                     <div>
                         <form>
@@ -1879,8 +1879,7 @@ function UploadMobileApp() {
                     <>
                     <h2>STEP2: Annotation</h2>
                     <p style={{ color: 'red', fontSize: '14px' }}>
-                        Tap the top left of the object area and drag to the bottom right to create a box. Enter a description in the text box.
-                        The upload button will appear when at least one box and its corresponding text are entered.
+                        Touch the image, drag to the bottom right to create a box, and enter text.
                     </p>
                     </>
                 )}
