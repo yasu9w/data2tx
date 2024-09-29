@@ -2049,7 +2049,9 @@ function Annotation({ annotation, onDelete, onUpdateText, onMouseDown, onMouseMo
                 style={{
                     position: 'absolute',
                     bottom: -20,
-                    width: `${Math.max(100, annotation.text.length * 8)}px` // テキストの長さに基づいて幅を調整します。
+                    width: `${Math.max(100, annotation.text.length * 8)}px`, // テキストの長さに基づいて幅を調整します。
+                    fontSize: '16px', // フォントサイズを16pxに設定
+                    zIndex: 1 // リサイズエリアの後ろに配置
                 }}
             />
             <div
