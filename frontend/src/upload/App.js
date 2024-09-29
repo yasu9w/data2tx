@@ -1568,6 +1568,7 @@ function UploadApp() {
                     ))}
                 </div>
 
+                {/*
                 {uploadedImage && checkDateTime(exifInfo.DateTimeOriginal) && checkLatitude(exifInfo.GPSLatitude) && checkLatitude(exifInfo.GPSLongitude) && (
                     <h2>STEP3: Annotation (Subjects to be protected)</h2>
                 )}
@@ -1625,6 +1626,7 @@ function UploadApp() {
                         </div>
                     ))}
                 </div>
+                */}
 
 
 
