@@ -1849,7 +1849,9 @@ function UploadMobileApp() {
                 {publicKey &&
                 <div>
                     <h2>STEP1: Load Image</h2>
-
+                    <p style={{ color: 'red', fontSize: '14px' }}>
+                        Only images taken with GPS ON can be loaded.
+                    </p>
                     <div>
                         <form>
                             <input type="file" onChange={handleImage} />
@@ -1862,7 +1864,12 @@ function UploadMobileApp() {
 
 
                 {uploadedImage && checkDateTime(exifInfo.DateTimeOriginal) && checkLatitude(exifInfo.GPSLatitude) && checkLatitude(exifInfo.GPSLongitude) && (
+                    <>
                     <h2>STEP2: Annotation</h2>
+                    <p style={{ color: 'red', fontSize: '14px' }}>
+                        Please tap on the object area to set the region, and then enter a text description for the object.
+                    </p>
+                    </>
                 )}
                 <div
                     style={{ position: 'relative', display: 'inline-block' }}
