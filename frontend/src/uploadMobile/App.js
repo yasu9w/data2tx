@@ -2026,7 +2026,6 @@ function Annotation({ annotation, onDelete, onUpdateText, onMouseDown, onMouseMo
                 top: annotation.y,
                 width: annotation.width,
                 height: annotation.height,
-                border: '3px solid red', // 赤の太線（3px）に変更
                 boxSizing: 'border-box', // 枠を含めたサイズ計算
             }}
             onMouseDown={onMouseDown}
