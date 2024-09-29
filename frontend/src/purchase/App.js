@@ -680,7 +680,8 @@ const PurchaseApp = React.memo(() => {
                             </a>
                         </p>
                     </div>
-                    {selectedImagesFlag && !isSendButtonDisabled && (
+                    {/*{selectedImagesFlag && !isSendButtonDisabled && ( */}
+                    {selectedImagesFlag && (
                         <div>
                             <SendTransaction selectedImagesHandle={selectedImagesHandle} />
                         </div>
