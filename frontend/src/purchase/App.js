@@ -682,7 +682,7 @@ const PurchaseApp = React.memo(() => {
                     </div>
                     {/*{selectedImagesFlag && !isSendButtonDisabled && ( */}
                     {selectedImagesFlag && (
-                        <div>
+                        <div style={isLocked ? { pointerEvents: 'none', opacity: 0.5 } : {}}>
                             <SendTransaction selectedImagesHandle={selectedImagesHandle} />
                         </div>
                     )}
