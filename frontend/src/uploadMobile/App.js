@@ -1827,14 +1827,16 @@ function UploadMobileApp() {
             {condition_STEP4 && <Footer />}
 
             <div style={{
+                position: 'relative', // 必要であれば追加
+                width: '100%', // 画面幅いっぱいに設定
                 padding: '20px',
-                maxWidth: '1200px',
-                margin: '0 auto',
                 marginTop: '60px', // ヘッダーの高さ分の余白を確保
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: '20px' // 要素間のスペースを追加
+                gap: '20px', // 要素間のスペースを追加
+                overflowX: 'hidden', // 横方向のスクロールを禁止
+                left: 0 // 左端まで広げる
             }}>
 
                 {!publicKey &&
