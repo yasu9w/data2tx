@@ -1836,7 +1836,8 @@ function UploadMobileApp() {
                 gap: '20px', // 要素間のスペースを追加
                 boxSizing: 'border-box', // paddingやborderを含めて幅を計算
                 overflowX: 'hidden', // 横方向のスクロールを禁止
-                left: 0 // 左端まで広げる
+                left: 0, // 左端まで広げる
+                paddingBottom: '60px', // Footerの高さ分のスペースを追加（調整可能）
             }}>
 
                 {!publicKey &&
