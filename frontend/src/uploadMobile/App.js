@@ -1867,7 +1867,7 @@ function UploadMobileApp() {
                     <>
                     <h2>STEP2: Annotation</h2>
                     <p style={{ color: 'red', fontSize: '14px' }}>
-                        Tap the top left and drag to the bottom right to create a box. Enter a description in the text box.
+                        Tap the top left of the object area and drag to the bottom right to create a box. Enter a description in the text box.
                         The upload button will appear when at least one box and its corresponding text are entered.
                     </p>
                     </>
