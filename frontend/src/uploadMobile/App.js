@@ -1515,7 +1515,8 @@ function UploadMobileApp() {
     }
 
     const condition_STEP4 = uploadedImage && checkDateTime(exifInfo.DateTimeOriginal) && checkLatitude(exifInfo.GPSLatitude) && checkLatitude(exifInfo.GPSLongitude) && hasAnyAnnotationsAndAllHaveText(annotations, annotations_protected);
-    const condition_AppBar = !isButtonDisabled && uploadedImage && checkDateTime(exifInfo.DateTimeOriginal) && checkLatitude(exifInfo.GPSLatitude) && checkLatitude(exifInfo.GPSLongitude) && hasAnyAnnotationsAndAllHaveText(annotations, annotations_protected)
+    //const condition_AppBar = !isButtonDisabled && uploadedImage && checkDateTime(exifInfo.DateTimeOriginal) && checkLatitude(exifInfo.GPSLatitude) && checkLatitude(exifInfo.GPSLongitude) && hasAnyAnnotationsAndAllHaveText(annotations, annotations_protected);
+    const condition_AppBar = uploadedImage && checkDateTime(exifInfo.DateTimeOriginal) && checkLatitude(exifInfo.GPSLatitude) && checkLatitude(exifInfo.GPSLongitude) && hasAnyAnnotationsAndAllHaveText(annotations, annotations_protected);
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
