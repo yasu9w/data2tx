@@ -2021,10 +2021,13 @@ function Annotation({ annotation, onDelete, onUpdateText, onMouseDown, onMouseMo
         <div
             className="annotation"
             style={{
+                position: 'absolute',
                 left: annotation.x,
                 top: annotation.y,
                 width: annotation.width,
-                height: annotation.height
+                height: annotation.height,
+                border: '1px solid black', // 枠を追加
+                boxSizing: 'border-box', // 枠を含めたサイズ計算
             }}
             onMouseDown={onMouseDown}
             onMouseMove={onMouseMove}
@@ -2048,10 +2051,10 @@ function Annotation({ annotation, onDelete, onUpdateText, onMouseDown, onMouseMo
                 onTouchStart={handleTextMouseDown} // 追加
                 style={{
                     position: 'absolute',
-                    bottom: -20,
-                    width: `${Math.max(100, annotation.text.length * 8)}px`, // テキストの長さに基づいて幅を調整します。
-                    fontSize: '16px', // フォントサイズを16pxに設定
-                    zIndex: 1 // リサイズエリアの後ろに配置
+                    bottom: '-40px', // 枠の下にテキストボックスを移動
+                    left: 0,
+                    width: `${Math.max(100, annotation.text.length * 8)}px`,
+                    fontSize: '16px',
                 }}
             />
             <div
@@ -2059,9 +2062,10 @@ function Annotation({ annotation, onDelete, onUpdateText, onMouseDown, onMouseMo
                     position: 'absolute',
                     right: -5,
                     bottom: -5,
-                    width: 10,
-                    height: 10,
-                    cursor: 'se-resize'
+                    width: 20,
+                    height: 20,
+                    cursor: 'se-resize',
+                    zIndex: 2, // リサイズエリアを前面に
                 }}
                 onMouseDown={onResizerMouseDown}
                 onTouchStart={onResizerTouchStart} // 追加
