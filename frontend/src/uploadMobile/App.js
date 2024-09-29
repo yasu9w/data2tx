@@ -1480,7 +1480,7 @@ function UploadMobileApp() {
         const exifDateTime = new Date(dateTimeString);
         const now = new Date();
         const diffInMilliseconds = Math.abs(now - exifDateTime);
-        if (diffInMilliseconds > 12 * 60 * 60 * 1000 * 1000) return false;
+        //if (diffInMilliseconds > 12 * 60 * 60 * 1000 * 1000) return false;  //time check comment out
 
         return true;
     }
