@@ -490,8 +490,9 @@ function UploadMobileApp() {
         setAnnotations_protected(annotations_protected.map((ann, i) => i === index ? { ...ann, text } : ann));
     };
 
-    const handleAnnotationMouseDown_protected = (index, e) => {
+    const handleAnnotationStart_protected = (index, e) => {
         e.stopPropagation();
+        e.preventDefault();
         const { left, top } = imgRef_protected.current.getBoundingClientRect();
         const offsetX = e.clientX + window.scrollX - left - annotations_protected[index].x;
         const offsetY = e.clientY + window.scrollY - top - annotations_protected[index].y;
@@ -499,7 +500,8 @@ function UploadMobileApp() {
         setDraggingOffset_protected({ x: offsetX, y: offsetY });
     };
 
-    const handleAnnotationMouseMove_protected = (e) => {
+    const handleAnnotationMove_protected = (e) => {
+        e.preventDefault();
         if (draggingIndex_protected === null) return;
         const { left, top, width: imageWidth, height: imageHeight } = imgRef_protected.current.getBoundingClientRect();
         const offsetX = e.clientX + window.scrollX - left - draggingOffset_protected.x;
