@@ -341,7 +341,7 @@ function UploadMobileApp() {
     let isCreatingAnnotation = false; // 新規枠作成中かどうか
     let isMovingExistingAnnotation = false; // 既存枠を移動中かどうか
     let isResizingAnnotation = false; // 既存枠をリサイズ中かどうか
-
+/*
     const handleTouchStart = (e) => {
         if (e.touches.length === 1) {
             isCreatingAnnotation = false;
@@ -412,36 +412,33 @@ function UploadMobileApp() {
         isResizingAnnotation = false;
     };
     
-
-    // マウス・タッチ押下で新規BBOXを設置
+*/
     const handleStart = (e) => {
         e.preventDefault();
-        const offsetX = e.clientX || e.touches[0].clientX;
-        const offsetY = e.clientY || e.touches[0].clientY;
+        const offsetX = e.clientX !== undefined ? e.clientX : e.touches[0].clientX;
+        const offsetY = e.clientY !== undefined ? e.clientY : e.touches[0].clientY;
 
         const { left, top } = imgRef.current.getBoundingClientRect();
         setCurrentAnnotation({ x: offsetX - left, y: offsetY - top, width: 0, height: 0 });
     };
 
-    // マウス・タッチ押下状態で移動したらBBOXの大きさを更新
     const handleMove = (e) => {
         e.preventDefault();
         if (!currentAnnotation) return;
         const { left, top, width: imageWidth, height: imageHeight } = imgRef.current.getBoundingClientRect();
-        const offsetX = (e.clientX || e.touches[0].clientX) - left;
-        const offsetY = (e.clientY || e.touches[0].clientY) - top;
+        const offsetX = e.clientX !== undefined ? e.clientX : e.touches[0].clientX;
+        const offsetY = e.clientY !== undefined ? e.clientY : e.touches[0].clientY;
 
-        const validX = Math.max(0, Math.min(offsetX, imageWidth));
-        const validY = Math.max(0, Math.min(offsetY, imageHeight));
+        const validX = Math.max(0, Math.min(offsetX - left, imageWidth));
+        const validY = Math.max(0, Math.min(offsetY - top, imageHeight));
 
         setCurrentAnnotation((prevAnnotation) => ({
             ...prevAnnotation,
             width: validX - prevAnnotation.x,
-            height: Math.floor(validY - prevAnnotation.y),
+            height: validY - prevAnnotation.y,
         }));
     };
 
-    // マウス・タッチ押下解除でBBOXを追加、currentAnnotationを初期化
     const handleEnd = () => {
         if (currentAnnotation) {
             const { width, height } = currentAnnotation;
@@ -794,7 +791,7 @@ function UploadMobileApp() {
             window.removeEventListener('touchend', handleResizerEnd);
         };
     }, [isMouseDown]);
-
+/*
     useEffect(() => {
         window.addEventListener('touchstart', handleTouchStart, { passive: false });
         window.addEventListener('touchmove', handleTouchMove, { passive: false });
@@ -806,6 +803,7 @@ function UploadMobileApp() {
             window.removeEventListener('touchend', handleTouchEnd);
         };
     }, []);
+*/
     /////////////////////////////////////////////////////////////
     ////// 追加済みBBOXのリサイズ　anntation protected
     /////////////////////////////////////////////////////////////
