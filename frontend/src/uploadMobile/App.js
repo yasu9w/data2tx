@@ -404,7 +404,7 @@ function UploadMobileApp() {
 
     const handleMove_protected = (e) => {
         e.preventDefault();
-        if (!currentAnnotation) return;
+        if (!currentAnnotation_protected) return;
         const { left, top, width: imageWidth, height: imageHeight } = imgRef_protected.current.getBoundingClientRect();
         const offsetX = e.clientX !== undefined ? e.clientX : e.touches[0].clientX;
         const offsetY = e.clientY !== undefined ? e.clientY : e.touches[0].clientY;
@@ -420,10 +420,10 @@ function UploadMobileApp() {
     };
 
     const handleEnd_protected = () => {
-        if (currentAnnotation) {
-            const { width, height } = currentAnnotation;
+        if (currentAnnotation_protected) {
+            const { width, height } = currentAnnotation_protected;
             if (width >= MIN_WIDTH && height >= MIN_HEIGHT) {
-                setAnnotations_protected((annotations) => [...annotations, { ...currentAnnotation, text: '' }]);
+                setAnnotations_protected((annotations) => [...annotations, { ...currentAnnotation_protected, text: '' }]);
             }
         }
         setCurrentAnnotation_protected(null);
