@@ -419,6 +419,15 @@ function UploadMobileApp() {
         const offsetY = e.clientY !== undefined ? e.clientY : e.touches[0].clientY;
 
         const { left, top } = imgRef.current.getBoundingClientRect();
+        
+        // X座標とY座標が画像の範囲内にあるか確認し、0未満であれば処理を中断
+        const validX = offsetX - left;
+        const validY = offsetY - top;
+        
+        if (validX < 0 || validY < 0) {
+            return; // XまたはYが0未満の場合、アノテーションを開始しない
+        }
+
         setCurrentAnnotation({ x: offsetX - left, y: offsetY - top, width: 0, height: 0 });
     };
 
