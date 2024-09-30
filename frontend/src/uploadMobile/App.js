@@ -335,84 +335,6 @@ function UploadMobileApp() {
     ////// 新規BBOX追加　anntation
     /////////////////////////////////////////////////////////////
 
-    // 初期フラグ設定
-    let startX = 0; // タッチ開始時のX座標
-    let startY = 0; // タッチ開始時のY座標
-    let isCreatingAnnotation = false; // 新規枠作成中かどうか
-    let isMovingExistingAnnotation = false; // 既存枠を移動中かどうか
-    let isResizingAnnotation = false; // 既存枠をリサイズ中かどうか
-/*
-    const handleTouchStart = (e) => {
-        if (e.touches.length === 1) {
-            isCreatingAnnotation = false;
-            isMovingExistingAnnotation = false;
-            isResizingAnnotation = false;
-
-            // タッチ開始位置の記録
-            startX = e.touches[0].clientX;
-            startY = e.touches[0].clientY;
-
-            // 既存の枠操作をチェック
-            const target = e.target.closest('.annotation');
-            if (target) {
-                if (e.target.closest('.resizer')) {
-                    // リサイザー部分をタッチした場合はリサイズ開始
-                    isResizingAnnotation = true;
-                    handleResizerStart(target.dataset.index, e);
-                } else {
-                    // 既存枠全体をタッチした場合は移動開始
-                    isMovingExistingAnnotation = true;
-                    handleAnnotationStart(target.dataset.index, e);
-                }
-            }
-        }
-    };
-
-    const handleTouchMove = (e) => {
-
-        if (e.touches.length === 1) {
-            // リサイズ中
-            if (isResizingAnnotation) {
-                e.preventDefault();
-                handleResizerMove(e); // リサイズ処理を実行
-                return;
-            }
-
-            // 既存枠を移動中
-            if (isMovingExistingAnnotation) {
-                e.preventDefault();
-                handleAnnotationMove(e); // 移動処理を実行
-                return;
-            }
-
-            // 新規枠の作成
-            if (isCreatingAnnotation) {
-                e.preventDefault(); // スクロールを抑制
-                if (e.target.closest('img')) {
-                    handleMove(e); // 新規枠の移動処理
-                }
-            }
-        }
-    };
-
-    const handleTouchEnd = (e) => {
-        if (isResizingAnnotation) {
-            handleResizerEnd(); // リサイズ終了
-        }
-        if (isMovingExistingAnnotation) {
-            handleAnnotationEnd(); // 既存枠の移動終了
-        }
-        if (isCreatingAnnotation && e.target.closest('img')) {
-            handleEnd(); // 新規枠の作成終了
-        }
-    
-        // フラグのリセット
-        isCreatingAnnotation = false;
-        isMovingExistingAnnotation = false;
-        isResizingAnnotation = false;
-    };
-    
-*/
     const handleStart = (e) => {
         e.preventDefault();
         const offsetX = e.clientX !== undefined ? e.clientX : e.touches[0].clientX;
@@ -462,155 +384,50 @@ function UploadMobileApp() {
     ////// 新規BBOX追加　anntation protected
     /////////////////////////////////////////////////////////////
 
-    /*
-    const handleMouseDown_protected = (e) => {
-        const offsetX = e.nativeEvent.offsetX;
-        const offsetY = e.nativeEvent.offsetY;
-
-        setCurrentAnnotation_protected({ x: offsetX, y: offsetY, width: 0, height: 0 });
-    };
-
-    const handleMouseMove_protected = (e) => {
-        if (!currentAnnotation_protected) return;
-        const { left, top, width: imageWidth, height: imageHeight } = imgRef_protected.current.getBoundingClientRect();
-        const offsetX = e.clientX - left;
-        const offsetY = e.clientY - top;
-
-        const validX = Math.max(0, Math.min(offsetX, imageWidth));
-        const validY = Math.max(0, Math.min(offsetY, imageHeight));
-
-        setCurrentAnnotation_protected((prevAnnotation) => ({
-            ...prevAnnotation,
-            width: validX - prevAnnotation.x,
-            height: Math.floor(validY - prevAnnotation.y),
-        }));
-    };
-
-    const handleMouseUp_protected = () => {
-        if (currentAnnotation_protected) {
-            const { width, height } = currentAnnotation_protected;
-            if (width >= MIN_WIDTH && height >= MIN_HEIGHT) {
-                setAnnotations_protected((annotations_protected) => [...annotations_protected, { ...currentAnnotation_protected, text: '' }]);
-            }
-        }
-        setCurrentAnnotation_protected(null);
-    };
-    */
-    // 初期フラグ設定
-    let startX_protected = 0; // タッチ開始時のX座標
-    let startY_protected = 0; // タッチ開始時のY座標
-    let isCreatingAnnotation_protected = false; // 新規枠作成中かどうか
-    let isMovingExistingAnnotation_protected = false; // 既存枠を移動中かどうか
-    let isResizingAnnotation_protected = false; // 既存枠をリサイズ中かどうか
-
-    const handleTouchStart_protected = (e) => {
-        if (e.touches.length === 1) {
-            isCreatingAnnotation_protected = false;
-            isMovingExistingAnnotation_protected = false;
-            isResizingAnnotation_protected = false;
-
-            // タッチ開始位置の記録
-            startX_protected = e.touches[0].clientX;
-            startY_protected = e.touches[0].clientY;
-
-            // 既存の枠操作をチェック
-            const target = e.target.closest('.annotation_protected');
-            if (target) {
-                if (e.target.closest('.resizer_protected')) {
-                    // リサイザー部分をタッチした場合はリサイズ開始
-                    isResizingAnnotation_protected = true;
-                    handleResizerStart_protected(target.dataset.index, e);
-                } else {
-                    // 既存枠全体をタッチした場合は移動開始
-                    isMovingExistingAnnotation_protected = true;
-                    handleAnnotationStart_protected(target.dataset.index, e);
-                }
-            }
-        }
-    };
-
-    const handleTouchMove_protected = (e) => {
-        if (e.touches.length === 1) {
-            // リサイズ中
-            if (isResizingAnnotation_protected) {
-                e.preventDefault();
-                handleResizerMove_protected(e); // リサイズ処理を実行
-                return;
-            }
-
-            // 既存枠を移動中
-            if (isMovingExistingAnnotation_protected) {
-                e.preventDefault();
-                handleAnnotationMove_protected(e); // 移動処理を実行
-                return;
-            }
-
-            // 新規枠の作成
-            if (isCreatingAnnotation_protected) {
-                e.preventDefault(); // スクロールを抑制
-                if (e.target.closest('img')) {
-                    handleMove_protected(e); // 新規枠の移動処理
-                }
-            }
-        }
-    };
-
-    const handleTouchEnd_protected = (e) => {
-        if (isResizingAnnotation_protected) {
-            handleResizerEnd_protected(); // リサイズ終了
-        }
-        if (isMovingExistingAnnotation_protected) {
-            handleAnnotationEnd_protected(); // 既存枠の移動終了
-        }
-        if (isCreatingAnnotation_protected && e.target.closest('img')) {
-            handleEnd_protected(); // 新規枠の作成終了
-        }
-
-        // フラグのリセット
-        isCreatingAnnotation_protected = false;
-        isMovingExistingAnnotation_protected = false;
-        isResizingAnnotation_protected = false;
-    };
-
-    // マウス・タッチ押下で新規BBOXを設置
     const handleStart_protected = (e) => {
         e.preventDefault();
-        const offsetX = e.clientX || e.touches[0].clientX;
-        const offsetY = e.clientY || e.touches[0].clientY;
+        const offsetX = e.clientX !== undefined ? e.clientX : e.touches[0].clientX;
+        const offsetY = e.clientY !== undefined ? e.clientY : e.touches[0].clientY;
 
-        const { left, top } = imgRef_protected.current.getBoundingClientRect();
+        const { left, top } = imgRef.current.getBoundingClientRect();
+
+        // X座標とY座標が画像の範囲内にあるか確認し、0未満であれば処理を中断
+        const validX = offsetX - left;
+        const validY = offsetY - top;
+        
+        if (validX < 0 || validY < 0) {
+            return; // XまたはYが0未満の場合、アノテーションを開始しない
+        }
+
         setCurrentAnnotation_protected({ x: offsetX - left, y: offsetY - top, width: 0, height: 0 });
     };
 
-    // マウス・タッチ押下状態で移動したらBBOXの大きさを更新
     const handleMove_protected = (e) => {
         e.preventDefault();
-        if (!currentAnnotation_protected) return;
-        const { left, top, width: imageWidth, height: imageHeight } = imgRef_protected.current.getBoundingClientRect();
-        const offsetX = (e.clientX || e.touches[0].clientX) - left;
-        const offsetY = (e.clientY || e.touches[0].clientY) - top;
+        if (!currentAnnotation) return;
+        const { left, top, width: imageWidth, height: imageHeight } = imgRef.current.getBoundingClientRect();
+        const offsetX = e.clientX !== undefined ? e.clientX : e.touches[0].clientX;
+        const offsetY = e.clientY !== undefined ? e.clientY : e.touches[0].clientY;
 
-        const validX = Math.max(0, Math.min(offsetX, imageWidth));
-        const validY = Math.max(0, Math.min(offsetY, imageHeight));
+        const validX = Math.max(0, Math.min(offsetX - left, imageWidth));
+        const validY = Math.max(0, Math.min(offsetY - top, imageHeight));
 
         setCurrentAnnotation_protected((prevAnnotation) => ({
             ...prevAnnotation,
             width: validX - prevAnnotation.x,
-            height: Math.floor(validY - prevAnnotation.y),
+            height: validY - prevAnnotation.y,
         }));
     };
 
-    // マウス・タッチ押下解除でBBOXを追加、currentAnnotationを初期化
     const handleEnd_protected = () => {
-        if (currentAnnotation_protected) {
-            const { width, height } = currentAnnotation_protected;
+        if (currentAnnotation) {
+            const { width, height } = currentAnnotation;
             if (width >= MIN_WIDTH && height >= MIN_HEIGHT) {
-                setAnnotations_protected((annotations_protected) => [...annotations_protected, { ...currentAnnotation_protected, text: '' }]);
+                setAnnotations_protected((annotations) => [...annotations, { ...currentAnnotation, text: '' }]);
             }
         }
         setCurrentAnnotation_protected(null);
     };
-
 
     /////////////////////////////////////////////////////////////
     ////// 追加済みBBOXの移動　anntation
@@ -673,7 +490,6 @@ function UploadMobileApp() {
         setAnnotations_protected(annotations_protected.map((ann, i) => i === index ? { ...ann, text } : ann));
     };
 
-    /*
     const handleAnnotationMouseDown_protected = (index, e) => {
         e.stopPropagation();
         const { left, top } = imgRef_protected.current.getBoundingClientRect();
@@ -688,40 +504,6 @@ function UploadMobileApp() {
         const { left, top, width: imageWidth, height: imageHeight } = imgRef_protected.current.getBoundingClientRect();
         const offsetX = e.clientX + window.scrollX - left - draggingOffset_protected.x;
         const offsetY = e.clientY + window.scrollY - top - draggingOffset_protected.y;
-
-        const annotation_protected = annotations_protected[draggingIndex_protected];
-        const validX = Math.floor(Math.max(0, Math.min(offsetX, imageWidth - annotation_protected.width)));
-        const validY = Math.floor(Math.max(0, Math.min(offsetY, imageHeight - annotation_protected.height)));
-
-        setAnnotations_protected(annotations_protected.map((ann, i) => i === draggingIndex_protected ? {
-            ...ann,
-            x: validX,
-            y: validY
-        } : ann));
-    };
-
-    const handleAnnotationMouseUp_protected = () => {
-        setDraggingIndex_protected(null);
-    };
-    */
-    // BBOXをマウス・タッチ押下で選択
-    const handleAnnotationStart_protected = (index, e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        const { left, top } = imgRef_protected.current.getBoundingClientRect();
-        const offsetX = (e.clientX || e.touches[0].clientX) + window.scrollX - left - annotations_protected[index].x;
-        const offsetY = (e.clientY || e.touches[0].clientY) + window.scrollY - top - annotations_protected[index].y;
-        setDraggingIndex_protected(index);
-        setDraggingOffset_protected({ x: offsetX, y: offsetY });
-    };
-
-    // BBOXをマウス・タッチ移動で更新
-    const handleAnnotationMove_protected = (e) => {
-        e.preventDefault();
-        if (draggingIndex_protected === null) return;
-        const { left, top, width: imageWidth, height: imageHeight } = imgRef_protected.current.getBoundingClientRect();
-        const offsetX = (e.clientX || e.touches[0].clientX) + window.scrollX - left - draggingOffset_protected.x;
-        const offsetY = (e.clientY || e.touches[0].clientY) + window.scrollY - top - draggingOffset_protected.y;
 
         const annotation_protected = annotations_protected[draggingIndex_protected];
         const validX = Math.floor(Math.max(0, Math.min(offsetX, imageWidth - annotation_protected.width)));
@@ -800,49 +582,11 @@ function UploadMobileApp() {
             window.removeEventListener('touchend', handleResizerEnd);
         };
     }, [isMouseDown]);
-/*
-    useEffect(() => {
-        window.addEventListener('touchstart', handleTouchStart, { passive: false });
-        window.addEventListener('touchmove', handleTouchMove, { passive: false });
-        window.addEventListener('touchend', handleTouchEnd, { passive: false });
-    
-        return () => {
-            window.removeEventListener('touchstart', handleTouchStart);
-            window.removeEventListener('touchmove', handleTouchMove);
-            window.removeEventListener('touchend', handleTouchEnd);
-        };
-    }, []);
-*/
+
     /////////////////////////////////////////////////////////////
     ////// 追加済みBBOXのリサイズ　anntation protected
     /////////////////////////////////////////////////////////////
-    /*
-    const handleResizerMouseDown_protected = (index, e) => {
-        e.stopPropagation();
-        setResizingIndex_protected(index);
-        setIsMouseDown_protected(true);
-    };
 
-    const handleResizerMouseMove_protected = (e) => {
-        if (resizingIndex_protected === null || !isMouseDown_protected) return;
-        const { left, top, width: imageWidth, height: imageHeight } = imgRef_protected.current.getBoundingClientRect();
-        const offsetX = e.clientX - left;
-        const offsetY = e.clientY - top;
-        const maxWidth = imageWidth - annotations_protected[resizingIndex_protected].x;
-        const maxHeight = imageHeight - annotations_protected[resizingIndex_protected].y;
-
-        setAnnotations_protected(annotations_protected.map((ann, i) => i === resizingIndex_protected ? {
-            ...ann,
-            width: Math.floor(Math.min(maxWidth, Math.max(0, offsetX - ann.x))),
-            height: Math.floor(Math.min(maxHeight, Math.max(0, offsetY - ann.y)))
-        } : ann));
-    };
-
-    const handleResizerMouseUp_protected = () => {
-        setResizingIndex_protected(null);
-        setIsMouseDown_protected(false);
-    };
-    */
     // リサイザーをマウス・タッチ押下で選択
     const handleResizerStart_protected = (index, e) => {
         e.stopPropagation();
@@ -855,15 +599,16 @@ function UploadMobileApp() {
     const handleResizerMove_protected = (e) => {
         e.preventDefault();
         if (resizingIndex_protected === null || !isMouseDown_protected) return;
-        const { left, top, width: imageWidth, height: imageHeight } = imgRef_protected.current.getBoundingClientRect();
+        const { left, top, width: imageWidth, height: imageHeight } = imgRef.current.getBoundingClientRect();
         const offsetX = (e.clientX || e.touches[0].clientX) - left;
         const offsetY = (e.clientY || e.touches[0].clientY) - top;
         const maxWidth = imageWidth - annotations_protected[resizingIndex_protected].x;
         const maxHeight = imageHeight - annotations_protected[resizingIndex_protected].y;
-
+    
+        // 修正: 幅と高さの両方を正しく計算
         const newWidth = Math.floor(Math.min(maxWidth, Math.max(0, offsetX - annotations_protected[resizingIndex_protected].x)));
         const newHeight = Math.floor(Math.min(maxHeight, Math.max(0, offsetY - annotations_protected[resizingIndex_protected].y)));
-
+    
         setAnnotations_protected(annotations_protected.map((ann, i) => i === resizingIndex_protected ? {
             ...ann,
             width: newWidth,
@@ -876,42 +621,10 @@ function UploadMobileApp() {
         setResizingIndex_protected(null);
         setIsMouseDown_protected(false);
     };
-
-    /*
+    
+    //リサイザー処理で設定したisMouseDownに応じて、リスナー
     useEffect(() => {
-
-        const handleTouchMove_protected = (event) => {
-            handleResizerMouseMove_protected(event.touches[0]);
-        };
-
-        const handleTouchEnd_protected = (event) => {
-            handleResizerMouseUp_protected(event);
-        };
-        if (isMouseDown_protected) {
-            window.addEventListener('mousemove', handleResizerMouseMove_protected);
-            window.addEventListener('mouseup', handleResizerMouseUp_protected);
-
-            window.addEventListener('touchmove', handleTouchMove_protected);
-            window.addEventListener('touchend', handleTouchEnd_protected);
-        } else {
-            window.removeEventListener('mousemove', handleResizerMouseMove_protected);
-            window.removeEventListener('mouseup', handleResizerMouseUp_protected);
-
-            window.removeEventListener('touchmove', handleTouchMove_protected);
-            window.removeEventListener('touchend', handleTouchEnd_protected);
-        }
-
-        return () => {
-            window.removeEventListener('mousemove', handleResizerMouseMove_protected);
-            window.removeEventListener('mouseup', handleResizerMouseUp_protected);
-            window.removeEventListener('touchmove', handleTouchMove_protected);
-            window.removeEventListener('touchend', handleTouchEnd_protected);
-        };
-    }, [isMouseDown_protected]);
-    */
-
-    // リサイザー処理で設定したisMouseDownに応じて、リスナー
-    useEffect(() => {
+        // イベントリスナーの登録
         if (isMouseDown_protected) {
             window.addEventListener('mousemove', handleResizerMove_protected);
             window.addEventListener('mouseup', handleResizerEnd_protected);
@@ -932,18 +645,6 @@ function UploadMobileApp() {
         };
     }, [isMouseDown_protected]);
 
-    // タッチイベント用のuseEffect
-    useEffect(() => {
-        window.addEventListener('touchstart', handleTouchStart_protected, { passive: false });
-        window.addEventListener('touchmove', handleTouchMove_protected, { passive: false });
-        window.addEventListener('touchend', handleTouchEnd_protected, { passive: false });
-
-        return () => {
-            window.removeEventListener('touchstart', handleTouchStart_protected);
-            window.removeEventListener('touchmove', handleTouchMove_protected);
-            window.removeEventListener('touchend', handleTouchEnd_protected);
-        };
-    }, []);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////// sign、uploadに関する処理
@@ -1950,7 +1651,6 @@ function UploadMobileApp() {
                     ))}
                 </div>
                 
-                {/*
                 {uploadedImage && checkDateTime(exifInfo.DateTimeOriginal) && checkLatitude(exifInfo.GPSLatitude) && checkLatitude(exifInfo.GPSLongitude) && (
                     <h2>STEP3: Annotation (Subjects to be protected)</h2>
                 )}
@@ -2015,7 +1715,6 @@ function UploadMobileApp() {
                         </div>
                     ))}
                 </div>
-                */}
 
 
 
