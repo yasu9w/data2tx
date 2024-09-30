@@ -389,7 +389,7 @@ function UploadMobileApp() {
         const offsetX = e.clientX !== undefined ? e.clientX : e.touches[0].clientX;
         const offsetY = e.clientY !== undefined ? e.clientY : e.touches[0].clientY;
 
-        const { left, top } = imgRef.current.getBoundingClientRect();
+        const { left, top } = imgRef_protected.current.getBoundingClientRect();
 
         // X座標とY座標が画像の範囲内にあるか確認し、0未満であれば処理を中断
         const validX = offsetX - left;
@@ -405,7 +405,7 @@ function UploadMobileApp() {
     const handleMove_protected = (e) => {
         e.preventDefault();
         if (!currentAnnotation) return;
-        const { left, top, width: imageWidth, height: imageHeight } = imgRef.current.getBoundingClientRect();
+        const { left, top, width: imageWidth, height: imageHeight } = imgRef_protected.current.getBoundingClientRect();
         const offsetX = e.clientX !== undefined ? e.clientX : e.touches[0].clientX;
         const offsetY = e.clientY !== undefined ? e.clientY : e.touches[0].clientY;
 
@@ -601,7 +601,7 @@ function UploadMobileApp() {
     const handleResizerMove_protected = (e) => {
         e.preventDefault();
         if (resizingIndex_protected === null || !isMouseDown_protected) return;
-        const { left, top, width: imageWidth, height: imageHeight } = imgRef.current.getBoundingClientRect();
+        const { left, top, width: imageWidth, height: imageHeight } = imgRef_protected.current.getBoundingClientRect();
         const offsetX = (e.clientX || e.touches[0].clientX) - left;
         const offsetY = (e.clientY || e.touches[0].clientY) - top;
         const maxWidth = imageWidth - annotations_protected[resizingIndex_protected].x;
