@@ -1501,7 +1501,9 @@ function UploadApp() {
                 {publicKey &&
                 <div>
                     <h2>STEP1: Load Image</h2>
-
+                    <p style={{ color: 'red', fontSize: '14px' }}>
+                        To load an image, it must include GPS data.
+                    </p>
                     <div>
                         <form>
                             <input type="file" onChange={handleImage} />
@@ -1514,7 +1516,12 @@ function UploadApp() {
 
 
                 {uploadedImage && checkDateTime(exifInfo.DateTimeOriginal) && checkLatitude(exifInfo.GPSLatitude) && checkLatitude(exifInfo.GPSLongitude) && (
-                    <h2>STEP2: Annotation</h2>
+                    <>
+                        <h2>STEP2: Click and Drag to Draw Area and Enter Text</h2>
+                        <p style={{ color: 'red', fontSize: '14px' }}>
+                            Click on the image, drag to the bottom right to create a box, and enter text.
+                        </p>
+                    </>
                 )}
                 <div
                     style={{ position: 'relative', display: 'inline-block' }}
