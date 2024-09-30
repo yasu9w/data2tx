@@ -419,7 +419,7 @@ function UploadMobileApp() {
         const offsetY = e.clientY !== undefined ? e.clientY : e.touches[0].clientY;
 
         const { left, top } = imgRef.current.getBoundingClientRect();
-        
+
         // X座標とY座標が画像の範囲内にあるか確認し、0未満であれば処理を中断
         const validX = offsetX - left;
         const validY = offsetY - top;
@@ -1884,7 +1884,7 @@ function UploadMobileApp() {
 
                 {uploadedImage && checkDateTime(exifInfo.DateTimeOriginal) && checkLatitude(exifInfo.GPSLatitude) && checkLatitude(exifInfo.GPSLongitude) && (
                     <>
-                    <h2>STEP2: Annotation</h2>
+                    <h2>STEP2: Touch and Drag to Draw Area and Enter Text</h2>
                     <p style={{ color: 'red', fontSize: '14px' }}>
                         Touch the image, drag to the bottom right to create a box, and enter text.
                     </p>
