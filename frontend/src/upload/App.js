@@ -1365,7 +1365,13 @@ function UploadApp() {
 
 
     const Footer = React.memo(() => {
-        
+
+        useEffect(() => {
+            if (isCompleted) {
+                window.location.reload();
+            }
+        }, [isCompleted]); 
+
         const handleAgreementLinkClick = useCallback((event) => {
             if (isLocked) {
                 event.preventDefault();
