@@ -1365,7 +1365,7 @@ function UploadApp() {
 
 
     const Footer = React.memo(() => {
-
+        
         const handleAgreementLinkClick = useCallback((event) => {
             if (isLocked) {
                 event.preventDefault();
