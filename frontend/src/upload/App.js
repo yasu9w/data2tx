@@ -1166,9 +1166,11 @@ function UploadApp() {
         }
     }
 
-    const condition_STEP4 = uploadedImage && checkDateTime(exifInfo.DateTimeOriginal) && checkLatitude(exifInfo.GPSLatitude) && checkLatitude(exifInfo.GPSLongitude) && hasAnyAnnotationsAndAllHaveText(annotations, annotations_protected);
+    //const condition_STEP4 = uploadedImage && checkDateTime(exifInfo.DateTimeOriginal) && checkLatitude(exifInfo.GPSLatitude) && checkLatitude(exifInfo.GPSLongitude) && hasAnyAnnotationsAndAllHaveText(annotations, annotations_protected);
+    const condition_STEP4 = uploadedImage && hasAnyAnnotationsAndAllHaveText(annotations, annotations_protected);
     //const condition_AppBar = !isButtonDisabled && uploadedImage && checkDateTime(exifInfo.DateTimeOriginal) && checkLatitude(exifInfo.GPSLatitude) && checkLatitude(exifInfo.GPSLongitude) && hasAnyAnnotationsAndAllHaveText(annotations, annotations_protected);
-    const condition_AppBar = uploadedImage && checkDateTime(exifInfo.DateTimeOriginal) && checkLatitude(exifInfo.GPSLatitude) && checkLatitude(exifInfo.GPSLongitude) && hasAnyAnnotationsAndAllHaveText(annotations, annotations_protected);
+    //const condition_AppBar = uploadedImage && checkDateTime(exifInfo.DateTimeOriginal) && checkLatitude(exifInfo.GPSLatitude) && checkLatitude(exifInfo.GPSLongitude) && hasAnyAnnotationsAndAllHaveText(annotations, annotations_protected);
+    const condition_AppBar = uploadedImage  && hasAnyAnnotationsAndAllHaveText(annotations, annotations_protected);
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1514,7 +1516,8 @@ function UploadApp() {
                 <ShowExif />
 
 
-                {uploadedImage && checkDateTime(exifInfo.DateTimeOriginal) && checkLatitude(exifInfo.GPSLatitude) && checkLatitude(exifInfo.GPSLongitude) && (
+                {/*{uploadedImage && checkDateTime(exifInfo.DateTimeOriginal) && checkLatitude(exifInfo.GPSLatitude) && checkLatitude(exifInfo.GPSLongitude) && (*/}
+                {uploadedImage && (
                     <>
                         <h2>STEP2: Click and Drag to Draw Area and Enter Text</h2>
                         <p style={{ color: 'red', fontSize: '14px' }}>
@@ -1528,7 +1531,8 @@ function UploadApp() {
                     onMouseMove={handleMouseMove}
                     onMouseUp={handleMouseUp}
                 >
-                    {uploadedImage && checkDateTime(exifInfo.DateTimeOriginal) && checkLatitude(exifInfo.GPSLatitude) && checkLatitude(exifInfo.GPSLongitude) && (
+                    {/*{uploadedImage && checkDateTime(exifInfo.DateTimeOriginal) && checkLatitude(exifInfo.GPSLatitude) && checkLatitude(exifInfo.GPSLongitude) && (*/}
+                    {uploadedImage && (
                         <img
                             ref={imgRef}
                             src={uploadedImage}
