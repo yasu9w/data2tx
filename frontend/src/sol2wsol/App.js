@@ -223,9 +223,20 @@ function SOL2WSOLApp() {
             <Header />
             <div style={{ marginTop: '80px' }}></div>
 
-            <a href="https://faucet.solana.com/" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'blue' }}>
+            <button 
+                onClick={() => window.open("https://faucet.solana.com/", "_blank")} 
+                style={{ 
+                    padding: '10px 20px',
+                    backgroundColor: '#007bff',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '5px',
+                    cursor: 'pointer',
+                    textAlign: 'center'
+                }}
+            >
                 Airdrop SOL (Solana Faucet)
-            </a>
+            </button>
 
             <h3>Convert SOL to wSOL (fixed at 1SOL)</h3>
             <button onClick={handleConvert} disabled={!isWalletReady}>Convert</button>
