@@ -1654,7 +1654,10 @@ function UploadMobileApp() {
                         </form>
                     </div>
                     */}
-                    <div>
+                    <div style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                    }}>
                         <form>
                             <input 
                                 type="file" 
