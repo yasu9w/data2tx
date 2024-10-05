@@ -224,6 +224,14 @@ function SOL2WSOLApp() {
             <Header />
             <div style={{ marginTop: '80px' }}></div>
 
+            <h3 style={{
+                fontSize: '18px',
+                fontWeight: 'bold',
+                margin: '20px 0 10px 0',
+                textAlign: 'center',
+            }}>
+                Airdrop (Link to Solana Faucet)
+            </h3>
             <button 
                 onClick={() => window.open("https://faucet.solana.com/", "_blank")} 
                 style={{ 
@@ -234,58 +242,58 @@ function SOL2WSOLApp() {
                     borderRadius: '5px',
                     cursor: 'pointer',
                     textAlign: 'center',
-                    fontSize: '16px', // フォントサイズを統一
+                    fontSize: '16px',
                 }}
             >
-                Airdrop SOL (Solana Faucet)
+                Airdrop SOL
             </button>
 
             <h3 style={{
-                fontSize: '18px', // タイトルのフォントサイズを統一
+                fontSize: '18px',
                 fontWeight: 'bold',
                 margin: '20px 0 10px 0',
                 textAlign: 'center',
             }}>
-                Convert SOL to wSOL (fixed at 1SOL)
+                Convert SOL to wSOL
             </h3>
             <button 
                 onClick={handleConvert} 
                 disabled={!isWalletReady}
                 style={{ 
                     padding: '10px 20px',
-                    backgroundColor: isWalletReady ? '#28a745' : '#6c757d', // 状態に応じて色を変える
+                    backgroundColor: isWalletReady ? '#007bff' : '#6c757d',
                     color: '#fff',
                     border: 'none',
                     borderRadius: '5px',
-                    cursor: isWalletReady ? 'pointer' : 'not-allowed', // カーソルも変更
-                    fontSize: '16px', // フォントサイズを統一
+                    cursor: isWalletReady ? 'pointer' : 'not-allowed',
+                    fontSize: '16px',
                 }}
             >
-                Convert
+                SOL->wSOL
             </button>
 
             <h3 style={{
-                fontSize: '18px', // タイトルのフォントサイズを統一
+                fontSize: '18px',
                 fontWeight: 'bold',
                 margin: '20px 0 10px 0',
                 textAlign: 'center',
             }}>
-                Convert wSOL to SOL (close wSOL account)
+                Convert wSOL to SOL
             </h3>
             <button 
                 onClick={handleClose} 
                 disabled={!isWalletReady}
                 style={{ 
                     padding: '10px 20px',
-                    backgroundColor: isWalletReady ? '#dc3545' : '#6c757d', // 状態に応じて色を変える
+                    backgroundColor: isWalletReady ? '#007bff' : '#6c757d',
                     color: '#fff',
                     border: 'none',
                     borderRadius: '5px',
                     cursor: isWalletReady ? 'pointer' : 'not-allowed',
-                    fontSize: '16px', // フォントサイズを統一
+                    fontSize: '16px',
                 }}
             >
-                Close
+                wSOL->SOL
             </button>
 
             {status && (
