@@ -1122,8 +1122,8 @@ function UploadApp() {
         const dbImagesCollection = process.env.REACT_APP_DB_IMAGES;
         const docRef = db.collection(dbImagesCollection).doc(`${filenameOnlynameStr}.${filenameFormatStr}`);
         const geoPoint = new firebase.firestore.GeoPoint(exifInfo.Latitude, exifInfo.Longitude);
-        const latitude_ = exifInfo.Latitude !== undefined ? exifInfo.Latitude : 0;
-        const longitude_ = exifInfo.Longitude !== undefined ? exifInfo.Longitude : 0;
+        const latitude_ = (typeof exifInfo.Latitude === 'number' && !isNaN(exifInfo.Latitude)) ? exifInfo.Latitude : 0;
+        const longitude_ = (typeof exifInfo.Longitude === 'number' && !isNaN(exifInfo.Longitude)) ? exifInfo.Longitude : 0;        
         const hash = geofire.geohashForLocation([latitude_, longitude_]);
         const geohashLevels = generateGeohashLevels(hash);
         const dateOriginal = firebase.firestore.Timestamp.fromDate(getUTCDateTimeByDate(exifInfo.DateTimeOriginal));
