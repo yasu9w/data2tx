@@ -218,6 +218,7 @@ function SOL2WSOLApp() {
             alignItems: 'center',
             gap: '20px',
             overflowX: 'hidden',
+            boxSizing: 'border-box',
         }}>
             <Header />
             <div style={{ marginTop: '80px' }}></div>
@@ -237,6 +238,7 @@ function SOL2WSOLApp() {
                 overflowWrap: 'break-word',
                 textAlign: 'center',
                 whiteSpace: 'normal',
+                overflowX: 'hidden',
             }}>
                 {status}
             </p>
