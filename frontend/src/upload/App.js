@@ -1296,7 +1296,11 @@ function UploadApp() {
                     maxWidth: '1200px',
                     margin: '0 auto'
                 }}>
-                    <h1 style={{ textTransform: 'uppercase', margin: 0 }}>
+                    <h1 style={{ 
+                        textTransform: 'uppercase', 
+                        margin: 0,
+                        fontSize: '24px'
+                    }}>
                         UPLOAD PAGE
                     </h1>
                     <div>
