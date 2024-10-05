@@ -29,6 +29,8 @@ const SOL2WSOLMain = () => (
 
 const Header = React.memo(() => {
 
+    const isMobile = window.innerWidth <= 600;
+
     return (
         <div style={{
             position: 'fixed',
@@ -46,8 +48,12 @@ const Header = React.memo(() => {
                 padding: '10px 20px',
                 maxWidth: '1200px',
                 margin: '0 auto'
-            }}>
-                <h1 style={{ textTransform: 'uppercase', margin: 0 }}>
+            }}>                
+                <h1 style={{ 
+                    textTransform: 'uppercase', 
+                    margin: 0,
+                    fontSize: isMobile ? '16px' : '24px'
+                }}>
                     SOL-WSOL CONVERTER
                 </h1>
                 <div>
