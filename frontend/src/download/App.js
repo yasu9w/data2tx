@@ -97,6 +97,8 @@ function DownloadApp() {
 
     const Header = React.memo(() => {
 
+        const isMobile = window.innerWidth <= 600;
+        
         return (
             <div style={{
                 position: 'fixed',
@@ -117,7 +119,11 @@ function DownloadApp() {
                     maxWidth: '1200px',
                     margin: '0 auto'
                 }}>
-                    <h1 style={{ textTransform: 'uppercase', margin: 0 }}>
+                    <h1 style={{ 
+                        textTransform: 'uppercase', 
+                        margin: 0,
+                        fontSize: isMobile ? '16px' : '24px'
+                    }}>
                         DOWNLOAD PAGE
                     </h1>
                     <div>

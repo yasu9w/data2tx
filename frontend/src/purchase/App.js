@@ -593,6 +593,8 @@ const PurchaseApp = React.memo(() => {
             console.log("Header");
         }
 
+        const isMobile = window.innerWidth <= 600;
+
         const { isLocked } = useLock();
 
         return (
@@ -615,7 +617,11 @@ const PurchaseApp = React.memo(() => {
                     maxWidth: '1200px',
                     margin: '0 auto'
                 }}>
-                    <h1 style={{ textTransform: 'uppercase', margin: 0 }}>
+                    <h1 style={{ 
+                        textTransform: 'uppercase', 
+                        margin: 0,
+                        fontSize: isMobile ? '16px' : '24px'
+                    }}>
                         PURCHASE PAGE
                     </h1>
                     <div>
