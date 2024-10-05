@@ -39,7 +39,8 @@ const Header = React.memo(() => {
             width: '100%',
             backgroundColor: 'white',
             zIndex: 1000,
-            borderBottom: '1px solid #ddd'
+            borderBottom: '1px solid #ddd',
+            fontFamily: 'Arial, sans-serif',
         }}>
             <div style={{
                 display: 'flex',
@@ -219,7 +220,7 @@ function SOL2WSOLApp() {
             gap: '20px',
             overflowX: 'hidden',
             boxSizing: 'border-box',
-            fontFamily: 'Arial, sans-serif', // 全体に統一したフォント
+            fontFamily: 'Arial, sans-serif',
         }}>
             <Header />
             <div style={{ marginTop: '80px' }}></div>
@@ -269,7 +270,7 @@ function SOL2WSOLApp() {
                     fontSize: '16px',
                 }}
             >
-                SOL->wSOL
+                SOL &rarr; wSOL
             </button>
 
             <h3 style={{
@@ -293,7 +294,7 @@ function SOL2WSOLApp() {
                     fontSize: '16px',
                 }}
             >
-                wSOL->SOL
+                wSOL &rarr; SOL
             </button>
 
             {status && (

@@ -35,7 +35,8 @@ const Overlay = () => {
             alignItems: 'center',
             justifyContent: 'center',
             color: '#fff',
-            fontSize: '24px',
+            fontSize: '16px',
+            fontFamily: 'Arial, sans-serif',
             pointerEvents: 'auto'
         }}>
             {sendingMessage}
@@ -602,7 +603,9 @@ const PurchaseApp = React.memo(() => {
                 width: '100%',
                 backgroundColor: 'white',
                 zIndex: 1000,
-                borderBottom: '1px solid #ddd'
+                borderBottom: '1px solid #ddd',
+                fontSize: '16px',
+                fontFamily: 'Arial, sans-serif',
             }}>
                 <div style={{
                     display: 'flex',
@@ -651,7 +654,8 @@ const PurchaseApp = React.memo(() => {
                 borderTop: '1px solid #ddd', //gray
                 padding: '10px',
                 textAlign: 'center',
-                fontSize: '16px'
+                fontSize: '16px',
+                fontFamily: 'Arial, sans-serif',
             }}>
                 <div style={{
                     display: 'flex',
@@ -697,6 +701,8 @@ const PurchaseApp = React.memo(() => {
                 flexDirection: 'column',
                 alignItems: 'center',
                 gap: '0px',
+                fontSize: '16px',
+                fontFamily: 'Arial, sans-serif',
             }}>
 
                 {!useJSMapAPI && (

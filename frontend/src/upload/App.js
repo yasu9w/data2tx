@@ -1265,7 +1265,8 @@ function UploadApp() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 color: '#fff',
-                fontSize: '24px',
+                fontSize: '16px',
+                fontFamily: 'Arial, sans-serif',
                 pointerEvents: 'auto'
             }}>
                 {uploadingMessage}
@@ -1283,7 +1284,9 @@ function UploadApp() {
                 width: '100%',
                 backgroundColor: 'white',
                 zIndex: 1000,
-                borderBottom: '1px solid #ddd'
+                borderBottom: '1px solid #ddd',
+                fontSize: '16px',
+                fontFamily: 'Arial, sans-serif',
             }}>
                 <div style={{
                     display: 'flex',
@@ -1458,7 +1461,8 @@ function UploadApp() {
                 borderTop: '1px solid #ddd',
                 padding: '10px',
                 textAlign: 'center',
-                fontSize: '16px'
+                fontSize: '16px',
+                fontFamily: 'Arial, sans-serif',
             }}>
                 <div style={{
                     display: 'flex',
@@ -1562,7 +1566,9 @@ function UploadApp() {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: '20px'
+                gap: '20px',
+                fontSize: '16px',
+                fontFamily: 'Arial, sans-serif',
             }}>
 
                 {!publicKey &&

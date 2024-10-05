@@ -105,7 +105,9 @@ function DownloadApp() {
                 width: '100%',
                 backgroundColor: 'white',
                 zIndex: 1000,
-                borderBottom: '1px solid #ddd'
+                borderBottom: '1px solid #ddd',
+                fontSize: '16px',
+                fontFamily: 'Arial, sans-serif',
             }}>
                 <div style={{
                     display: 'flex',
@@ -142,7 +144,8 @@ function DownloadApp() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 color: '#fff',
-                fontSize: '24px',
+                fontSize: '16px',
+                fontFamily: 'Arial, sans-serif',
                 pointerEvents: 'auto'
             }}>
                 {processingMessage}
@@ -169,7 +172,9 @@ function DownloadApp() {
                 wordWrap: 'break-word',
                 overflowWrap: 'break-word',
                 wordBreak: 'break-all',
-                whiteSpace: 'normal'
+                whiteSpace: 'normal',
+                fontSize: '16px',
+                fontFamily: 'Arial, sans-serif',
             }}>
 
                 {!publicKey &&

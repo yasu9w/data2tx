@@ -89,6 +89,8 @@ const styles = {
         flexDirection: 'column',
         minHeight: '100vh',
         backgroundColor: '#ffffff',
+        fontFamily: 'Arial, sans-serif',
+        fontSize: '16px', 
     },
     container: {
         flex: '1',
@@ -100,7 +102,6 @@ const styles = {
     },
     content: {
         marginBottom: '20px',
-        fontSize: '24px',
         fontWeight: 'bold',
     },
     image: {
@@ -129,10 +130,10 @@ const styles = {
     },
     link: {
         textDecoration: 'underline',
-        fontSize: '20px',
         color: '#0000EE',
         display: 'inline-block',
         transition: 'color 0.2s ease',
+        fontSize: '16px', 
     },
     disabledLink: {
         pointerEvents: 'none',
@@ -148,7 +149,6 @@ const styles = {
     },
     warningMessage: {
         color: 'red',
-        fontSize: '16px',
         fontWeight: 'bold',
         marginTop: '10px',
     },
