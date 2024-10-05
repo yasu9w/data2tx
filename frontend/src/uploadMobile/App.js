@@ -1642,12 +1642,42 @@ function UploadMobileApp() {
                 {publicKey &&
                 <div>
                     <h2>STEP1: Load Image</h2>
+                    {/*
                     <p style={{ color: 'red', fontSize: '14px' }}>
                         To load an image, it must include GPS data.
                     </p>
+                    */}
+                    {/*
                     <div>
                         <form>
                             <input type="file" onChange={handleImage} />
+                        </form>
+                    </div>
+                    */}
+                    <div>
+                        <form>
+                            <input 
+                                type="file" 
+                                id="fileInput" 
+                                onChange={handleImage} 
+                                style={{ display: 'none' }}
+                            />
+                            <label 
+                                htmlFor="fileInput" 
+                                style={{
+                                    display: 'inline-block',
+                                    padding: '10px 20px',
+                                    backgroundColor: '#007bff',
+                                    color: '#fff',
+                                    borderRadius: '5px',
+                                    cursor: 'pointer',
+                                    fontSize: '16px',
+                                    fontFamily: 'Arial, sans-serif',
+                                    textAlign: 'center',
+                                }}
+                            >
+                                Choose Image
+                            </label>
                         </form>
                     </div>
                 </div>

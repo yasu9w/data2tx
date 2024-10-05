@@ -1584,9 +1584,11 @@ function UploadApp() {
                 {publicKey &&
                 <div>
                     <h2>STEP1: Load Image</h2>
+                    {/*
                     <p style={{ color: 'red', fontSize: '14px' }}>
                         To load an image, it must include GPS data. HEIC format is not supported, so if you are using an iPhone, please save the image as a JPG.
                     </p>
+                    */}
                     <div>
                         <form>
                             <input type="file" onChange={handleImage} />
