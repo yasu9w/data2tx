@@ -32,19 +32,15 @@ function Navigation() {
                             {isMobile ? "Upload Mobile" : "Upload"}
                         </Link>
                     </li>
-                    {!isMobile && (
-                        <>
-                            <li style={styles.li}>
-                                <Link to="/purchase" style={styles.link}>Purchase</Link>
-                            </li>
-                            <li style={styles.li}>
-                                <Link to="/download" style={styles.link}>Download</Link>
-                            </li>
-                            <li style={styles.li}>
-                                <Link to="/sol2wsol" style={styles.link}>SOL2WSOL</Link>
-                            </li>
-                        </>
-                    )}
+                    <li style={styles.li}>
+                        <Link to="/purchase" style={styles.link}>Purchase</Link>
+                    </li>
+                    <li style={styles.li}>
+                        <Link to="/download" style={styles.link}>Download</Link>
+                    </li>
+                    <li style={styles.li}>
+                        <Link to="/sol2wsol" style={styles.link}>SOL2WSOL</Link>
+                    </li>
                 </ul>
             </nav>
         </div>
@@ -78,13 +74,9 @@ function App() {
                         path="/upload" 
                         element={isMobile ? <UploadMobileMain /> : <UploadMain />}
                     />
-                    {!isMobile && (
-                        <>
-                            <Route path="/purchase" element={<PurchaseMain />} />
-                            <Route path="/download" element={<DownloadMain />} />
-                            <Route path="/sol2wsol" element={<SOL2WSOLMain />} />
-                        </>
-                    )}
+                    <Route path="/purchase" element={<PurchaseMain />} />
+                    <Route path="/download" element={<DownloadMain />} />
+                    <Route path="/sol2wsol" element={<SOL2WSOLMain />} />
                 </Routes>
             </div>
         </Router>
