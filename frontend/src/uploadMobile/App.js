@@ -54,10 +54,10 @@ function UploadMobileApp() {
     });
 
     const [annotations, setAnnotations] = useState([]);
-    const [currentAnnotation, setCurrentAnnotation] = useState(null); //マウス操作で新規追加するBBOXのパラメータ
+    const [currentAnnotation, setCurrentAnnotation] = useState(null);
 
     const [annotations_protected, setAnnotations_protected] = useState([]);
-    const [currentAnnotation_protected, setCurrentAnnotation_protected] = useState(null); //マウス操作で新規追加するBBOXのパラメータ
+    const [currentAnnotation_protected, setCurrentAnnotation_protected] = useState(null);
 
     const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
     const [imageDimensionsProtected, setImageDimensionsProtected] = useState({ width: 0, height: 0 });
@@ -65,20 +65,20 @@ function UploadMobileApp() {
     const [isButtonDisabled, setButtonDisabled] = useState(true);
 
     useEffect(() => {
-        // ピンチズームを無効化するためのメタタグを追加
+        // Add meta tag to disable pinch zoom
         const metaViewport = document.createElement('meta');
         metaViewport.name = 'viewport';
         metaViewport.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
         document.head.appendChild(metaViewport);
     
         return () => {
-          // コンポーネントがアンマウントされたときにメタタグを削除
+          // Remove meta tag when the component is unmounted
           document.head.removeChild(metaViewport);
         };
       }, []);
     
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////// 画像読み込みに関する処理
+    ////// Processing related to image loading
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     const handleImage = async (event) => {
@@ -152,7 +152,7 @@ function UploadMobileApp() {
                 await searchImages(DateTimeOriginal, Latitude, Longitude);
 
             } else {
-                // Exif情報が存在しない場合の処理
+                // If Exif information does not exist
                 setExifInfo({
                     DateTimeOriginal: '',
                     GPSLatitude: '',
@@ -193,7 +193,6 @@ function UploadMobileApp() {
             }
             reader.readAsDataURL(selectedImage);
         } catch (error) {
-            // do a proper action on failure cases
             setExifInfo({
                 DateTimeOriginal: '',
                 GPSLatitude: '',
@@ -315,11 +314,11 @@ function UploadMobileApp() {
     }, [publicKey]);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////// アノテーション付与に関する処理
+    ////// Processing related to adding annotations
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    const MIN_WIDTH = 20;  // 最小幅を設定します。
-    const MIN_HEIGHT = 20;  // 最小高さを設定します。
+    const MIN_WIDTH = 20;
+    const MIN_HEIGHT = 20;
     const [draggingIndex, setDraggingIndex] = useState(null);
     const [draggingIndex_protected, setDraggingIndex_protected] = useState(null);
     const [draggingOffset, setDraggingOffset] = useState({ x: 0, y: 0 });
@@ -332,7 +331,7 @@ function UploadMobileApp() {
 
 
     /////////////////////////////////////////////////////////////
-    ////// 新規BBOX追加　anntation
+    /////// Add new BBOX annotation
     /////////////////////////////////////////////////////////////
 
     const handleStart = (e) => {
@@ -342,12 +341,12 @@ function UploadMobileApp() {
 
         const { left, top } = imgRef.current.getBoundingClientRect();
 
-        // X座標とY座標が画像の範囲内にあるか確認し、0未満であれば処理を中断
+        // Check if the X and Y coordinates are within the image boundaries, and abort processing if they are less than 0
         const validX = offsetX - left;
         const validY = offsetY - top;
         
         if (validX < 0 || validY < 0) {
-            return; // XまたはYが0未満の場合、アノテーションを開始しない
+            return; // Do not start annotation if X or Y is less than 0
         }
 
         setCurrentAnnotation({ x: offsetX - left, y: offsetY - top, width: 0, height: 0 });
@@ -381,7 +380,7 @@ function UploadMobileApp() {
     };
 
     /////////////////////////////////////////////////////////////
-    ////// 新規BBOX追加　anntation protected
+    ////// Add new BBOX annotation_protected
     /////////////////////////////////////////////////////////////
 
     const handleStart_protected = (e) => {
@@ -391,12 +390,12 @@ function UploadMobileApp() {
 
         const { left, top } = imgRef_protected.current.getBoundingClientRect();
 
-        // X座標とY座標が画像の範囲内にあるか確認し、0未満であれば処理を中断
+        // Check if the X and Y coordinates are within the image boundaries, and abort processing if they are less than 0
         const validX = offsetX - left;
         const validY = offsetY - top;
         
         if (validX < 0 || validY < 0) {
-            return; // XまたはYが0未満の場合、アノテーションを開始しない
+            return; // Do not start annotation if X or Y is less than 0
         }
 
         setCurrentAnnotation_protected({ x: offsetX - left, y: offsetY - top, width: 0, height: 0 });
@@ -430,20 +429,20 @@ function UploadMobileApp() {
     };
 
     /////////////////////////////////////////////////////////////
-    ////// 追加済みBBOXの移動　anntation
+    ////// Move added BBOX annotation
     /////////////////////////////////////////////////////////////
 
-    //BBOXを削除
+    // Delete BBOX
     const deleteAnnotation = (index) => {
         setAnnotations(annotations.filter((_, i) => i !== index));
     };
 
-    //BBOXにテキスト入力
+    // Input text into BBOX
     const updateAnnotationText = (index, text) => {
         setAnnotations(annotations.map((ann, i) => i === index ? { ...ann, text } : ann));
     };
 
-    // BBOXをマウス・タッチ押下で選択
+    // Select BBOX with mouse press
     const handleAnnotationStart = (index, e) => {
         e.stopPropagation();
         e.preventDefault();
@@ -454,7 +453,7 @@ function UploadMobileApp() {
         setDraggingOffset({ x: offsetX, y: offsetY });
     };
 
-    // BBOXをマウス・タッチ移動で更新
+    // Press mouse to select BBOX and move it with mouse movement
     const handleAnnotationMove = (e) => {
         e.preventDefault();
         if (draggingIndex === null) return;
@@ -473,13 +472,13 @@ function UploadMobileApp() {
         } : ann));
     };
 
-    // マウス・タッチ押下解除で選択解除
+    // Release mouse press to deselect BBOX
     const handleAnnotationEnd = () => {
         setDraggingIndex(null);
     };
 
     /////////////////////////////////////////////////////////////
-    ////// 追加済みBBOXの移動　anntation protected
+    ////// Move added BBOX annotation_protected
     /////////////////////////////////////////////////////////////
 
     const deleteAnnotation_protected = (index) => {
@@ -518,16 +517,16 @@ function UploadMobileApp() {
         } : ann));
     };
 
-    // マウス・タッチ押下解除で選択解除
+    // Deselect on mouse/touch release
     const handleAnnotationEnd_protected = () => {
         setDraggingIndex_protected(null);
     };
 
     /////////////////////////////////////////////////////////////
-    ////// 追加済みBBOXのリサイズ　anntation
+    ////// Resize added BBOX annotation
     /////////////////////////////////////////////////////////////
 
-    // リサイザーをマウス・タッチ押下で選択
+    // Select resizer with mouse/touch press
     const handleResizerStart = (index, e) => {
         e.stopPropagation();
         e.preventDefault();
@@ -535,7 +534,7 @@ function UploadMobileApp() {
         setIsMouseDown(true);
     };
 
-    // リサイザーをマウス・タッチ移動でサイズ変更
+    // Change size with mouse/touch movement on the resizer
     const handleResizerMove = (e) => {
         e.preventDefault();
         if (resizingIndex === null || !isMouseDown) return;
@@ -545,7 +544,6 @@ function UploadMobileApp() {
         const maxWidth = imageWidth - annotations[resizingIndex].x;
         const maxHeight = imageHeight - annotations[resizingIndex].y;
     
-        // 修正: 幅と高さの両方を正しく計算
         const newWidth = Math.floor(Math.min(maxWidth, Math.max(0, offsetX - annotations[resizingIndex].x)));
         const newHeight = Math.floor(Math.min(maxHeight, Math.max(0, offsetY - annotations[resizingIndex].y)));
     
@@ -556,15 +554,13 @@ function UploadMobileApp() {
         } : ann));
     };
 
-    // マウス・タッチ押下解除で選択解除
+    // Deselect on mouse/touch release
     const handleResizerEnd = () => {
         setResizingIndex(null);
         setIsMouseDown(false);
     };
-    
-    //リサイザー処理で設定したisMouseDownに応じて、リスナー
+
     useEffect(() => {
-        // イベントリスナーの登録
         if (isMouseDown) {
             window.addEventListener('mousemove', handleResizerMove);
             window.addEventListener('mouseup', handleResizerEnd);
@@ -586,10 +582,10 @@ function UploadMobileApp() {
     }, [isMouseDown]);
 
     /////////////////////////////////////////////////////////////
-    ////// 追加済みBBOXのリサイズ　anntation protected
+    ////// Resize added BBOX annotation_protected
     /////////////////////////////////////////////////////////////
 
-    // リサイザーをマウス・タッチ押下で選択
+    // Select resizer with mouse/touch press
     const handleResizerStart_protected = (index, e) => {
         e.stopPropagation();
         e.preventDefault();
@@ -597,7 +593,7 @@ function UploadMobileApp() {
         setIsMouseDown_protected(true);
     };
 
-    // リサイザーをマウス・タッチ移動でサイズ変更
+    // Change size with mouse/touch movement on the resizer
     const handleResizerMove_protected = (e) => {
         e.preventDefault();
         if (resizingIndex_protected === null || !isMouseDown_protected) return;
@@ -607,7 +603,6 @@ function UploadMobileApp() {
         const maxWidth = imageWidth - annotations_protected[resizingIndex_protected].x;
         const maxHeight = imageHeight - annotations_protected[resizingIndex_protected].y;
     
-        // 修正: 幅と高さの両方を正しく計算
         const newWidth = Math.floor(Math.min(maxWidth, Math.max(0, offsetX - annotations_protected[resizingIndex_protected].x)));
         const newHeight = Math.floor(Math.min(maxHeight, Math.max(0, offsetY - annotations_protected[resizingIndex_protected].y)));
     
@@ -618,15 +613,13 @@ function UploadMobileApp() {
         } : ann));
     };
 
-    // マウス・タッチ押下解除で選択解除
+    // Deselect on mouse/touch release
     const handleResizerEnd_protected = () => {
         setResizingIndex_protected(null);
         setIsMouseDown_protected(false);
     };
     
-    //リサイザー処理で設定したisMouseDownに応じて、リスナー
     useEffect(() => {
-        // イベントリスナーの登録
         if (isMouseDown_protected) {
             window.addEventListener('mousemove', handleResizerMove_protected);
             window.addEventListener('mouseup', handleResizerEnd_protected);
@@ -649,7 +642,7 @@ function UploadMobileApp() {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////// sign、uploadに関する処理
+    ////// Processing related to sign and upload
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     const { wallet, signMessage } = useWallet();
@@ -660,10 +653,10 @@ function UploadMobileApp() {
     let signatureStr = '';
 
     /////////////////////////////////////////////////////////////
-    ////// 画像のリサイズ、アノテーション番号を画像内に描画
+    ////// Resize the image and draw the annotation number within the image
     /////////////////////////////////////////////////////////////
 
-    // 画像をリサイズする関数
+    // Function to resize the image
     function resizeImage(file, maxWidth, maxHeight) {
         return new Promise((resolve, reject) => {
             const img = document.createElement("img");
@@ -674,7 +667,7 @@ function UploadMobileApp() {
                 let width = img.width;
                 let height = img.height;
 
-                // 縦横比を保ちつつ指定のサイズに収まるようにリサイズ
+                // Resize to fit specified size while maintaining aspect ratio
                 if (width > height) {
                     if (width > maxWidth) {
                         height *= maxWidth / width;
@@ -712,7 +705,7 @@ function UploadMobileApp() {
                 let width = img.width;
                 let height = img.height;
 
-                // 縦横比を保ちつつ指定のサイズに収まるようにリサイズ
+                // Resize to fit specified size while maintaining aspect ratio
                 if (width > height) {
                     if (width > maxWidth) {
                         height *= maxWidth / width;
@@ -730,21 +723,18 @@ function UploadMobileApp() {
 
                 ctx.drawImage(img, 0, 0, width, height);
 
-                // テキストのスタイルを設定
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 ctx.font = '18px sans-serif';
                 ctx.fillStyle = 'black';
 
-                // アノテーションを描画
                 ctx.strokeStyle = 'red';
                 ctx.lineWidth = 5;
                 annotations.forEach((annotation, index) => {
                     ctx.strokeRect(annotation.x, annotation.y, annotation.width, annotation.height);
 
-                    // テキストを描画する背景を白色で描画
-                    const textHeight = 24; // テキストの高さを24に設定
-                    const textWidth = 24; // テキストの高さを24に設定
+                    const textHeight = 24;
+                    const textWidth = 24;
                     ctx.fillStyle = 'white';
                     if (annotation.y - textHeight < 0) {
                         if (annotation.y + annotation.height + textHeight > height) {
@@ -756,7 +746,6 @@ function UploadMobileApp() {
                         ctx.fillRect(annotation.x, annotation.y - textHeight, textWidth, textHeight);
                     }
 
-                    // テキストを左端に寄せて描画
                     ctx.fillStyle = 'black';
                     ctx.textAlign = 'left';
                     ctx.textBaseline = 'middle';
@@ -783,17 +772,16 @@ function UploadMobileApp() {
                     }
                 });
 
-                // annotations_protectedをグレー色で描画と塗りつぶし
+                // Draw and fill annotations_protected in gray
                 annotations_protected.forEach((annotation, index) => {
-                    ctx.fillStyle = 'rgba(128, 128, 128, 0.8)'; // 80%透過のグレー
+                    ctx.fillStyle = 'rgba(128, 128, 128, 0.8)';
                     ctx.fillRect(annotation.x, annotation.y, annotation.width, annotation.height);
                     ctx.strokeStyle = 'gray';
                     ctx.lineWidth = 5;
                     ctx.strokeRect(annotation.x, annotation.y, annotation.width, annotation.height);
 
-                    // テキストを描画する背景を白色で描画
-                    const textHeight = 24; // テキストの高さを24に設定
-                    const textWidth = 24; // テキストの高さを24に設定
+                    const textHeight = 24;
+                    const textWidth = 24;
                     ctx.fillStyle = 'white';
                     if (annotation.y - textHeight < 0) {
                         if (annotation.y + annotation.height + textHeight > height) {
@@ -805,7 +793,6 @@ function UploadMobileApp() {
                         ctx.fillRect(annotation.x, annotation.y - textHeight, textWidth, textHeight);
                     }
 
-                    // テキストを左端に寄せて描画
                     ctx.fillStyle = 'black';
                     ctx.textAlign = 'left';
                     ctx.textBaseline = 'middle';
@@ -875,7 +862,7 @@ function UploadMobileApp() {
         const dateTime = new Date(dateTimeString);
 
         const year = dateTime.getUTCFullYear();
-        const month = dateTime.getUTCMonth() + 1; // 月は0から始まるため、+1する
+        const month = dateTime.getUTCMonth() + 1; // Add 1 because months start from 0
         const day = dateTime.getUTCDate();
         const hours = dateTime.getUTCHours();
         const minutes = dateTime.getUTCMinutes();
@@ -941,7 +928,7 @@ function UploadMobileApp() {
     }
 
     /////////////////////////////////////////////////////////////
-    ////// upload処理（関数内でsign signatureを実行）、ボタンクリックで発動
+    ////// Upload process (execute sign signature within the function), triggered by button click
     /////////////////////////////////////////////////////////////
 
     const onSignUpload = async (event) => {
@@ -1026,7 +1013,7 @@ function UploadMobileApp() {
 
 
     /////////////////////////////////////////////////////////////
-    ////// 画像アップロード
+    ////// Image upload
     /////////////////////////////////////////////////////////////
 
     const uploadOriginalImage = (imagesRef) => {
@@ -1077,7 +1064,7 @@ function UploadMobileApp() {
 
 
     /////////////////////////////////////////////////////////////
-    ////// annotationアップロード
+    ////// Annotation upload
     /////////////////////////////////////////////////////////////
 
     const uploadAnnotationData = async (storageRefOriginal) => {
@@ -1163,7 +1150,7 @@ function UploadMobileApp() {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////// パラメータチェック、表示フラグ管理
+    ////// Parameter check and display flag management
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     function padZero(number) {
@@ -1242,7 +1229,7 @@ function UploadMobileApp() {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////// ページ表示
+    ////// Page display
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -1262,7 +1249,7 @@ function UploadMobileApp() {
                 justifyContent: 'center',
                 color: '#fff',
                 fontSize: '24px',
-                pointerEvents: 'auto'  // オーバーレイ上のイベントを有効化
+                pointerEvents: 'auto'
             }}>
                 {uploadingMessage}
             </div>
@@ -1270,7 +1257,6 @@ function UploadMobileApp() {
     };
 
     const Header = React.memo(() => {
-        // ここではすべてモバイルとして想定しているので `isMobile` は不要です。
         return (
             <div style={{
                 position: 'fixed',
@@ -1292,7 +1278,7 @@ function UploadMobileApp() {
                     <h1 style={{ 
                         textTransform: 'uppercase', 
                         margin: 0,
-                        fontSize: '16px' // モバイル用のフォントサイズを設定
+                        fontSize: '16px' // mobile font size
                     }}>
                         UPLOAD PAGE
                     </h1>
@@ -1453,9 +1439,9 @@ function UploadMobileApp() {
                 bottom: 0,
                 left: 0,
                 width: '100%',
-                backgroundColor: 'rgba(245, 245, 245, 0.9)', // 白に近い灰色で少し透過
+                backgroundColor: 'rgba(245, 245, 245, 0.9)',
                 zIndex: 1000,
-                borderTop: '1px solid #ddd', // ボーダーを薄いグレー
+                borderTop: '1px solid #ddd',
                 padding: '10px',
                 textAlign: 'center',
                 fontSize: '16px'
@@ -1509,7 +1495,7 @@ function UploadMobileApp() {
         );
     });
 
-    //walletが接続パブリックキーが読み込まれたor切断された場合に再読み込みを実行
+    // Reload when the wallet is connected or the public key is read or disconnected
     useEffect(() => {
         if (true) {
             console.log("useEffect , [publicKey, disconnect]");
@@ -1555,17 +1541,17 @@ function UploadMobileApp() {
             {condition_STEP4 && <Footer />}
 
             <div style={{
-                width: '100%', // 画面幅いっぱいに設定
-                padding: '0 20px', // 左右のpaddingを調整
-                marginTop: '60px', // ヘッダーの高さ分の余白を確保
+                width: '100%',
+                padding: '0 20px',
+                marginTop: '60px',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: '20px', // 要素間のスペースを追加
-                boxSizing: 'border-box', // paddingやborderを含めて幅を計算
-                overflowX: 'hidden', // 横方向のスクロールを禁止
-                left: 0, // 左端まで広げる
-                paddingBottom: '60px', // Footerの高さ分のスペースを追加（調整可能）
+                gap: '20px',
+                boxSizing: 'border-box',
+                overflowX: 'hidden',
+                left: 0,
+                paddingBottom: '60px',
             }}>
 
                 {!publicKey &&
@@ -1745,7 +1731,7 @@ function Annotation({ annotation, onDelete, onUpdateText, onMouseDown, onMouseMo
     };
 
     const handleTextMouseDown = (e) => {
-        e.stopPropagation();  // テキストボックス上でのイベントの伝播を止めます。
+        e.stopPropagation();
     };
 
     const handleTextChange = (e) => {
@@ -1761,7 +1747,7 @@ function Annotation({ annotation, onDelete, onUpdateText, onMouseDown, onMouseMo
                 top: annotation.y,
                 width: annotation.width,
                 height: annotation.height,
-                boxSizing: 'border-box', // 枠を含めたサイズ計算
+                boxSizing: 'border-box',
             }}
             onMouseDown={onMouseDown}
             onMouseMove={onMouseMove}
@@ -1773,7 +1759,7 @@ function Annotation({ annotation, onDelete, onUpdateText, onMouseDown, onMouseMo
             <button
                 style={{ position: 'absolute', right: -10, top: -10 }}
                 onMouseDown={handleClick}
-                onTouchStart={handleClick} // 追加
+                onTouchStart={handleClick}
             >
                 X
             </button>
@@ -1782,10 +1768,10 @@ function Annotation({ annotation, onDelete, onUpdateText, onMouseDown, onMouseMo
                 value={annotation.text}
                 onChange={handleTextChange}
                 onMouseDown={handleTextMouseDown}
-                onTouchStart={handleTextMouseDown} // 追加
+                onTouchStart={handleTextMouseDown}
                 style={{
                     position: 'absolute',
-                    bottom: '-40px', // 枠の下にテキストボックスを移動
+                    bottom: '-40px',
                     left: 0,
                     width: `${Math.max(100, annotation.text.length * 8)}px`,
                     fontSize: '16px',
@@ -1799,10 +1785,10 @@ function Annotation({ annotation, onDelete, onUpdateText, onMouseDown, onMouseMo
                     width: 20,
                     height: 20,
                     cursor: 'se-resize',
-                    zIndex: 2, // リサイズエリアを前面に
+                    zIndex: 2,
                 }}
                 onMouseDown={onResizerMouseDown}
-                onTouchStart={onResizerTouchStart} // 追加
+                onTouchStart={onResizerTouchStart}
             />
         </div>
     );
@@ -1815,11 +1801,11 @@ function AnnotationProtected({
     onMouseDown, 
     onMouseMove, 
     onMouseUp, 
-    onTouchStart, // 追加
-    onTouchMove, // 追加
-    onTouchEnd, // 追加
+    onTouchStart,
+    onTouchMove,
+    onTouchEnd,
     onResizerMouseDown, 
-    onResizerTouchStart // 追加 
+    onResizerTouchStart
 }) {
     const handleClick = (e) => {
         e.stopPropagation();
@@ -1827,7 +1813,7 @@ function AnnotationProtected({
     };
 
     const handleTextMouseDown = (e) => {
-        e.stopPropagation();  // テキストボックス上でのイベントの伝播を止めます。
+        e.stopPropagation();
     };
 
     const handleTextChange = (e) => {
@@ -1842,19 +1828,19 @@ function AnnotationProtected({
                 top: annotation.y,
                 width: annotation.width,
                 height: annotation.height,
-                boxSizing: 'border-box', // 枠を含めたサイズ計算
+                boxSizing: 'border-box',
             }}
             onMouseDown={onMouseDown}
             onMouseMove={onMouseMove}
             onMouseUp={onMouseUp}
-            onTouchStart={onTouchStart} // 追加
-            onTouchMove={onTouchMove} // 追加
-            onTouchEnd={onTouchEnd} // 追加
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
         >
             <button
                 style={{ position: 'absolute', right: -10, top: -10 }}
                 onMouseDown={handleClick}
-                onTouchStart={handleClick} // 追加
+                onTouchStart={handleClick}
             >
                 X
             </button>
@@ -1863,10 +1849,10 @@ function AnnotationProtected({
                 value={annotation.text}
                 onChange={handleTextChange}
                 onMouseDown={handleTextMouseDown}
-                onTouchStart={handleTextMouseDown} // 追加
+                onTouchStart={handleTextMouseDown}
                 style={{
                     position: 'absolute',
-                    bottom: '-40px', // 枠の下にテキストボックスを移動
+                    bottom: '-40px',
                     left: 0,
                     width: `${Math.max(100, annotation.text.length * 8)}px`,
                     fontSize: '16px',
@@ -1880,10 +1866,10 @@ function AnnotationProtected({
                     width: 20,
                     height: 20,
                     cursor: 'se-resize',
-                    zIndex: 2, // リサイズエリアを前面に
+                    zIndex: 2,
                 }}
                 onMouseDown={onResizerMouseDown}
-                onTouchStart={onResizerTouchStart} // 追加
+                onTouchStart={onResizerTouchStart}
             />
         </div>
     );

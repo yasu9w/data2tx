@@ -24,11 +24,6 @@
   color: white;
 }
 
-/*
-.App-link {
-  color: #61dafb;
-}
-*/
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -50,26 +45,26 @@
     background-color: rgba(128, 128, 128, 0.5);
 }
 
-/* ピンチズーム無効化 */
+/* Disable pinch zoom */
 body, html {
   touch-action: manipulation;
-  -ms-touch-action: manipulation; /* IE 10+ 用 */
+  -ms-touch-action: manipulation; /* IE 10+ */
   user-select: none;
-  -webkit-user-select: none; /* Safari 用 */
-  -ms-user-select: none; /* IE 10+ 用 */
-  -moz-user-select: none; /* Firefox 用 */
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10+ */
+  -moz-user-select: none; /* Firefox */
   overscroll-behavior: none;
 }
 
-/* ダブルタップによるズーム無効化 */
+/* Disable zoom on double tap */
 body {
   touch-action: pan-x pan-y;
 }
 
-/* 長押し選択メニューの無効化 */
+/* Disable long press selection menu */
 * {
-  -webkit-user-select: none; /* Safari 用 */
-  -moz-user-select: none; /* Firefox 用 */
-  -ms-user-select: none; /* IE 10+ 用 */
-  user-select: none; /* 標準プロパティ */
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE 10+ */
+  user-select: none; /* Standard properties */
 }

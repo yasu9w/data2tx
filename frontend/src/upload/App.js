@@ -54,10 +54,10 @@ function UploadApp() {
     });
 
     const [annotations, setAnnotations] = useState([]);
-    const [currentAnnotation, setCurrentAnnotation] = useState(null); //マウス操作で新規追加するBBOXのパラメータ
+    const [currentAnnotation, setCurrentAnnotation] = useState(null);
 
     const [annotations_protected, setAnnotations_protected] = useState([]);
-    const [currentAnnotation_protected, setCurrentAnnotation_protected] = useState(null); //マウス操作で新規追加するBBOXのパラメータ
+    const [currentAnnotation_protected, setCurrentAnnotation_protected] = useState(null);
 
     const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
     const [imageDimensionsProtected, setImageDimensionsProtected] = useState({ width: 0, height: 0 });
@@ -66,7 +66,7 @@ function UploadApp() {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////// 画像読み込みに関する処理
+    ////// Processing related to image loading
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     const handleImage = async (event) => {
@@ -140,7 +140,7 @@ function UploadApp() {
                 await searchImages(DateTimeOriginal, Latitude, Longitude);
 
             } else {
-                // Exif情報が存在しない場合の処理
+                // If Exif information does not exist
                 setExifInfo({
                     DateTimeOriginal: '',
                     GPSLatitude: '',
@@ -181,7 +181,6 @@ function UploadApp() {
             }
             reader.readAsDataURL(selectedImage);
         } catch (error) {
-            // do a proper action on failure cases
             setExifInfo({
                 DateTimeOriginal: '',
                 GPSLatitude: '',
@@ -303,11 +302,11 @@ function UploadApp() {
     }, [publicKey]);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////// アノテーション付与に関する処理
+    ////// Processing related to adding annotations
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    const MIN_WIDTH = 20;  // 最小幅を設定します。
-    const MIN_HEIGHT = 20;  // 最小高さを設定します。
+    const MIN_WIDTH = 20;
+    const MIN_HEIGHT = 20;
     const [draggingIndex, setDraggingIndex] = useState(null);
     const [draggingIndex_protected, setDraggingIndex_protected] = useState(null);
     const [draggingOffset, setDraggingOffset] = useState({ x: 0, y: 0 });
@@ -320,10 +319,10 @@ function UploadApp() {
 
 
     /////////////////////////////////////////////////////////////
-    ////// 新規BBOX追加　anntation
+    ////// Add new BBOX annotation
     /////////////////////////////////////////////////////////////
 
-    //マウス押下されたら新規BBOXを設置
+    // Place a new BBOX when the mouse is pressed
     const handleMouseDown = (e) => {
         const offsetX = e.nativeEvent.offsetX;
         const offsetY = e.nativeEvent.offsetY;
@@ -331,7 +330,7 @@ function UploadApp() {
         setCurrentAnnotation({ x: offsetX, y: offsetY, width: 0, height: 0 });
     };
 
-    //マウス押下状態でマウスが移動したらBBOXの大きさを更新
+    // Update the size of the BBOX when the mouse is moved while pressed
     const handleMouseMove = (e) => {
         if (!currentAnnotation) return;
         const { left, top, width: imageWidth, height: imageHeight } = imgRef.current.getBoundingClientRect();
@@ -348,7 +347,7 @@ function UploadApp() {
         }));
     };
 
-    //マウス押下状態が解除されたらcurrentAnnotationをAnnotationsに追加、currentAnnotationは初期化
+    // When the mouse press state is released, add currentAnnotation to Annotations and initialize currentAnnotation
     const handleMouseUp = () => {
         if (currentAnnotation) {
             const { width, height } = currentAnnotation;
@@ -360,7 +359,7 @@ function UploadApp() {
     };
 
     /////////////////////////////////////////////////////////////
-    ////// 新規BBOX追加　anntation protected
+    ////// Add new BBOX annotation_protected
     /////////////////////////////////////////////////////////////
 
     const handleMouseDown_protected = (e) => {
@@ -399,20 +398,20 @@ function UploadApp() {
 
 
     /////////////////////////////////////////////////////////////
-    ////// 追加済みBBOXの移動　anntation
+    ////// Move added BBOX annotation
     /////////////////////////////////////////////////////////////
 
-    //BBOXを削除
+    // Delete BBOX
     const deleteAnnotation = (index) => {
         setAnnotations(annotations.filter((_, i) => i !== index));
     };
 
-    //BBOXにテキスト入力
+    // Input text into BBOX
     const updateAnnotationText = (index, text) => {
         setAnnotations(annotations.map((ann, i) => i === index ? { ...ann, text } : ann));
     };
 
-    //BBOXをマウス押下で選択
+    // Select BBOX with mouse press
     const handleAnnotationMouseDown = (index, e) => {
         e.stopPropagation();
         const { left, top } = imgRef.current.getBoundingClientRect();
@@ -422,7 +421,7 @@ function UploadApp() {
         setDraggingOffset({ x: offsetX, y: offsetY });
     };
 
-    //BBOXをマウス押下、マウス移動でBBOXを移動
+    // Press mouse to select BBOX and move it with mouse movement
     const handleAnnotationMouseMove = (e) => {
         if (draggingIndex === null) return;
         const { left, top, width: imageWidth, height: imageHeight } = imgRef.current.getBoundingClientRect();
@@ -440,13 +439,13 @@ function UploadApp() {
         } : ann));
     };
 
-    //マウス押下解除で、BBOX選択を解除
+    // Release mouse press to deselect BBOX
     const handleAnnotationMouseUp = () => {
         setDraggingIndex(null);
     };
 
     /////////////////////////////////////////////////////////////
-    ////// 追加済みBBOXの移動　anntation protected
+    ////// Move added BBOX annotation_protected
     /////////////////////////////////////////////////////////////
 
     const deleteAnnotation_protected = (index) => {
@@ -490,17 +489,17 @@ function UploadApp() {
 
 
     /////////////////////////////////////////////////////////////
-    ////// 追加済みBBOXのリサイズ　anntation
+    ////// Resize added BBOX annotation
     /////////////////////////////////////////////////////////////
 
-    //リサイザーをマウス押下で選択
+    // Select resizer with mouse press
     const handleResizerMouseDown = (index, e) => {
         e.stopPropagation();
         setResizingIndex(index);
         setIsMouseDown(true);
     };
 
-    //リサイザーをマウス押下、マウス移動でBBOXサイズを変更
+    // Press mouse on the resizer and move the mouse to change BBOX size
     const handleResizerMouseMove = (e) => {
         if (resizingIndex === null || !isMouseDown) return;
         const { left, top, width: imageWidth, height: imageHeight } = imgRef.current.getBoundingClientRect();
@@ -516,13 +515,13 @@ function UploadApp() {
         } : ann));
     };
 
-    //マウス押下解除で、リサイザー選択を解除
+    // Release mouse press to deselect resizer
     const handleResizerMouseUp = () => {
         setResizingIndex(null);
         setIsMouseDown(false);
     };
 
-    //リサイザー処理で設定したisMouseDownに応じて、リスナー
+    // Set up listeners based on isMouseDown set in resizer processing
     useEffect(() => {
         if (isMouseDown) {
             window.addEventListener('mousemove', handleResizerMouseMove);
@@ -539,7 +538,7 @@ function UploadApp() {
     }, [isMouseDown]);
 
     /////////////////////////////////////////////////////////////
-    ////// 追加済みBBOXのリサイズ　anntation protected
+    ////// Resize added BBOX annotation_protected
     /////////////////////////////////////////////////////////////
 
     const handleResizerMouseDown_protected = (index, e) => {
@@ -586,7 +585,7 @@ function UploadApp() {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////// sign、uploadに関する処理
+    ////// Processing related to sign and upload
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     const { wallet, signMessage } = useWallet();
@@ -597,10 +596,10 @@ function UploadApp() {
     let signatureStr = '';
 
     /////////////////////////////////////////////////////////////
-    ////// 画像のリサイズ、アノテーション番号を画像内に描画
+    ////// Resize the image and draw the annotation number within the image
     /////////////////////////////////////////////////////////////
 
-    // 画像をリサイズする関数
+    // Function to resize the image
     function resizeImage(file, maxWidth, maxHeight) {
         return new Promise((resolve, reject) => {
             const img = document.createElement("img");
@@ -611,7 +610,7 @@ function UploadApp() {
                 let width = img.width;
                 let height = img.height;
 
-                // 縦横比を保ちつつ指定のサイズに収まるようにリサイズ
+                // Resize to fit specified size while maintaining aspect ratio
                 if (width > height) {
                     if (width > maxWidth) {
                         height *= maxWidth / width;
@@ -649,7 +648,7 @@ function UploadApp() {
                 let width = img.width;
                 let height = img.height;
 
-                // 縦横比を保ちつつ指定のサイズに収まるようにリサイズ
+                // Resize to fit specified size while maintaining aspect ratio
                 if (width > height) {
                     if (width > maxWidth) {
                         height *= maxWidth / width;
@@ -667,21 +666,18 @@ function UploadApp() {
 
                 ctx.drawImage(img, 0, 0, width, height);
 
-                // テキストのスタイルを設定
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 ctx.font = '18px sans-serif';
                 ctx.fillStyle = 'black';
 
-                // アノテーションを描画
                 ctx.strokeStyle = 'red';
                 ctx.lineWidth = 5;
                 annotations.forEach((annotation, index) => {
                     ctx.strokeRect(annotation.x, annotation.y, annotation.width, annotation.height);
 
-                    // テキストを描画する背景を白色で描画
-                    const textHeight = 24; // テキストの高さを24に設定
-                    const textWidth = 24; // テキストの高さを24に設定
+                    const textHeight = 24;
+                    const textWidth = 24;
                     ctx.fillStyle = 'white';
                     if (annotation.y - textHeight < 0) {
                         if (annotation.y + annotation.height + textHeight > height) {
@@ -693,7 +689,6 @@ function UploadApp() {
                         ctx.fillRect(annotation.x, annotation.y - textHeight, textWidth, textHeight);
                     }
 
-                    // テキストを左端に寄せて描画
                     ctx.fillStyle = 'black';
                     ctx.textAlign = 'left';
                     ctx.textBaseline = 'middle';
@@ -720,17 +715,16 @@ function UploadApp() {
                     }
                 });
 
-                // annotations_protectedをグレー色で描画と塗りつぶし
+                // Draw and fill annotations_protected in gray
                 annotations_protected.forEach((annotation, index) => {
-                    ctx.fillStyle = 'rgba(128, 128, 128, 0.8)'; // 80%透過のグレー
+                    ctx.fillStyle = 'rgba(128, 128, 128, 0.8)';
                     ctx.fillRect(annotation.x, annotation.y, annotation.width, annotation.height);
                     ctx.strokeStyle = 'gray';
                     ctx.lineWidth = 5;
                     ctx.strokeRect(annotation.x, annotation.y, annotation.width, annotation.height);
 
-                    // テキストを描画する背景を白色で描画
-                    const textHeight = 24; // テキストの高さを24に設定
-                    const textWidth = 24; // テキストの高さを24に設定
+                    const textHeight = 24;
+                    const textWidth = 24;
                     ctx.fillStyle = 'white';
                     if (annotation.y - textHeight < 0) {
                         if (annotation.y + annotation.height + textHeight > height) {
@@ -742,7 +736,6 @@ function UploadApp() {
                         ctx.fillRect(annotation.x, annotation.y - textHeight, textWidth, textHeight);
                     }
 
-                    // テキストを左端に寄せて描画
                     ctx.fillStyle = 'black';
                     ctx.textAlign = 'left';
                     ctx.textBaseline = 'middle';
@@ -812,7 +805,7 @@ function UploadApp() {
         const dateTime = new Date(dateTimeString);
 
         const year = dateTime.getUTCFullYear();
-        const month = dateTime.getUTCMonth() + 1; // 月は0から始まるため、+1する
+        const month = dateTime.getUTCMonth() + 1; // Add 1 because months start from 0
         const day = dateTime.getUTCDate();
         const hours = dateTime.getUTCHours();
         const minutes = dateTime.getUTCMinutes();
@@ -878,7 +871,7 @@ function UploadApp() {
     }
 
     /////////////////////////////////////////////////////////////
-    ////// upload処理（関数内でsign signatureを実行）、ボタンクリックで発動
+    ////// Upload process (execute sign signature within the function), triggered by button click
     /////////////////////////////////////////////////////////////
 
     const onSignUpload = async (event) => {
@@ -963,7 +956,7 @@ function UploadApp() {
 
 
     /////////////////////////////////////////////////////////////
-    ////// 画像アップロード
+    ////// Image upload
     /////////////////////////////////////////////////////////////
 
     const uploadOriginalImage = (imagesRef) => {
@@ -1014,7 +1007,7 @@ function UploadApp() {
 
 
     /////////////////////////////////////////////////////////////
-    ////// annotationアップロード
+    ////// Annotation upload
     /////////////////////////////////////////////////////////////
 
     const uploadAnnotationData = async (storageRefOriginal) => {
@@ -1100,7 +1093,7 @@ function UploadApp() {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////// パラメータチェック、表示フラグ管理
+    ////// Parameter check and display flag management
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     function padZero(number) {
@@ -1111,7 +1104,7 @@ function UploadApp() {
         const dateTime = new Date(dateTimeString);
 
         const year = dateTime.getUTCFullYear();
-        const month = dateTime.getUTCMonth() + 1; // 月は0から始まるため、+1する
+        const month = dateTime.getUTCMonth() + 1; // Add 1 because months start from 0
         const day = dateTime.getUTCDate();
         const hours = dateTime.getUTCHours();
         const minutes = dateTime.getUTCMinutes();
@@ -1179,7 +1172,7 @@ function UploadApp() {
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////// ページ表示
+    ////// Page display
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -1199,7 +1192,7 @@ function UploadApp() {
                 justifyContent: 'center',
                 color: '#fff',
                 fontSize: '24px',
-                pointerEvents: 'auto'  // オーバーレイ上のイベントを有効化
+                pointerEvents: 'auto'
             }}>
                 {uploadingMessage}
             </div>
@@ -1386,9 +1379,9 @@ function UploadApp() {
                 bottom: 0,
                 left: 0,
                 width: '100%',
-                backgroundColor: 'rgba(245, 245, 245, 0.9)', // 白に近い灰色で少し透過
+                backgroundColor: 'rgba(245, 245, 245, 0.9)',
                 zIndex: 1000,
-                borderTop: '1px solid #ddd', // ボーダーを薄いグレー
+                borderTop: '1px solid #ddd',
                 padding: '10px',
                 textAlign: 'center',
                 fontSize: '16px'
@@ -1442,7 +1435,7 @@ function UploadApp() {
         );
     });
 
-    //walletが接続パブリックキーが読み込まれたor切断された場合に再読み込みを実行
+    // Reload when the wallet is connected or the public key is read or disconnected
     useEffect(() => {
         if (true) {
             console.log("useEffect , [publicKey, disconnect]");
@@ -1491,11 +1484,11 @@ function UploadApp() {
                 padding: '20px',
                 width: '100%',
                 margin: '0 auto',
-                marginTop: '60px', // ヘッダーの高さ分の余白を確保
+                marginTop: '60px',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: '20px' // 要素間のスペースを追加
+                gap: '20px'
             }}>
 
                 {!publicKey &&
@@ -1663,7 +1656,7 @@ function Annotation({ annotation, onDelete, onUpdateText, onMouseDown, onMouseMo
     };
 
     const handleTextMouseDown = (e) => {
-        e.stopPropagation();  // テキストボックス上でのイベントの伝播を止めます。
+        e.stopPropagation();
     };
 
     const handleTextChange = (e) => {
@@ -1697,7 +1690,7 @@ function Annotation({ annotation, onDelete, onUpdateText, onMouseDown, onMouseMo
                 style={{
                     position: 'absolute',
                     bottom: -20,
-                    width: `${Math.max(100, annotation.text.length * 8)}px` // テキストの長さに基づいて幅を調整します。
+                    width: `${Math.max(100, annotation.text.length * 8)}px`
                 }}
             />
             <div
@@ -1722,7 +1715,7 @@ function AnnotationProtected({ annotation, onDelete, onUpdateText, onMouseDown, 
     };
 
     const handleTextMouseDown = (e) => {
-        e.stopPropagation();  // テキストボックス上でのイベントの伝播を止めます。
+        e.stopPropagation();
     };
 
     const handleTextChange = (e) => {
@@ -1756,7 +1749,7 @@ function AnnotationProtected({ annotation, onDelete, onUpdateText, onMouseDown, 
                 style={{
                     position: 'absolute',
                     bottom: -20,
-                    width: `${Math.max(100, annotation.text.length * 8)}px` // テキストの長さに基づいて幅を調整します。
+                    width: `${Math.max(100, annotation.text.length * 8)}px`
                 }}
             />
             <div
