@@ -1223,9 +1223,11 @@ function UploadMobileApp() {
         }
     }
 
-    const condition_STEP4 = uploadedImage && checkDateTime(exifInfo.DateTimeOriginal) && checkLatitude(exifInfo.GPSLatitude) && checkLatitude(exifInfo.GPSLongitude) && hasAnyAnnotationsAndAllHaveText(annotations, annotations_protected);
+    //const condition_STEP4 = uploadedImage && checkDateTime(exifInfo.DateTimeOriginal) && checkLatitude(exifInfo.GPSLatitude) && checkLatitude(exifInfo.GPSLongitude) && hasAnyAnnotationsAndAllHaveText(annotations, annotations_protected);
+    const condition_STEP4 = uploadedImage && hasAnyAnnotationsAndAllHaveText(annotations, annotations_protected);
     //const condition_AppBar = !isButtonDisabled && uploadedImage && checkDateTime(exifInfo.DateTimeOriginal) && checkLatitude(exifInfo.GPSLatitude) && checkLatitude(exifInfo.GPSLongitude) && hasAnyAnnotationsAndAllHaveText(annotations, annotations_protected);
-    const condition_AppBar = uploadedImage && checkDateTime(exifInfo.DateTimeOriginal) && checkLatitude(exifInfo.GPSLatitude) && checkLatitude(exifInfo.GPSLongitude) && hasAnyAnnotationsAndAllHaveText(annotations, annotations_protected);
+    //const condition_AppBar = uploadedImage && checkDateTime(exifInfo.DateTimeOriginal) && checkLatitude(exifInfo.GPSLatitude) && checkLatitude(exifInfo.GPSLongitude) && hasAnyAnnotationsAndAllHaveText(annotations, annotations_protected);
+    const condition_AppBar = uploadedImage  && hasAnyAnnotationsAndAllHaveText(annotations, annotations_protected);
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1577,7 +1579,8 @@ function UploadMobileApp() {
                 <ShowExif />
 
 
-                {uploadedImage && checkDateTime(exifInfo.DateTimeOriginal) && checkLatitude(exifInfo.GPSLatitude) && checkLatitude(exifInfo.GPSLongitude) && (
+                {/*{uploadedImage && checkDateTime(exifInfo.DateTimeOriginal) && checkLatitude(exifInfo.GPSLatitude) && checkLatitude(exifInfo.GPSLongitude) && (*/}
+                {uploadedImage && (
                     <>
                     <h2>STEP2: Touch and Drag to Draw Area and Enter Text</h2>
                     <p style={{ color: 'red', fontSize: '14px' }}>
@@ -1594,7 +1597,8 @@ function UploadMobileApp() {
                     onTouchMove={handleMove}
                     onTouchEnd={handleEnd}
                 >
-                    {uploadedImage && checkDateTime(exifInfo.DateTimeOriginal) && checkLatitude(exifInfo.GPSLatitude) && checkLatitude(exifInfo.GPSLongitude) && (
+                    {/*{uploadedImage && checkDateTime(exifInfo.DateTimeOriginal) && checkLatitude(exifInfo.GPSLatitude) && checkLatitude(exifInfo.GPSLongitude) && (*/}
+                    {uploadedImage && (
                         <img
                             ref={imgRef}
                             src={uploadedImage}
