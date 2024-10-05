@@ -20,7 +20,7 @@ function Navigation() {
     return (
         <div style={styles.container}>
             <div style={styles.content}>
-                <img src={logoImage} alt="logo" style={styles.image} />
+                <img src={logoImage} alt="logo" style={isMobile ? styles.imageMobile : styles.imagePC} />
             </div>
             <nav style={styles.nav}>
                 <ul style={styles.ul}>
@@ -103,11 +103,15 @@ const styles = {
     content: {
         marginBottom: '20px',
         fontWeight: 'bold',
+        fontSize: '16px',
     },
-    image: {
-        maxWidth: '100%',
+    imageMobile: {
+        maxWidth: '80%',
         height: 'auto',
-        marginTop: '20px',
+    },
+    imagePC: {
+        maxWidth: '150px',
+        height: 'auto',
     },
     nav: {
         marginTop: '20px',
