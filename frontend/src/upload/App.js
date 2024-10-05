@@ -1128,7 +1128,7 @@ function UploadApp() {
         const geohashLevels = generateGeohashLevels(hash);
         const dateOriginal = (exifInfo.DateTimeOriginal && !isNaN(new Date(exifInfo.DateTimeOriginal))) 
         ? firebase.firestore.Timestamp.fromDate(getUTCDateTimeByDate(exifInfo.DateTimeOriginal)) 
-        : firebase.firestore.Timestamp.fromDate(new Date(NaN));
+        : null;
 
         const annotations_label = annotations.map((annotation, index) => `${index + 1}:${annotation.text}`).join(", ");
         const annotations_protected_label = annotations_protected.map((annotations_protected, index) => `${index + 1}:${annotations_protected.text}`).join(", ");
