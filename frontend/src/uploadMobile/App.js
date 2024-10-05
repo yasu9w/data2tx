@@ -83,7 +83,15 @@ function UploadMobileApp() {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     const handleImage = async (event) => {
-        const selectedImage = event.target.files[0];
+        let selectedImage = event.target.files[0];
+
+        if (selectedImage.type === "image/heic") {
+            selectedImage = await heic2any({
+                blob: selectedImage,
+                toType: "image/jpeg",
+            });
+        }
+
         setImage(selectedImage);
         if (DEBUG) {
             console.log("selectedImage", selectedImage);
@@ -170,7 +178,6 @@ function UploadMobileApp() {
                 });
             }
 
-            /*
             const reader = new FileReader();
             reader.onloadend = () => {
                 setUploadedImage(reader.result);
@@ -194,7 +201,7 @@ function UploadMobileApp() {
 
             }
             reader.readAsDataURL(selectedImage);
-            */
+            /*
             if (selectedImage.type === "image/heic") {
                 const convertedBlob = await heic2any({
                     blob: selectedImage,
@@ -247,6 +254,7 @@ function UploadMobileApp() {
                 };
                 reader.readAsDataURL(selectedImage);
             }
+            */
         } catch (error) {
             setExifInfo({
                 DateTimeOriginal: '',
