@@ -210,13 +210,14 @@ function SOL2WSOLApp() {
     return (
         <div style={{
             padding: '20px',
-            maxWidth: '1200px',
+            maxWidth: '100%',
             margin: '0 auto',
             marginTop: '0px',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            gap: '20px'
+            gap: '20px',
+            overflowX: 'hidden',
         }}>
             <Header />
             <div style={{ marginTop: '80px' }}></div>
@@ -235,6 +236,7 @@ function SOL2WSOLApp() {
                 maxWidth: '100%',
                 overflowWrap: 'break-word',
                 textAlign: 'center',
+                whiteSpace: 'normal',
             }}>
                 {status}
             </p>
