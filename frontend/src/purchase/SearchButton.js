@@ -1,4 +1,3 @@
-//import React from 'react';
 import React, { useEffect, useState } from 'react';
 import { storage_preview } from "./firebase";
 
@@ -10,7 +9,7 @@ import { useLock } from './LockContext';
 const DEBUG = true;
 
 
-//画像IDページのURL作成
+// Create URL for the image ID page
 function createUrlitemID(params) {
     const origin = window.location.origin;
 
@@ -24,7 +23,7 @@ function createUrlitemID(params) {
     return newUrl;
 }
 
-//publickeyページのURL作成
+// Create URL for the public key page
 function createUrlpublicKey(params) {
 
     const queryParams = new URLSearchParams(
@@ -41,33 +40,33 @@ function createUrlpublicKey(params) {
 }
 
 function stringToDateTimeStart(startDate, startTime) {
-    // startTimeがnullの場合、"00:00"を代入
+    // If startTime is null, assign "00:00"
     if (!startTime) {
         startTime = "00:00";
     }
 
-    // startDateがnullの場合、現在の日付をISO 8601形式の日付文字列に変換
+    // If startDate is null, convert the current date to an ISO 8601 formatted date string
     if (!startDate) {
         return new Date();
     }
 
-    // startDateとstartTimeを組み合わせる
+    // Combine startDate and startTime
     const dateTimeString = `${startDate}T${startTime}`;
 
-    // Dateオブジェクトを作成
+    // Create a Date object
     const dateTime = new Date(dateTimeString);
 
-    // Dateオブジェクトが無効な場合（組み合わせが無効な日時の場合）、現在の日時を返す
+    // If the Date object is invalid (e.g., an invalid date-time combination), return the current date and time
     if (isNaN(dateTime.getTime())) {
         return new Date();
     } else {
-        // 有効な日時の場合、そのDateオブジェクトを返す
+        // If the date-time is valid, return the Date object
         return dateTime;
     }
 }
 
 function stringToDateTimeEnd(endDate, endTime) {
-    // startTimeがnullの場合、"23:59"を代入
+    // If startTime is null, assign "23:59"
     if (!endTime) {
         endTime = "23:59";
     }
@@ -77,17 +76,17 @@ function stringToDateTimeEnd(endDate, endTime) {
         return new Date();
     }
 
-    // endDateとendTimeを組み合わせる
+    // If endDate is null, convert the current date to an ISO 8601 formatted date string
     const dateTimeString = `${endDate}T${endTime}`;
 
-    // Dateオブジェクトを作成
+    // Create a Date object
     const dateTime = new Date(dateTimeString);
 
-    // Dateオブジェクトが無効な場合（組み合わせが無効な日時の場合）、現在の日時を返す
+    // If the Date object is invalid (e.g., an invalid date-time combination), return the current date and time
     if (isNaN(dateTime.getTime())) {
         return new Date();
     } else {
-        // 有効な日時の場合、そのDateオブジェクトを返す
+        // If the date-time is valid, return the Date object
         return dateTime;
     }
 }
@@ -157,7 +156,7 @@ function getGeoHashLength(zoom, CenterLat, CenterLng, NElat, NElng, SWlat, SWlng
         }
     }
 
-    // 22より大きい場合はすべてnullに設定
+    // If the value is greater than 22, set everything to null
     if (zoom > 22) {
         geoHashLength = 'null';
         hashCenter = null;
@@ -249,14 +248,14 @@ function SearchButton({
 
     const queryString = window.location.search;
 
-    // URLSearchParamsオブジェクトを作成
+    // Create a URLSearchParams object
     const queryParams = new URLSearchParams(queryString);
 
-    // クエリパラメータが1つでも含まれているかチェック
+    // Check if at least one query parameter is present
     const hasQueryParams = queryParams.keys().next().done === false;
 
     //****************************************************//
-    //地図情報をもとに画像検索クエリ生成
+    // Generate an image search query based on map information
     //****************************************************//
 
     const searchImages = async () => {
@@ -274,7 +273,7 @@ function SearchButton({
         try {
 
             //////////////////////////////////////////////////////////
-            //検索クエリ作成
+            // Create search query
             //////////////////////////////////////////////////////////
 
             const [geoHashLength, centerHash] = getGeoHashLength(zoom, CenterLat, CenterLng, NElat, NElng, SWlat, SWlng);
@@ -332,7 +331,7 @@ function SearchButton({
 
             
             //////////////////////////////////////////////////////////
-            //スナップショット取得
+            // Take a snapshot
             //////////////////////////////////////////////////////////
 
             let snapshot = null;
@@ -356,7 +355,7 @@ function SearchButton({
 
             
             //////////////////////////////////////////////////////////
-            //購入済みリストpurchasedListを作成する　（docDataAllはこの後は参照しない）
+            // Create the purchased list (purchasedList), docDataAll will no longer be referenced after this
             //////////////////////////////////////////////////////////
 
             const storagePath = process.env.REACT_APP_STORAGE_PATH;
@@ -365,13 +364,13 @@ function SearchButton({
             try {
 
                 let promises = snapshot.docs
-                    .filter((doc, index) => { //地図の表示範囲のデータのみフィルタ
+                    .filter((doc, index) => { // Filter only the data within the map display area
                         return SWlat < doc.data().latitude && doc.data().latitude < NElat && SWlng < doc.data().longitude && doc.data().longitude < NElng;
                     })
                     .map(async doc => {
                         const data = doc.data();
 
-                        //ウォレットが接続されpublickeyがある場合は購入済みリストを作成
+                        // If the wallet is connected and a public key exists, create the purchased list
                         if (publicKey != null) {
 
                             const id_ = publicKey.toString().substring(0, 10) + doc.id.split('.')[0];
@@ -383,7 +382,7 @@ function SearchButton({
                                 if (doc.exists) {
 
                                     if (DEBUG) {
-                                        console.log("購入済みコンテンツ: ", doc.data());
+                                        console.log("Purchased Content: ", doc.data());
                                     }
 
                                     if (doc.data().status === 0) {
@@ -410,7 +409,6 @@ function SearchButton({
                         return data;
                     });
 
-                // Promise.allを使ってすべてのPromiseが完了するのを待つ
                 await Promise.all(promises);
 
             } catch (error) {
@@ -422,7 +420,8 @@ function SearchButton({
 
             
             //////////////////////////////////////////////////////////
-            //App.jsにdocDataを返す（地図上にピンを打つ用）、後述のinfoOverlayに表示する情報(combinedProperty)を生成
+            // Return docData to App.js (for placing pins on the map), 
+            //and generate information (combinedProperty) to display in the infoOverlay mentioned later
             //////////////////////////////////////////////////////////
 
             let imageUrls = null;
@@ -444,16 +443,16 @@ function SearchButton({
             }
 
             const docData = snapshot.docs
-                .map((doc, index) => { //doc, imageUrlをindexで紐付け
+                .map((doc, index) => { // Link doc and imageUrl by index
                     return {
                         doc,
                         imageUrl: imageUrls[index],
                     };
                 })
-                .filter(({ doc, imageUrl }) => { //地図の表示範囲のデータのみフィルタ
+                .filter(({ doc, imageUrl }) => { // Filter only the data within the map display area
                     return SWlat < doc.data().latitude && doc.data().latitude < NElat && SWlng < doc.data().longitude && doc.data().longitude < NElng;
                 })
-                .map(({ doc, imageUrl }) => { //画像に重畳表示するデータを渡す
+                .map(({ doc, imageUrl }) => { // Pass the data to be overlaid on the image
                     let combinedProperty = '';
 
                     combinedProperty += `Image: \n`;
@@ -505,12 +504,12 @@ function SearchButton({
 
             
             //////////////////////////////////////////////////////////
-            //imagecontainer作成
+            // Create image container
             //////////////////////////////////////////////////////////
 
             const newImageCache = { ...imageCache };
 
-            // 前回の検索結果を全て削除
+            // Delete all previous search results
             const imageContainer = document.getElementById("image-container");
             imageContainer.style.display = 'flex';
             imageContainer.style.flexWrap = 'wrap';
@@ -523,23 +522,23 @@ function SearchButton({
             docData.forEach((item, index) => {
 
                 ////////////////////////////////////////////////////////////////
-                /////　画像の追加
+                ///// Add image
                 ////////////////////////////////////////////////////////////////
                 let imageDiv = document.createElement('div');
-                imageDiv.style.width = "360px";  // 720pxから360pxに変更
-                imageDiv.style.height = "360px"; // 720pxから360pxに変更
+                imageDiv.style.width = "360px";
+                imageDiv.style.height = "360px";
                 imageDiv.style.display = 'flex';
                 imageDiv.style.alignItems = 'center';
                 imageDiv.style.justifyContent = 'center';
                 imageDiv.style.marginRight = "10px";
                 imageDiv.style.marginBottom = "10px";
-                imageDiv.style.border = '1px solid rgb(211,211,211)'; // 枠線のスタイルを灰色の細線に変更
+                imageDiv.style.border = '1px solid rgb(211,211,211)';
                 imageDiv.style.position = 'relative';
 
                 if (newImageCache[item.imageUrl]) {
-                    // キャッシュから画像を再利用
+                    // Reuse image from cache
                     if (DEBUG) {
-                        console.log("キャッシュから再利用", item.imageUrl)
+                        console.log("Reuse from cache: ", item.imageUrl)
                     }
 
                     let img = newImageCache[item.imageUrl].cloneNode();
@@ -555,9 +554,9 @@ function SearchButton({
 
                 } else {
                     try {
-                        // 画像をダウンロードし、キャッシュに保存
+                        // Download the image and save it to the cache
                         if (DEBUG) {
-                            console.log("画像をダウンロードし、キャッシュに保存", item.imageUrl)
+                            console.log("Download the image and save it to cache: ", item.imageUrl)
                         }
                         let img = document.createElement('img');
                         img.src = item.imageUrl;
@@ -585,36 +584,36 @@ function SearchButton({
                 }
 
                 ////////////////////////////////////////////////////////////////
-                /////　infoOverlayの追加
+                ////// Add infoOverlay
                 ////////////////////////////////////////////////////////////////
-                // オーバーレイ情報を作成
+                // Create overlay information
                 let infoOverlay = document.createElement('div');
                 infoOverlay.style.position = 'absolute';
                 infoOverlay.style.top = '0';
                 infoOverlay.style.left = '0';
                 infoOverlay.style.width = '100%';
                 infoOverlay.style.height = '100%';
-                infoOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';  // 透明度を持つ黒色
+                infoOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
                 infoOverlay.style.color = 'white';
                 infoOverlay.style.display = 'none';
                 infoOverlay.style.alignItems = 'center';
                 infoOverlay.style.justifyContent = 'center';
-                infoOverlay.style.overflow = 'auto';  // Add this line
-                infoOverlay.style.maxHeight = '360px';  // Add this line
-                infoOverlay.style.whiteSpace = 'pre-wrap';  // Change to 'pre-wrap'
-                infoOverlay.style.textAlign = 'left';  // Add this line
+                infoOverlay.style.overflow = 'auto';
+                infoOverlay.style.maxHeight = '360px';
+                infoOverlay.style.whiteSpace = 'pre-wrap';
+                infoOverlay.style.textAlign = 'left';
 
-                // オーバーレイを画像のDIVに追加
+                // Add overlay to the image DIV
                 imageDiv.appendChild(infoOverlay);
 
                 ////////////////////////////////////////////////////////////////
-                /////　マウスが画像上に乗った時の処理を追加
+                ///// Add processing for when the mouse hovers over the image
                 ////////////////////////////////////////////////////////////////
 
                 imageDiv.addEventListener('mouseover', () => {
                     if (!infoOverlay.querySelector('.text-container')) {
 
-                        // テキストとリンクを含む新しいdivを作成
+                        // Create a new div containing text and a link
                         let textContainer = document.createElement('div');
                         textContainer.className = 'text-container';
                         textContainer.style.textAlign = 'left';
@@ -622,7 +621,7 @@ function SearchButton({
                         textContainer.style.marginTop = '0';
                         textContainer.style.paddingTop = '0';
 
-                        //画像IDへのリンクは保留
+                        // Hold off on the link to the image ID
                         let linkTextId = item.id;
                         let urlId = createUrlitemID({ "id": item.id });
                         let linkHtmlId = `<a href="${urlId}" target="_blank" rel="noopener noreferrer" class="custom-link">${linkTextId}</a>`;
@@ -647,7 +646,6 @@ function SearchButton({
 
                         textContainer.innerHTML = item.jsonData.replace(item.id, linkHtmlId).replace(item.publicKey, linkHtmlKey);
 
-                        // CSSを追加
                         let style = `<style>.custom-link { color: #33FF33; text-decoration: none;} .custom-link:visited { color: #33FF33; } .custom-link:hover { color: #33FF33; text-decoration: underline; }</style>`;
 
                         infoOverlay.innerHTML = style;
@@ -664,7 +662,7 @@ function SearchButton({
 
 
                 ////////////////////////////////////////////////////////////////
-                /////　購入済みをグレーアウトを追加
+                ///// Add graying out for purchased items
                 ////////////////////////////////////////////////////////////////
                 if (purchasedList.includes(item.id)) {
                     imageDiv.style.border = '1px solid rgb(211,211,211)';
@@ -701,15 +699,14 @@ function SearchButton({
                         </div>
                     `;
                     }
-                    imageDiv.appendChild(overlay);  // オーバーレイを画像のDIVに追加
+                    imageDiv.appendChild(overlay);
                 }
 
 
                 ////////////////////////////////////////////////////////////////
-                /////　通報フォームを追加（ポップアップメニュー）
+                ///// Add report form (popup menu)
                 ////////////////////////////////////////////////////////////////
 
-                // チェックボックス
                 let checkboxes = [
                     { id: '1', label: 'A location where photography is prohibited.' },
                     { id: '2', label: 'A location where photography is allowed, but commercial photography is prohibited.' },
@@ -718,10 +715,9 @@ function SearchButton({
                     { id: '5', label: 'The image is inappropriate.' },
                     { id: '6', label: 'The annotation is inappropriate.' },
                     { id: '7', label: 'The location or time information is inappropriate.' },
-                    // 他のオプションも追加可能
                 ];
 
-                //プレフィックス
+                //prefix
                 const itemIdPrefix = `item-${index}-`;
 
                 let popupMenu = document.createElement('div');
@@ -744,9 +740,9 @@ function SearchButton({
                     input.type = 'checkbox';
                     input.id = itemIdPrefix + checkbox.id;
 
-                    // change イベントリスナーを追加
+                    // Add change event listener
                     input.addEventListener('change', function () {
-                        // 他のすべてのチェックボックスの選択を解除
+                        // Deselect all other checkboxes
                         checkboxes.forEach(function (otherCheckbox) {
                             if (otherCheckbox.id !== checkbox.id) {
                                 let otherCheckboxElement = document.getElementById(itemIdPrefix + otherCheckbox.id);
@@ -764,7 +760,7 @@ function SearchButton({
                 });
 
                 popupMenu.addEventListener('mouseout', (event) => {
-                    // relatedTargetをチェックして、ポップアップメニュー外に移動した場合のみ非表示にする
+                    // Check the relatedTarget and hide the popup menu only if the focus moves outside of it
                     if (!popupMenu.contains(event.relatedTarget)) {
                         popupMenu.style.display = 'none';
 
@@ -777,12 +773,12 @@ function SearchButton({
                     }
                 });
 
-                // フォームの作成
+                // Create form
                 let form = document.createElement('form');
 
-                // フォームに送信イベントのリスナーを追加
+                // Add submit event listener to the form
                 form.addEventListener('submit', function (event) {
-                    event.preventDefault(); // デフォルトの送信動作を防止
+                    event.preventDefault(); // Prevent default submit behavior
 
                     checkboxes.forEach(function (checkbox) {
                         let checkboxElement = document.getElementById(itemIdPrefix + checkbox.id);
@@ -790,7 +786,7 @@ function SearchButton({
 
                             if (publicKey) {
                                 let id = item.id.split('.')[0] + '_' + checkbox.id + '_' + publicKey.toString().substring(0, 10);
-                                const docRef = db.collection("reports").doc(id); //引数にidがあるため、ここに記述
+                                const docRef = db.collection("reports").doc(id);
 
                                 docRef.set({
                                     reportId: checkbox.id,
@@ -817,15 +813,15 @@ function SearchButton({
                     });
                 });
 
-                // ボタンの作成
+                // Create button
                 let button = document.createElement('button');
                 button.type = 'submit';
                 button.textContent = 'Report';
 
-                // ボタンをフォームに追加
+                // Add button to the form
                 form.appendChild(button);
 
-                //処理状況に関するテキストを追加
+                // Add text related to processing status
                 let textSuccessDiv = document.createElement('div');
                 textSuccessDiv.textContent = 'Thank you for your report.';
                 textSuccessDiv.style.color = 'blue';
@@ -849,40 +845,40 @@ function SearchButton({
 
 
                 ////////////////////////////////////////////////////////////////
-                /////　イベントリスナー追加（マウスの左、右クリック）
+                ///// Add event listener (left and right mouse clicks)
                 ////////////////////////////////////////////////////////////////
 
                 imageDiv.addEventListener('contextmenu', (e) => {
                     e.preventDefault();
                 });
 
-                // 左クリックと右クリックのイベントを処理
+                // Handle left-click and right-click events
                 imageDiv.addEventListener('mousedown', function (event) {
 
-                    if (isLocked) return; // ロックされている場合は何もしない
+                    if (isLocked) return; // Do nothing if it is locked
 
                     if (event.target.tagName === 'A') {
-                        // リンクの場合は何もせず、デフォルトの動作を許可
+                        // Do nothing if it's a link, and allow the default behavior
                         return;
                     }
-                    if (event.button === 0 & popupMenu.style.display === 'none' & publicKey !== null) { //左クリック、かつ、通報フォーム非表示
+                    if (event.button === 0 & popupMenu.style.display === 'none' & publicKey !== null) { // Left-click, and the report form is hidden
 
-                        if (!purchasedList.includes(item.id)) { //画像が購入済みリストに入っていない場合、
+                        if (!purchasedList.includes(item.id)) { // If the image is not in the purchased list,
 
-                            if (selectedImages[item.id]) { //画像がすでに購入選択リストに入っていれば、購入選択リストから除外する
+                            if (selectedImages[item.id]) { // If the image is already in the purchase selection list, remove it from the list
                                 imageDiv.style.border = '1px solid rgb(211,211,211)';
                                 delete selectedImages[item.id];
                                 selectedImagesArray = selectedImagesArray.filter(elem => elem[0] !== item.id);
 
-                            } else { //画像が購入選択リストに入っていなければ、購入選択リストに追加する
+                            } else { // If the image is not in the purchase selection list, add it to the list
                                 imageDiv.style.border = '2px solid blue';
                                 selectedImages[item.id] = true;
                                 selectedImagesArray.push([item.id, item.publicKey]);
                             }
 
-                            setSelectedImagesHandle(selectedImagesArray); //購入選択リストを更新する
+                            setSelectedImagesHandle(selectedImagesArray); // Update the purchase selection list
 
-                            //選択リストが空か判定、フラグを更新
+                            // Check if the selection list is empty, and update the flag
                             if (selectedImagesArray.length > 0) {
                                 setSelectedImagesFlag(true);
 
@@ -890,16 +886,16 @@ function SearchButton({
                                 setSelectedImagesFlag(false);
                             }
 
-                            setSendButtonDisabled(true); //画像をクリックした時点でpurchaseボタンが表示されていた時に、一度非表示
+                            setSendButtonDisabled(true); // When the image is clicked and the purchase button is visible, hide it temporarily
                         }
 
-                    } else if (event.button === 0 & popupMenu.style.display === 'block' & publicKey !== null) { //左クリック、かつ、通報フォーム表示
+                    } else if (event.button === 0 & popupMenu.style.display === 'block' & publicKey !== null) { // Left-click, and the report form is displayed
 
-                    } else if (event.button === 2 & !selectedImages[item.id] & publicKey !== null) { //右クリック、かつ、画像が選択リストに入っていない
+                    } else if (event.button === 2 & !selectedImages[item.id] & publicKey !== null) { // Right-click, and the image is not in the selection list
 
-                        if (popupMenu.style.display === 'block') { //通報フォームが表示状態なら、通報フォームを非表示にする
+                        if (popupMenu.style.display === 'block') { // If the report form is visible, hide the report form
                             popupMenu.style.display = 'none';
-                        } else { //通報フォームが非表示状態なら、通報フォームを表示する
+                        } else { // If the report form is hidden, show the report form
                             popupMenu.style.display = 'block';
                             popupMenu.style.position = 'absolute';
                             popupMenu.style.top = '0';
@@ -907,11 +903,10 @@ function SearchButton({
                             popupMenu.style.bottom = '0';
                             popupMenu.style.left = '0';
                         }
-                        event.preventDefault(); // デフォルトのコンテキストメニューを防止
+                        event.preventDefault(); // Prevent the default context menu
                     }
                 });
 
-                // <div>要素をページに追加
                 imageContainer.appendChild(imageDiv);
 
             });
@@ -960,7 +955,7 @@ function SearchButton({
 
     }, [isSendCompleted]);
 
-    //walletが接続パブリックキーが読み込まれたor切断された場合に再読み込みを実行
+    // Reload when the wallet is connected or the public key is read or disconnected
     useEffect(() => {
         if (DEBUG) {
             console.log("useEffect , [publicKey, disconnect]");
@@ -969,12 +964,11 @@ function SearchButton({
             console.log("publicKey || disconnect");
             const imageContainer = document.getElementById("image-container");
 
-            if (imageContainer.firstChild) { //検索結果がある状態でwalletが接続/切断
+            if (imageContainer.firstChild) { // Wallet is connected/disconnected while there are search results
                 console.log("imageContainer.firstChild");
                 searchImages();
-            } else { //検索結果がない状態でwalletが接続/切断
+            } else { // Wallet is connected/disconnected while there are no search results
                 console.log("imageContainer.firstChild else");
-                //onSearchMsg('');
             }
 
             while (imageContainer.firstChild) {
@@ -1002,7 +996,7 @@ function SearchButton({
         if (doc.exists) {
             if (doc.data().publicKey === publicKey.toString()) {
 
-                if (doc.data().mapApiPoint > 0) { //ポイント残っていれば
+                if (doc.data().mapApiPoint > 0) { // If there are remaining points
                     try {
                         await docRef.set({
                             mapApiPoint: doc.data().mapApiPoint - 1,
@@ -1048,7 +1042,7 @@ function SearchButton({
             try {
                 await docRef.set({
                     publicKey: publicKey.toString(),
-                    mapApiPoint: 5 - 1, //初回５ポイント付与、１ポイント利用
+                    mapApiPoint: 5 - 1, // Grant 5 points on the first time, use 1 point
                 });
 
                 setUseJSMapAPI(true)

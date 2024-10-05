@@ -34,11 +34,11 @@ const MyComponent = ({ selectedImagesHandle }) => {
         setSendingMessage(`Starting transaction processing...`);
 
         //****************************************************//
-        //publickey確認、RPCノードに接続
+        // Confirm public key and connect to RPC node
         //****************************************************//
         if (!publicKey) {
             if (DEBUG) {
-                console.error('公開鍵がありません');
+                console.error('No public key available.');
             }
             setSendingMessage(`Public key not found`);
             return;
@@ -50,7 +50,6 @@ const MyComponent = ({ selectedImagesHandle }) => {
 
         let connection = null;
         try {
-            // Solanaへの接続設定
             //const QUICKNODE_RPC = 'https://api.devnet.solana.com';
             const QUICKNODE_RPC = process.env.REACT_APP_QUICKNODE_RPC;
             connection = new Connection(QUICKNODE_RPC);
@@ -66,13 +65,13 @@ const MyComponent = ({ selectedImagesHandle }) => {
 
 
         //****************************************************//
-        //transacitonを定義
+        // Define transaction
         //****************************************************//
-        // selectedImagesHandle から publickey 配列を生成
+        // Generate an array of public keys from selectedImagesHandle
         const publickeys = selectedImagesHandle.map(item => new PublicKey(item[1]));
         const publickeys_str = selectedImagesHandle.map(item => item[1]);
 
-        // selectedImagesHandle から filename 配列を生成
+        // Generate an array of filenames from selectedImagesHandle
         const filenames = selectedImagesHandle.map(item => {
             const nameWithoutExtension = item[0].split('.')[0];
             return Number(nameWithoutExtension.slice(0, -10));
@@ -105,7 +104,8 @@ const MyComponent = ({ selectedImagesHandle }) => {
 
 
         //****************************************************//
-        //Associated Token Accountの存在チェック、存在しなければ１、存在すれば０をflag_listに入れる
+        // Check for the existence of the Associated Token Account; 
+        //if it doesn't exist, set flag_list to 1; if it exists, set it to 0
         //****************************************************//
         let pda_list = [];
         let bump_list = [];
@@ -158,7 +158,7 @@ const MyComponent = ({ selectedImagesHandle }) => {
 
 
         //****************************************************//
-        //transactionを分割
+        // Split transaction
         //****************************************************//
         let flagChunks = [];
         let pubkeyChunks = [];
@@ -170,32 +170,31 @@ const MyComponent = ({ selectedImagesHandle }) => {
         let tempArrayPda = [];
         let tempArrayBump = [];
         let tempArrayFilename = [];
-        let firstElementFlag = flag_list[0]; // 配列の先頭の要素を保持
-        let firstElementPubkey = pubkey_list[0]; // 配列の先頭の要素を保持
-        let firstElementPda = pda_list[0]; // 配列の先頭の要素を保持
-        let firstElementBump = bump_list[0]; // 配列の先頭の要素を保持
-        let firstElementFilename = filename_list[0]; // 配列の先頭の要素を保持
-        let secondElementFlag = flag_list[1]; // 配列の先頭の要素を保持
-        let secondElementPubkey = pubkey_list[1]; // 配列の先頭の要素を保持
-        let secondElementPda = pda_list[1]; // 配列の先頭の要素を保持
-        let secondElementBump = bump_list[1]; // 配列の先頭の要素を保持
-        let secondElementFilename = filename_list[1]; // 配列の先頭の要素を保持
+        let firstElementFlag = flag_list[0];
+        let firstElementPubkey = pubkey_list[0];
+        let firstElementPda = pda_list[0];
+        let firstElementBump = bump_list[0];
+        let firstElementFilename = filename_list[0];
+        let secondElementFlag = flag_list[1];
+        let secondElementPubkey = pubkey_list[1];
+        let secondElementPda = pda_list[1];
+        let secondElementBump = bump_list[1];
+        let secondElementFilename = filename_list[1];
         let countOnes = 0;
         let countTotal = 0;
 
         let filenameChunksStr = [];
         let tempArrayFilenameStr = [];
 
-        // 先頭の要素をスキップ
         for (let i = 2; i < flag_list.length; i++) {
             countOnes = flag_list[i] === 1 ? countOnes + 1 : countOnes;
             countTotal++;
             if (countOnes > 5 || countTotal > 10) {
-                flagChunks.push([firstElementFlag, secondElementFlag].concat(tempArrayFlag)); // 配列の先頭に元の配列の先頭要素を追加
-                pubkeyChunks.push([firstElementPubkey, secondElementPubkey].concat(tempArrayPubkey)); // 配列の先頭に元の配列の先頭要素を追加
-                pdaChunks.push([firstElementPda, secondElementPda].concat(tempArrayPda)); // 配列の先頭に元の配列の先頭要素を追加
-                bumpChunks.push([firstElementBump, secondElementBump].concat(tempArrayBump)); // 配列の先頭に元の配列の先頭要素を追加
-                filenameChunks.push([firstElementFilename, secondElementFilename].concat(tempArrayFilename)); // 配列の先頭に元の配列の先頭要素を追加
+                flagChunks.push([firstElementFlag, secondElementFlag].concat(tempArrayFlag));
+                pubkeyChunks.push([firstElementPubkey, secondElementPubkey].concat(tempArrayPubkey));
+                pdaChunks.push([firstElementPda, secondElementPda].concat(tempArrayPda));
+                bumpChunks.push([firstElementBump, secondElementBump].concat(tempArrayBump));
+                filenameChunks.push([firstElementFilename, secondElementFilename].concat(tempArrayFilename));
                 filenameChunksStr.push(["empty", "empty"].concat(tempArrayFilenameStr));
 
                 countOnes = flag_list[i] === 1 ? 1 : 0;
@@ -215,7 +214,7 @@ const MyComponent = ({ selectedImagesHandle }) => {
             tempArrayFilenameStr.push(selectedImagesHandle[i - 2]);
         }
 
-        // 残りの要素がある場合
+        // If there are remaining elements
         if (tempArrayFlag.length > 0) {
             flagChunks.push([firstElementFlag, secondElementFlag].concat(tempArrayFlag));
             pubkeyChunks.push([firstElementPubkey, secondElementPubkey].concat(tempArrayPubkey));
@@ -227,7 +226,7 @@ const MyComponent = ({ selectedImagesHandle }) => {
 
 
         //****************************************************//
-        //分割したトランザクションを順に送信
+        // Send the split transactions in order
         //****************************************************//
 
         setSendingMessage(`Send Transaciton... 0 / ${flagChunks.length}`);
@@ -293,10 +292,10 @@ const MyComponent = ({ selectedImagesHandle }) => {
                 const buffer_ = new ArrayBuffer(8);
                 const view = new DataView(buffer_);
 
-                // 14桁の数字を64ビットの整数としてセットする
+                // Set the 14-digit number as a 64-bit integer
                 const num = filename_list_[j];
-                view.setUint32(0, num & 0xFFFFFFFF, true); // 下位32ビット
-                view.setUint32(4, Math.floor(num / 0x100000000), true); // 上位32ビット
+                view.setUint32(0, num & 0xFFFFFFFF, true); // Lower 32 bits
+                view.setUint32(4, Math.floor(num / 0x100000000), true); // Upper 32 bits
 
                 const numberAsUint8Array = new Uint8Array(buffer_);
                 ix_data.push(...numberAsUint8Array);
@@ -320,7 +319,7 @@ const MyComponent = ({ selectedImagesHandle }) => {
             transaction.feePayer = publicKey;
 
             //****************************************************//
-            //RecentBlockhashを取得
+            // Retrieve RecentBlockhash
             //****************************************************//
             try {
                 transaction.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
@@ -340,7 +339,7 @@ const MyComponent = ({ selectedImagesHandle }) => {
 
 
                 //****************************************************//
-                //トランザクションに署名、walletUIと連動
+                // Sign the transaction, linked with wallet UI
                 //****************************************************//
 
                 let signedTransactions = null;
@@ -352,11 +351,10 @@ const MyComponent = ({ selectedImagesHandle }) => {
                     if (DEBUG) {
                         console.error("Transaction was cancelled: ", error);
                     }
-                    //setSendingMessage(`Transaction was cancelled. Please reload the page.`);
                     setSendingMessage(``);
                     setIsProcessing(false);
                     setIsLocked(false);
-                    //複数トランザクションが途中で中断した場合は、一部購入済みのためリロード
+                    // If multiple transactions are interrupted midway, reload because some have already been purchased
                     if (i > 0) {
                         setHasIncompleteTransactions(true);
                     }
@@ -364,7 +362,7 @@ const MyComponent = ({ selectedImagesHandle }) => {
                 }
 
                 //****************************************************//
-                //sellbuyデータベースに追加、status=0登録
+                // Add to sellbuy database, register with status = 0
                 //****************************************************//
 
                 for (let j = 2; j < filename_list_.length; j++) {
@@ -397,7 +395,7 @@ const MyComponent = ({ selectedImagesHandle }) => {
                 }
 
                 //****************************************************//
-                //トランザクション送信
+                // Send transaction
                 //****************************************************//
 
                 let signature = null;
@@ -413,7 +411,7 @@ const MyComponent = ({ selectedImagesHandle }) => {
                 }
 
                 //****************************************************//
-                //sellbuyデータベース、status=1にアップデート、signature登録
+                // Update sellbuy database, set status = 1 and register signature
                 //****************************************************//
                 for (let j = 2; j < filename_list_.length; j++) {
                     let id = publicKey.toString().substring(0, 10) + filename_str_list_[j][0].substring(0, 14) + pubkey_list_[j].toBase58().substring(0, 10);
@@ -437,7 +435,7 @@ const MyComponent = ({ selectedImagesHandle }) => {
                 }
 
                 //****************************************************//
-                //mapApiPoint更新
+                // Update mapApiPoint
                 //****************************************************//
 
                 let collectionRefPublicKeys = db.collection(dbPublicKeysCollection);

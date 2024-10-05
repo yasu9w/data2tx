@@ -36,7 +36,7 @@ const Overlay = () => {
             justifyContent: 'center',
             color: '#fff',
             fontSize: '24px',
-            pointerEvents: 'auto'  // オーバーレイ上のイベントを有効化
+            pointerEvents: 'auto'
         }}>
             {sendingMessage}
         </div>
@@ -57,12 +57,12 @@ function isValidImageId(query) {
     const totalLength = 24;
     const numericLength = 14;
 
-    // 拡張子を取得
-    let extension = query.slice(-5); // 拡張子が5文字の場合（例: '.jpeg', '.JPEG'）
+    // Get the file extension
+    let extension = query.slice(-5); // When the file extension is 5 characters long (e.g., '.jpeg', '.JPEG')
     let basePart = query.slice(0, -5);
 
     if (!validExtensions.includes(extension)) {
-        // 4文字の拡張子をチェック（例: '.jpg', '.JPG'）
+        // Check for a 4-character file extension (e.g., '.jpg', '.JPG')
         extension = query.slice(-4);
         basePart = query.slice(0, -4);
 
@@ -71,19 +71,19 @@ function isValidImageId(query) {
         }
     }
 
-    // ベース部分の長さのチェック
+    // Check the length of the base part
     if (basePart.length !== totalLength) {
         return false;
     }
 
-    // 前半14文字が数字で構成されているかチェック
+    // Check if the first 14 characters are composed of numbers
     for (let i = 0; i < numericLength; i++) {
         if (!('0' <= basePart[i] && basePart[i] <= '9')) {
             return false;
         }
     }
 
-    // 後半10文字がbase58で構成されているかチェック
+    // Check if the last 10 characters are composed of base58
     for (let i = numericLength; i < totalLength; i++) {
         if (!base58Chars.includes(basePart[i])) {
             return false;
@@ -102,76 +102,74 @@ function isValidSolanaPublicKey(query) {
     const base58Chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
     const length = query.length;
 
-    // 文字数のチェック
+    // Check the number of characters
     if (length < 32 || length > 44) {
         return false;
     }
 
-    // 使用される文字セットのチェック
+    // Check the character set used
     for (let i = 0; i < length; i++) {
         if (!base58Chars.includes(query[i])) {
             return false;
         }
     }
 
-    // ここでBase58エンコーディングの妥当性チェックを行う（ライブラリやツールを使用）
-
     return true;
 }
 
 function isValidDateInQuery(queryDateString) {
-    // URLデコード
+    // URL decode
     const decodedString = decodeURIComponent(queryDateString);
 
-    // 日付の形式をチェックする正規表現
+    /// Regular expression to check the date format
     const regex = /^\d{4}-\d{2}-\d{2}$/;
 
-    // 日付の形式が正しいかチェック
+    // Check if the date format is correct
     if (!regex.test(decodedString)) {
         return false;
     }
 
-    // 日付オブジェクトを作成して有効な日付かチェック
+    // Create a date object and check if the date is valid
     const date = new Date(decodedString);
     return date instanceof Date && !isNaN(date);
 }
 
 function isValidTimeInQuery(queryTimeString) {
-    // URLデコード
+    // URL decode
     const decodedString = decodeURIComponent(queryTimeString);
 
     // 日付の形式をチェックする正規表現
     //const regex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/;
     const regex = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/;
 
-    // 時間の形式が正しいかチェック
+    // Regular expression to check the date format
     return regex.test(decodedString);
 }
 
 function isValidZoomInQuery(queryString) {
-    // URLデコード
+    // URL decode
     const decodedString = decodeURIComponent(queryString);
 
-    // 0から22までの数字に一致する正規表現
+    // Regular expression to match numbers from 0 to 22
     const regex = /^(?:[0-9]|1[0-9]|2[0-2])$/;
 
-    // クエリ文字列が正規表現に一致するかチェック
+    // Check if the query string matches the regular expression
     return regex.test(decodedString);
 }
 
 function isValidLongitude(longitude) {
-    // 経度の範囲を検証する正規表現
+    // Regular expression to validate the range of longitude
     const regex = /^[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/;
 
-    // 経度が正規表現に一致するかチェック
+    // Check if the longitude matches the regular expression
     return regex.test(longitude);
 }
 
 function isValidLatitude(latitude) {
-    // 緯度の範囲を検証する正規表現
+    // Regular expression to validate the range of latitude
     const regex = /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?)$/;
 
-    // 緯度が正規表現に一致するかチェック
+    // Check if the latitude matches the regular expression
     return regex.test(latitude);
 }
 
@@ -265,14 +263,14 @@ const PurchaseApp = React.memo(() => {
         lng: 139.76908
     }
 
-    if (isValidLng && isValidLat) {//queryのlat, lngがvalid値であれば
+    if (isValidLng && isValidLat) {// If the lat and lng in the query are valid values
 
         initialCenter = {
             lat: initialLat,
             lng: initialLng
         }
 
-        if (!(isValidNElat && isValidNElng && isValidSWlat && isValidSWlng && isLatInRange && isLngInRange)) { //NElat, NElng, SWlat, SWlngの値が不正の場合、リセット
+        if (!(isValidNElat && isValidNElng && isValidSWlat && isValidSWlng && isLatInRange && isLngInRange)) { // Reset if the values of NElat, NElng, SWlat, or SWlng are invalid
             initialNElat = 90
             initialNElng = 180
             initialSWlat = -90
@@ -304,7 +302,7 @@ const PurchaseApp = React.memo(() => {
 
 
     //****************************************************//
-    //map API Embed版
+    //map API Embed
     //****************************************************//
 
     const generateEmbedUrl = (center, zoom) => {
@@ -347,7 +345,7 @@ const PurchaseApp = React.memo(() => {
             const changeAmount = zoomLevel[name === 'lat' ? 'height' : 'width'] / 4;
             const newValue = prevCenter[name] + (parsedValue - prevCenter[name]) * changeAmount;
 
-            // 小数点以下を5桁に制限
+            // Limit to 5 decimal places
             const roundedValue = parseFloat(newValue.toFixed(5));
 
             return {
@@ -408,7 +406,7 @@ const PurchaseApp = React.memo(() => {
     }, [boundEmbedAPI]);
 
     //****************************************************//
-    //map API javascript版
+    //map API javascript
     //****************************************************//
 
     const containerStyle = {
@@ -468,18 +466,16 @@ const PurchaseApp = React.memo(() => {
 
     const createMarkers = useCallback(() => {
         if (mapInstanceRef.current) {
-            // 既存のマーカーをクリア
             markerRefs.current.forEach(marker => marker.setMap(null));
             markerRefs.current = [];
 
-            // 新しいマーカーを作成
             markersAll.forEach((markerData) => {
                 const marker = new window.google.maps.Marker({
                     position: markerData.position,
                     map: mapInstanceRef.current,
                     draggable: markerData.draggable,
                 });
-                markerRefs.current.push(marker); // マーカーの参照を保存
+                markerRefs.current.push(marker);
             });
         }
     }, [markersAll]);
@@ -503,11 +499,9 @@ const PurchaseApp = React.memo(() => {
                         clickableIcons: false,
                     });
 
-                    // イベントリスナーの設定
                     mapInstanceRef.current.addListener("zoom_changed", handleZoomChanged);
                     mapInstanceRef.current.addListener("dragend", handleBoundsChanged);
 
-                    // マーカーを描画
                     createMarkers();
                 }
             });
@@ -652,9 +646,9 @@ const PurchaseApp = React.memo(() => {
                 bottom: 0,
                 left: 0,
                 width: '100%',
-                backgroundColor: 'rgba(245, 245, 245, 0.9)', // 白に近い灰色で少し透過
+                backgroundColor: 'rgba(245, 245, 245, 0.9)', //gray
                 zIndex: 1000,
-                borderTop: '1px solid #ddd', // ボーダーを薄いグレー
+                borderTop: '1px solid #ddd', //gray
                 padding: '10px',
                 textAlign: 'center',
                 fontSize: '16px'
@@ -698,11 +692,11 @@ const PurchaseApp = React.memo(() => {
                 padding: '20px',
                 maxWidth: '1200px',
                 margin: '0 auto',
-                marginTop: '60px', // ヘッダーの高さ分の余白を確保
+                marginTop: '60px',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: '0px', // 要素間のスペースをなくす
+                gap: '0px',
             }}>
 
                 {!useJSMapAPI && (
@@ -710,7 +704,7 @@ const PurchaseApp = React.memo(() => {
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
-                        gap: '0px' // 要素間のスペースをなくす
+                        gap: '0px'
                     }}>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -783,11 +777,11 @@ const PurchaseApp = React.memo(() => {
                 padding: '20px',
                 maxWidth: '1200px',
                 margin: '0 auto',
-                marginTop: '0px', // ヘッダーの高さ分の余白を確保
+                marginTop: '0px',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: '20px' // 要素間のスペースを追加
+                gap: '20px'
             }}>
 
                 {!useJSMapAPI && (
@@ -800,7 +794,7 @@ const PurchaseApp = React.memo(() => {
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
-                        gap: '10px' // 要素間のスペースを調整
+                        gap: '10px'
                     }}>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minWidth: '50px' }}>
@@ -830,11 +824,11 @@ const PurchaseApp = React.memo(() => {
                     padding: '20px',
                     maxWidth: '1200px',
                     margin: '0 auto',
-                    marginTop: '0px', // ヘッダーの高さ分の余白を確保
+                    marginTop: '0px',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
-                    gap: '20px' // 要素間のスペースを追加
+                    gap: '20px'
                 }}>
                     <SearchButton
                         db={db}
