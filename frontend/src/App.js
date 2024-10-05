@@ -110,7 +110,7 @@ const styles = {
         height: 'auto',
     },
     imagePC: {
-        maxWidth: '150px',
+        maxWidth: '300px',
         height: 'auto',
     },
     nav: {
