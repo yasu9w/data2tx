@@ -130,7 +130,7 @@ const styles = {
         fontSize: '18px',
         color: '#0000EE',
         display: 'inline-block',
-        marginLeft: '20px', // サブタイトルをわかりやすくするためのスペース
+        marginLeft: '20px',
         transition: 'color 0.2s ease',
         background: 'none',
         border: 'none',

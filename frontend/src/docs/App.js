@@ -11,7 +11,7 @@ import './App.css';
 
 function DocsMain() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const [language, setLanguage] = useState('en'); // デフォルトは英語
+    const [language, setLanguage] = useState('en');
 
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
