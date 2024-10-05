@@ -1,12 +1,11 @@
 ﻿import React from 'react';
 
-//import * as geofire from 'geofire-common';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { Connection } from "@solana/web3.js";
 
 const DEBUG = true;
 
-function FetchButton({ db, startDate, endDate, onDownload, publickeyStr, setIsLocked, setProcessingMessage }) {  // dbをプロップとして受け取る
+function FetchButton({ db, startDate, endDate, onDownload, publickeyStr, setIsLocked, setProcessingMessage }) {
 
     const { wallet, signMessage } = useWallet();
     const { publicKey } = useWallet();
@@ -75,10 +74,9 @@ function FetchButton({ db, startDate, endDate, onDownload, publickeyStr, setIsLo
             return;
         }
 
-        let checkedOkSignature = []; //getConfirmedTransactionを行い、OKが確認できたトランザクション
-        let checkedErrSignature = []; //getConfirmedTransactionを行い、Errが確認できたトランザクション
+        let checkedOkSignature = []; //Signatures confirmed as OK using getConfirmedTransaction
+        let checkedErrSignature = []; //Signatures confirmed as Err using getConfirmedTransaction
 
-        //let promises = snapshot.docs.map(async doc => {
         let completedCount = 0;
         let promises = snapshot.docs.map(async (doc, index) => {
 
@@ -87,23 +85,23 @@ function FetchButton({ db, startDate, endDate, onDownload, publickeyStr, setIsLo
                 console.log("data: ", data);
             }
 
-            //初期化
-            let verified = false; //購入が検証できたらtrue
-            let updateFlag = false; //sellbuy DBのアップデートが必要ならtrue
+            // Initialize
+            let verified = false; // Returns true if the purchase was successfully verified
+            let updateFlag = false; // Returns true if an update to the sellbuy DB is required
 
             if (DEBUG) {
                 console.log("data.status: ", data.status);
             }
 
-            if (data.status === 1) { //transaction approved状態
+            if (data.status === 1) { // Transaction approved status
                 console.log("data.status === 1");
-                if (checkedOkSignature.includes(data.signature)) { //すでにgetConfirmedTransactionして、OKが確認できたケース
+                if (checkedOkSignature.includes(data.signature)) { // Case where the signature has already been confirmed as OK using getConfirmedTransaction
                     updateFlag = true;
 
-                } else if (checkedErrSignature.includes(data.signature)) { //すでにgetConfirmedTransactionして、NGが確認できたケース
+                } else if (checkedErrSignature.includes(data.signature)) { // Case where the signature has already been confirmed as NG using getConfirmedTransaction
                     verified = false;
 
-                } else { //getConfirmedTransactionされていないので、確認
+                } else { // getConfirmedTransaction has not been executed, so verification is required
 
                     const MAX_RETRIES = 3;
                     let transactionStatus = null;
@@ -129,11 +127,11 @@ function FetchButton({ db, startDate, endDate, onDownload, publickeyStr, setIsLo
                         }
                     }
 
-                    if (transactionStatus.meta.status.Ok !== undefined) { //transactionのstatusがOKの場合
+                    if (transactionStatus.meta.status.Ok !== undefined) { // If the transaction status is OK
                         checkedOkSignature.push(data.signature);
                         updateFlag = true;
 
-                    } else if (transactionStatus.meta.status.Err !== undefined) { //transactionのstatusがErrの場合
+                    } else if (transactionStatus.meta.status.Err !== undefined) { // If the transaction status is Err
                         checkedErrSignature.push(data.signature);
                         verified = false;
 
@@ -145,11 +143,11 @@ function FetchButton({ db, startDate, endDate, onDownload, publickeyStr, setIsLo
                     }
                 }
 
-            } else if (data.status === 2) { //transaction completed状態
+            } else if (data.status === 2) { // Transaction completed status
                 verified = true;
             }
 
-            if (updateFlag) { //DB(sellbuy)の状態から差分あり
+            if (updateFlag) { // There is a difference from the current state in the sellbuy DB
 
                 const docRef = db.collection(dbSellbuyCollection).doc(doc.id);
 
@@ -211,7 +209,7 @@ function FetchButton({ db, startDate, endDate, onDownload, publickeyStr, setIsLo
                             filename: data.filename,
                             date1: date1String,
                             ...json
-                        }; // JSONデータとともにfilenameも戻り値として返す
+                        };
                     }
                 } catch (error) {
                     if (DEBUG) {
@@ -223,8 +221,6 @@ function FetchButton({ db, startDate, endDate, onDownload, publickeyStr, setIsLo
 
         });
 
-        // Promise.allを使ってすべてのPromiseが完了するのを待つ
-        //let results = await Promise.all(promises);
         let results = null;
         try {
             results = await Promise.all(promises);
@@ -237,7 +233,7 @@ function FetchButton({ db, startDate, endDate, onDownload, publickeyStr, setIsLo
             console.log("results: ", results);
         }
 
-        // ダウンロードが完了したら、結果をonDownloadを使って親コンポーネントに送信する
+        // Once the download is complete, send the result to the parent component using onDownload
         onDownload(results);
         setIsLocked(false);
         setProcessingMessage(``);

@@ -43,7 +43,7 @@ function DownloadApp() {
         if (isNaN(date)) {
             return new Date();
         } else {
-            date.setHours(0, 0, 0, 0); // 当日の開始時間に設定
+            date.setHours(0, 0, 0, 0);
             return date;
         }
     }
@@ -57,7 +57,7 @@ function DownloadApp() {
         if (isNaN(date)) {
             return new Date();
         } else {
-            date.setHours(23, 59, 59, 999); // 当日の終了時間に設定
+            date.setHours(23, 59, 59, 999);
             return date;
         }
     }
@@ -143,7 +143,7 @@ function DownloadApp() {
                 justifyContent: 'center',
                 color: '#fff',
                 fontSize: '24px',
-                pointerEvents: 'auto'  // オーバーレイ上のイベントを有効化
+                pointerEvents: 'auto'
             }}>
                 {processingMessage}
             </div>
@@ -161,15 +161,15 @@ function DownloadApp() {
                 padding: '20px',
                 maxWidth: '1200px',
                 margin: '0 auto',
-                marginTop: '60px', // ヘッダーの高さ分の余白を確保
+                marginTop: '60px',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 gap: '20px',
-                wordWrap: 'break-word', // 全体のテキスト折り返しを有効にする
-                overflowWrap: 'break-word', // テキスト折り返しを有効にする
-                wordBreak: 'break-all', // 長い単語を途中で折り返す
-                whiteSpace: 'normal' // テキストの改行を有効にする
+                wordWrap: 'break-word',
+                overflowWrap: 'break-word',
+                wordBreak: 'break-all',
+                whiteSpace: 'normal'
             }}>
 
                 {!publicKey &&
@@ -186,7 +186,7 @@ function DownloadApp() {
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
-                        gap: '20px' // 要素間のスペースを追加
+                        gap: '20px'
                     }}>
 
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -223,7 +223,7 @@ function DownloadApp() {
                         flexDirection: 'column',
                         alignItems: 'center',
                         marginBottom: '100px', 
-                        gap: '20px' // 要素間のスペースを追加
+                        gap: '20px'
                     }}>
                         <button onClick={() => downloadFiles(results)}>Download All</button>
 
@@ -233,39 +233,39 @@ function DownloadApp() {
                                 <div key={index} style={{ 
                                     display: 'flex', 
                                     alignItems: 'center',
-                                    flexWrap: 'wrap', // Flexコンテナ内のアイテムを折り返す
-                                    wordBreak: 'break-all', // 長い単語を途中で折り返す
-                                    overflowWrap: 'break-word', // テキストを折り返す
-                                    whiteSpace: 'normal' // テキストの改行を有効にする
+                                    flexWrap: 'wrap',
+                                    wordBreak: 'break-all',
+                                    overflowWrap: 'break-word',
+                                    whiteSpace: 'normal'
                                 }}>
                                     <span style={{ 
                                         width: '100px', 
                                         display: 'inline-block', 
                                         overflow: 'hidden', 
                                         textOverflow: 'ellipsis',
-                                        whiteSpace: 'nowrap' // テキストの折り返しを防止（必要に応じて削除）
+                                        whiteSpace: 'nowrap'
                                     }}>{result.date1}</span>
                                     <span style={{ 
                                         marginLeft: '10px',
-                                        overflowWrap: 'break-word', // テキストを単語ごとに折り返す
-                                        wordBreak: 'break-all', // 長い単語を途中で折り返す
-                                        maxWidth: '300px' // 必要に応じて適切な幅を設定
+                                        overflowWrap: 'break-word',
+                                        wordBreak: 'break-all',
+                                        maxWidth: '300px'
                                     }}><strong>{result.filename}</strong></span>
                                     <span style={{ 
                                         marginLeft: '10px',
-                                        maxWidth: '100px', // 適切な幅を設定
+                                        maxWidth: '100px',
                                         overflow: 'hidden',
                                         textOverflow: 'ellipsis',
-                                        whiteSpace: 'nowrap' // テキストの折り返しを防止
+                                        whiteSpace: 'nowrap'
                                     }}>
                                         <a href={result.url} target="_blank" rel="noopener noreferrer">image</a>
                                     </span>
                                     <span style={{ 
                                         marginLeft: '10px',
-                                        maxWidth: '100px', // 適切な幅を設定
+                                        maxWidth: '100px',
                                         overflow: 'hidden',
                                         textOverflow: 'ellipsis',
-                                        whiteSpace: 'nowrap' // テキストの折り返しを防止
+                                        whiteSpace: 'nowrap'
                                     }}>
                                         <a href={result.urlJson} target="_blank" rel="noopener noreferrer">json</a>
                                     </span>
