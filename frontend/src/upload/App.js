@@ -74,9 +74,13 @@ function UploadApp() {
         let selectedImage = event.target.files[0];
 
         if (selectedImage.type === "image/heic") {
-            selectedImage = await heic2any({
+            const convertedBlob = await heic2any({
                 blob: selectedImage,
                 toType: "image/jpeg",
+            });
+    
+            selectedImage = new File([convertedBlob], selectedImage.name.replace(/\.[^/.]+$/, ".jpg"), {
+                type: "image/jpeg",
             });
         }
 
