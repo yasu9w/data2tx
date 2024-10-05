@@ -4,14 +4,13 @@ import DocsMain from './docs/App';
 import PurchaseMain from './purchase/App';
 import DownloadMain from './download/App';
 import UploadMobileMain from './uploadMobile/App';
-import UploadMain from './upload/App'; // PC用のアップロードコンポーネントを追加
+import UploadMain from './upload/App';
 import SOL2WSOLMain from './sol2wsol/App';
 import logoImage from './images/logo.png'; 
 
 function Navigation() {
     const location = useLocation();
 
-    // モバイル判定を削除して、すべてのリンクを有効化
     const isMobile = /Mobi|Android/i.test(navigator.userAgent);
 
     if (location.pathname !== '/') {
@@ -30,7 +29,7 @@ function Navigation() {
                     </li>　*/}
                     <li style={styles.li}>
                         <Link to="/upload" style={styles.link}>
-                            {isMobile ? "Upload Mobile" : "Upload"} {/* モバイルとPCでテキストを変更 */}
+                            {isMobile ? "Upload Mobile" : "Upload"}
                         </Link>
                     </li>
                     {!isMobile && (
@@ -77,7 +76,7 @@ function App() {
                     {/* <Route path="/docs/*" element={<DocsMain />} />　*/}
                     <Route 
                         path="/upload" 
-                        element={isMobile ? <UploadMobileMain /> : <UploadMain />} // モバイルとPCで表示コンポーネントを切り替え
+                        element={isMobile ? <UploadMobileMain /> : <UploadMain />}
                     />
                     {!isMobile && (
                         <>
@@ -97,7 +96,7 @@ const styles = {
         display: 'flex',
         flexDirection: 'column',
         minHeight: '100vh',
-        backgroundColor: '#ffffff', // 背景を白に設定
+        backgroundColor: '#ffffff',
     },
     container: {
         flex: '1',
@@ -119,27 +118,27 @@ const styles = {
     },
     nav: {
         marginTop: '20px',
-        display: 'flex', // flexレイアウトに変更
-        justifyContent: 'center', // 中央揃え
-        alignItems: 'center', // 垂直方向に中央揃え
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     ul: {
         listStyleType: 'none',
         padding: 0,
         margin: 0,
-        display: 'flex', // 水平方向に並べるためにflexを使用
-        flexDirection: 'column', // デフォルトは縦方向
-        alignItems: 'center', // 中央揃え
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
     },
     li: {
         marginBottom: '10px',
         textAlign: 'left',
-        width: '100%', // リンク全体をクリックできるように幅を指定
+        width: '100%',
     },
     link: {
-        textDecoration: 'underline', // underline
+        textDecoration: 'underline',
         fontSize: '20px',
-        color: '#0000EE', // blue link
+        color: '#0000EE',
         display: 'inline-block',
         transition: 'color 0.2s ease',
     },
@@ -162,42 +161,42 @@ const styles = {
         marginTop: '10px',
     },
 
-    // モバイル向けスタイルを追加
+    // Styles for mobile
     '@media (max-width: 600px)': {
         nav: {
-            flexDirection: 'column', // モバイルでは縦方向に表示
+            flexDirection: 'column',
         },
         ul: {
-            flexDirection: 'column', // リンクを縦に並べる
-            alignItems: 'flex-start', // 左揃えにする
+            flexDirection: 'column',
+            alignItems: 'flex-start',
         },
         li: {
-            marginBottom: '15px', // リンク間のスペースを広げる
-            textAlign: 'center', // モバイルでは中央揃え
-            width: '100%', // 横幅全体を使用
+            marginBottom: '15px',
+            textAlign: 'center',
+            width: '100%',
         },
         link: {
-            fontSize: '18px', // フォントサイズを少し小さく
+            fontSize: '18px',
         },
         image: {
-            width: '80%', // ロゴのサイズを縮小
+            width: '80%',
         },
     },
 
-    // PC向けスタイルを追加
+    // Styles for PC
     '@media (min-width: 601px)': {
         nav: {
-            flexDirection: 'row', // PCでは横方向に表示
+            flexDirection: 'row',
         },
         ul: {
-            flexDirection: 'row', // リンクを横に並べる
-            justifyContent: 'center', // 横方向に中央揃え
+            flexDirection: 'row',
+            justifyContent: 'center',
         },
         li: {
-            marginBottom: 0, // スペースを詰める
-            marginRight: '20px', // リンク間のスペースを広げる
-            textAlign: 'center', // PCでは中央揃え
-            width: 'auto', // 幅の指定を解除
+            marginBottom: 0,
+            marginRight: '20px',
+            textAlign: 'center',
+            width: 'auto',
         },
     },
 };
