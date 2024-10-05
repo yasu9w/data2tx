@@ -1589,13 +1589,6 @@ function UploadApp() {
                         To load an image, it must include GPS data. HEIC format is not supported, so if you are using an iPhone, please save the image as a JPG.
                     </p>
                     */}
-                    {/*
-                    <div>
-                        <form>
-                            <input type="file" onChange={handleImage} />
-                        </form>
-                    </div>
-                    */}
                     <div style={{
                         display: 'flex',
                         justifyContent: 'center',

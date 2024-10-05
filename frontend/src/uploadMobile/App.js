@@ -1647,13 +1647,6 @@ function UploadMobileApp() {
                         To load an image, it must include GPS data.
                     </p>
                     */}
-                    {/*
-                    <div>
-                        <form>
-                            <input type="file" onChange={handleImage} />
-                        </form>
-                    </div>
-                    */}
                     <div style={{
                         display: 'flex',
                         justifyContent: 'center',
