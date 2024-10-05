@@ -14,6 +14,7 @@ import * as geofire from 'geofire-common';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { sign } from 'tweetnacl';
+import heic2any from "heic2any";
 
 const DEBUG = true;
 
@@ -157,6 +158,7 @@ function UploadApp() {
                 });
             }
 
+            /*
             const reader = new FileReader();
             reader.onloadend = () => {
                 setUploadedImage(reader.result);
@@ -180,6 +182,60 @@ function UploadApp() {
 
             }
             reader.readAsDataURL(selectedImage);
+            */
+
+            if (selectedImage.type === "image/heic") {
+                const convertedBlob = await heic2any({
+                    blob: selectedImage,
+                    toType: "image/jpeg",
+                });
+
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    setUploadedImage(reader.result);
+
+                    const img = new Image();
+                    img.onload = function () {
+                        let width, height;
+                        if (this.width > this.height) {
+                            const aspectRatio = this.width / this.height;
+                            width = 720;
+                            height = 720 / aspectRatio;
+                        } else {
+                            const aspectRatio = this.height / this.width;
+                            height = 720;
+                            width = 720 / aspectRatio;
+                        }
+                        setImageDimensions({ width, height });
+                        setImageDimensionsProtected({ width, height });
+                    };
+                    img.src = reader.result;
+                };
+                reader.readAsDataURL(convertedBlob);
+            } else {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    setUploadedImage(reader.result);
+
+                    const img = new Image();
+                    img.onload = function () {
+                        let width, height;
+                        if (this.width > this.height) {
+                            const aspectRatio = this.width / this.height;
+                            width = 720;
+                            height = 720 / aspectRatio;
+                        } else {
+                            const aspectRatio = this.height / this.width;
+                            height = 720;
+                            width = 720 / aspectRatio;
+                        }
+                        setImageDimensions({ width, height });
+                        setImageDimensionsProtected({ width, height });
+                    };
+                    img.src = reader.result;
+                };
+                reader.readAsDataURL(selectedImage);
+            }
         } catch (error) {
             setExifInfo({
                 DateTimeOriginal: '',

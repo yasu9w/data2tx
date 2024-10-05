@@ -53,7 +53,7 @@ function isValidImageId(query) {
     }
 
     const base58Chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
-    const validExtensions = ['.jpeg', '.JPEG', '.jpg', '.JPG'];
+    const validExtensions = ['.jpeg', '.JPEG', '.jpg', '.JPG', '.heic', '.HEIC',];
     const totalLength = 24;
     const numericLength = 14;
 
