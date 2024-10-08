@@ -1,8 +1,6 @@
-
 import { db } from "./firebase";
 import React, { useState } from 'react';
 import FetchButton from './FetchButton';
-
 
 import WalletContextProvider from './WalletContextProvider'
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
@@ -20,8 +18,13 @@ function DownloadApp() {
 
     const { publicKey } = useWallet();
 
+    const getCurrentDate = () => {
+        const today = new Date();
+        return today.toISOString().split('T')[0]; // YYYY-MM-DD形式で取得
+    };
+
     const [results, setResults] = useState(false);
-    const [startDate, setStartDate] = useState("");
+    const [startDate, setStartDate] = useState(getCurrentDate()); // デフォルト値を当日の日付に設定
     const [endDate, setEndDate] = useState("");
     const [isLocked, setIsLocked] = useState(false);
     const [processingMessage, setProcessingMessage] = useState("");
