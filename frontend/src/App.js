@@ -43,6 +43,9 @@ function Navigation() {
                     <li style={styles.li}>
                         <Link to="/download" style={styles.link}>Download</Link>
                     </li>
+                    <li style={styles.li}>
+                        <a href="https://faucet.solana.com/" style={styles.link} target="_blank" rel="noopener noreferrer">Airdrop</a>
+                    </li>
                 </ul>
             </nav>
 
