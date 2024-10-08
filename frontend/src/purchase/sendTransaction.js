@@ -261,7 +261,7 @@ const MyComponent = ({ selectedImagesHandle }) => {
             /*
             00 : number of accounts (0: one account, 2 or more pictures, 1: one account, one picture, 2: two accounts, two pictures, ...)
             01 : number of purchase pictures
-            02 : bump of pubkey
+            02 : bump of pubkey //Removed
             03 : flag account 01  0:account exists, 1:no account exists
             04 : flag account 02  0:account exists, 1:no account exists
             05 : flag account 03  0:account exists, 1:no account exists
@@ -273,7 +273,8 @@ const MyComponent = ({ selectedImagesHandle }) => {
             11 : flag account 09  0:account exists, 1:no account exists
             */
 
-            let ix_data = [pubkey_list_.length, pubkey_list_.length, bump_list_[0]];
+            //let ix_data = [pubkey_list_.length, pubkey_list_.length, bump_list_[0]];
+            let ix_data = [pubkey_list_.length, pubkey_list_.length, 0]; //Temporary handling for removed bump seed 
 
             ix_data.push(...flag_list_);
 
