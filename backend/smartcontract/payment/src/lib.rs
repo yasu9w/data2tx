@@ -7,7 +7,6 @@ use solana_program::{
     entrypoint::ProgramResult,
     msg,
     program_error::{PrintProgramError, ProgramError},
-    program::invoke_signed,
     program::invoke,
     pubkey::Pubkey,
     decode_error::DecodeError,
@@ -184,10 +183,9 @@ pub fn process_instruction(
             decimals,
         )?;
 
-        invoke_signed(
+        invoke(
             &seller_ix,
             &[pubkey_00_associated_token_account_info.clone(), mint_pubkey.clone(), pubkey_02_associated_token_account_info.clone(), pubkey_00_account_info.clone(), token_program.clone()],
-            signers,
         )?;
 
         // The buyer transfers the fee to data2tx
@@ -202,10 +200,9 @@ pub fn process_instruction(
             decimals,
         )?;
 
-        invoke_signed(
+        invoke(
             &platform_ix,
             &[pubkey_00_associated_token_account_info.clone(), mint_pubkey.clone(), pubkey_01_associated_token_account_info.clone(), pubkey_00_account_info.clone(), token_program.clone()],
-            signers,
         )?;
     }
     
