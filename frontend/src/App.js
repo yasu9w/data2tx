@@ -10,9 +10,8 @@ import logoImage from './images/logo.png';
 
 function Navigation() {
     const location = useLocation();
-    const navigate = useNavigate(); // navigate を使ってページ遷移を実現
-    const [address, setAddress] = useState(''); // 入力されたアドレスを管理するステート
-
+    const navigate = useNavigate();
+    const [address, setAddress] = useState('');
     const isMobile = /Mobi|Android/i.test(navigator.userAgent);
 
     if (location.pathname !== '/') {
@@ -21,9 +20,7 @@ function Navigation() {
 
     const handleAddressSubmit = () => {
         if (address) {
-            // 入力されたアドレスを使って目的のURLを生成
-            const targetUrl = `https://data2tx.io/purchase?key=${address}&zoom=0&lat=35.68286&lng=139.76908&NElat=125.68286&NElng=319.76908&SWlat=-54.31714&SWlng=-40.23092`;
-            // 新しいタブでURLを開く
+            const targetUrl = `https://www.data2tx.io/purchase?key=${address}&zoom=0&lat=35.68286&lng=139.76908000000003&NElat=125.68286&NElng=319.76908&SWlat=-54.31714&SWlng=-40.23092`;
             window.open(targetUrl, '_blank');
         }
     };
@@ -49,16 +46,15 @@ function Navigation() {
                 </ul>
             </nav>
 
-            {/* アドレス入力フォームとボタンを追加 */}
             <div style={styles.addressForm}>
                 <input 
                     type="text" 
-                    placeholder="Enter address"
+                    placeholder="Your Publickey"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)} 
                     style={styles.input}
                 />
-                <button onClick={handleAddressSubmit} style={styles.button}>Go to Address</button>
+                <button onClick={handleAddressSubmit} style={styles.button}>Check Your Photos</button>
             </div>
         </div>
     );
@@ -171,16 +167,20 @@ const styles = {
         padding: '10px',
         fontSize: '16px',
         marginBottom: '10px',
-        width: '250px',
+        width: '200px',
+        border: '1px solid #ccc',
+        borderRadius: '5px',
     },
     button: {
         padding: '10px 20px',
-        fontSize: '16px',
-        cursor: 'pointer',
-        backgroundColor: '#4CAF50',
-        color: 'white',
+        backgroundColor: '#007bff',
+        color: '#fff',
         border: 'none',
         borderRadius: '5px',
+        cursor: 'pointer',
+        fontSize: '16px',
+        width: '200px',
+        textAlign: 'center',
     },
 };
 
