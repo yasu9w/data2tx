@@ -19,7 +19,7 @@ const SOLANA_DEVNET_ENDPOINT = process.env.REACT_APP_QUICKNODE_RPC;
 //const SOLANA_DEVNET_ENDPOINT = 'https://api.devnet.solana.com';
 
 //const PROGRAM_ID_CONVERT = new PublicKey("BVyaTTKdj2XG1ptN2fYYmfbkQZitseN4nqDQBGvovnA2");
-const PROGRAM_ID_CONVERT = new PublicKey("CgKZSHVgpJNA8NctrKzv8rjhuEXUmM1SRPRh8dRrFKTd");
+const PROGRAM_ID_CONVERT = new PublicKey("6XtcCqFGhk8EMQY4zH1aRdrxkDtiDrRBG8hNUL6C2Ygw");
 const PROGRAM_ID_CLOSE = new PublicKey("Cj4DVtFabsYmEJkhe4Dpa69x1RLC3FRBCqtJQYgaCxed");
 
 const SOL2WSOLMain = () => (
