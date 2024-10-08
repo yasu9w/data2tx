@@ -7,6 +7,7 @@ use solana_program::{
     entrypoint::ProgramResult,
     msg,
     program_error::{PrintProgramError, ProgramError},
+    program::invoke_signed,
     program::invoke,
     pubkey::Pubkey,
     decode_error::DecodeError,
@@ -24,14 +25,13 @@ entrypoint!(process_instruction);
 use spl_associated_token_account::{instruction::create_associated_token_account};
 
 pub fn process_instruction(
-    _program_id: &Pubkey,
+    program_id: &Pubkey,
     accounts: &[AccountInfo],
     _instruction_data: &[u8],
 ) -> ProgramResult {
     
     let num_accounts = _instruction_data[0];
     let _num_purchase_pics = _instruction_data[1];
-    let seed = _instruction_data[2];
 
     let accounts_iter = &mut accounts.iter();
     
@@ -102,11 +102,9 @@ pub fn process_instruction(
                 let pubkey_str = (*pubkey.key).to_string();
                 let top_10_pubkey = &pubkey_str[..10];
                 if flag == 1 {
-                    //let result = format!("buy image:{}{} from {}   (0.02 wSOL, create associated account)", number, top_10_pubkey, pubkey_str);
                     let result = format!("Demo: buy image:{}{} from {}   (0 wSOL, create associated account)", number, top_10_pubkey, pubkey_str);
                     msg!("{}", result);
                 }else{
-                    //let result = format!("buy image:{}{} from {}   (0.03 wSOL)", number, top_10_pubkey, pubkey_str);
                     let result = format!("Demo: buy image:{}{} from {}   (0 wSOL)", number, top_10_pubkey, pubkey_str);
                     msg!("{}", result);
                 }
@@ -122,8 +120,12 @@ pub fn process_instruction(
     for n in 2..num_accounts{
         let flag = _instruction_data[3 + n as usize];
 
-        let swap_bytes = pubkey_00_account_info.key.to_bytes();
-        let authority_signature_seeds = [&swap_bytes[..32], &[seed]];
+        let (pda, bump_seed) = Pubkey::find_program_address(
+            &[pubkey_00_account_info.key.as_ref()],
+            program_id
+        );
+
+        let authority_signature_seeds = [&pubkey_00_account_info.key.as_ref()[..], &[bump_seed]];
         let signers = &[&authority_signature_seeds[..]];
 
         let mut amount_seller = 0; // 21_000_000 -> 0 for Demo
@@ -146,23 +148,31 @@ pub fn process_instruction(
             msg!("Invalid associated_account_info");
         }
 
-        // If the seller's associated token account does not exist, 
-        // the buyer will create the seller's associated token account 
-        // and deduct the cost from the payment accordingly.
-        if flag == 1 {
-            
-            let create_account_ix = create_associated_token_account(pubkey_00_account_info.key, pubkey_02_account_info.key, mint_pubkey.key, token_program.key);
+        // Check if the wSOL account for the sender (pubkey_00) exists, and create it if it doesn't
+        let create_account_ix = create_associated_token_account(
+            pubkey_00_account_info.key,
+            pubkey_00_account_info.key,
+            mint_pubkey.key,
+            token_program.key,
+        );
 
+        // Check for the existence of the Associated Token Account and create it if necessary
+        if pubkey_00_associated_token_account_info.lamports() == 0 {
+            msg!("Creating associated token account for the sender...");
             invoke(
                 &create_account_ix,
-                &[pubkey_00_account_info.clone(), pubkey_02_associated_token_account_info.clone(), pubkey_02_account_info.clone(), mint_pubkey.clone(), system_program.clone(), token_program.clone(), associated_token_program.clone()],
+                &[
+                    pubkey_00_account_info.clone(),
+                    pubkey_00_associated_token_account_info.clone(),
+                    mint_pubkey.clone(),
+                    system_program.clone(),
+                    token_program.clone(),
+                    associated_token_program.clone(),
+                ]
             )?;
-
-            //amount_seller = amount_seller - 10_000; //comment out for Demo
-
         }
 
-        // The buyer transfers the payment to the seller.
+        // The buyer transfers the payment to the seller
         let seller_ix = spl_token_2022::instruction::transfer_checked(
             token_program.key,
             pubkey_00_associated_token_account_info.key,
@@ -174,12 +184,13 @@ pub fn process_instruction(
             decimals,
         )?;
 
-        invoke(
+        invoke_signed(
             &seller_ix,
             &[pubkey_00_associated_token_account_info.clone(), mint_pubkey.clone(), pubkey_02_associated_token_account_info.clone(), pubkey_00_account_info.clone(), token_program.clone()],
+            signers,
         )?;
 
-        // The buyer transfers the fee to data2tx.
+        // The buyer transfers the fee to data2tx
         let platform_ix = spl_token_2022::instruction::transfer_checked(
             token_program.key,
             pubkey_00_associated_token_account_info.key,
@@ -191,9 +202,10 @@ pub fn process_instruction(
             decimals,
         )?;
 
-        invoke(
+        invoke_signed(
             &platform_ix,
             &[pubkey_00_associated_token_account_info.clone(), mint_pubkey.clone(), pubkey_01_associated_token_account_info.clone(), pubkey_00_account_info.clone(), token_program.clone()],
+            signers,
         )?;
     }
     
