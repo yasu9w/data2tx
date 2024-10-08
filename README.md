@@ -13,5 +13,7 @@ Repository:
 https://github.com/yasu9w/data2tx
 
 Running on devnet
+
 The buying and selling price is set to 0 wrapped SOL
+
 Available with only the transaction fee!
