@@ -7,7 +7,7 @@ use solana_program::{
     entrypoint::ProgramResult,
     msg,
     program_error::{PrintProgramError, ProgramError},
-    program::invoke_signed,
+    program::invoke,
     pubkey::Pubkey,
     decode_error::DecodeError,
 };
@@ -22,20 +22,6 @@ use std::str::FromStr;
 entrypoint!(process_instruction);
 
 use spl_associated_token_account::{instruction::create_associated_token_account};
-
-fn invoke_signed_wrapper<T>(
-    instruction: &Instruction,
-    account_infos: &[AccountInfo],
-    signers_seeds: &[&[&[u8]]],
-) -> Result<(), ProgramError>
-where
-    T: 'static + PrintProgramError + DecodeError<T> + FromPrimitive + Error,
-{
-    invoke_signed(instruction, account_infos, signers_seeds).map_err(|err| {
-        err.print::<T>();
-        err
-    })
-}
 
 pub fn process_instruction(
     _program_id: &Pubkey,
@@ -116,10 +102,12 @@ pub fn process_instruction(
                 let pubkey_str = (*pubkey.key).to_string();
                 let top_10_pubkey = &pubkey_str[..10];
                 if flag == 1 {
-                    let result = format!("buy image:{}{} from {}   (0.02 wSOL, create associated account)", number, top_10_pubkey, pubkey_str);
+                    //let result = format!("buy image:{}{} from {}   (0.02 wSOL, create associated account)", number, top_10_pubkey, pubkey_str);
+                    let result = format!("Demo: buy image:{}{} from {}   (0 wSOL, create associated account)", number, top_10_pubkey, pubkey_str);
                     msg!("{}", result);
                 }else{
-                    let result = format!("buy image:{}{} from {}   (0.03 wSOL)", number, top_10_pubkey, pubkey_str);
+                    //let result = format!("buy image:{}{} from {}   (0.03 wSOL)", number, top_10_pubkey, pubkey_str);
+                    let result = format!("Demo: buy image:{}{} from {}   (0 wSOL)", number, top_10_pubkey, pubkey_str);
                     msg!("{}", result);
                 }
             } else {
@@ -138,8 +126,8 @@ pub fn process_instruction(
         let authority_signature_seeds = [&swap_bytes[..32], &[seed]];
         let signers = &[&authority_signature_seeds[..]];
 
-        let mut amount_seller = 21_000_000;
-        let amount_platform = 9_000_000;
+        let mut amount_seller = 0; // 21_000_000 -> 0 for Demo
+        let amount_platform = 0; // 9_000_000 -> 0 for Demo
         let decimals = 9;
         
         let mut pubkey_02_account_info = pubkey_00_account_info;
@@ -165,13 +153,12 @@ pub fn process_instruction(
             
             let create_account_ix = create_associated_token_account(pubkey_00_account_info.key, pubkey_02_account_info.key, mint_pubkey.key, token_program.key);
 
-            invoke_signed_wrapper::<TokenError>(
+            invoke(
                 &create_account_ix,
                 &[pubkey_00_account_info.clone(), pubkey_02_associated_token_account_info.clone(), pubkey_02_account_info.clone(), mint_pubkey.clone(), system_program.clone(), token_program.clone(), associated_token_program.clone()],
-                signers,
-            );
+            )?;
 
-            amount_seller = amount_seller - 10_000;
+            //amount_seller = amount_seller - 10_000; //comment out for Demo
 
         }
 
@@ -187,11 +174,10 @@ pub fn process_instruction(
             decimals,
         )?;
 
-        invoke_signed_wrapper::<TokenError>(
+        invoke(
             &seller_ix,
             &[pubkey_00_associated_token_account_info.clone(), mint_pubkey.clone(), pubkey_02_associated_token_account_info.clone(), pubkey_00_account_info.clone(), token_program.clone()],
-            signers,
-        );
+        )?;
 
         // The buyer transfers the fee to data2tx.
         let platform_ix = spl_token_2022::instruction::transfer_checked(
@@ -205,11 +191,10 @@ pub fn process_instruction(
             decimals,
         )?;
 
-        invoke_signed_wrapper::<TokenError>(
+        invoke(
             &platform_ix,
             &[pubkey_00_associated_token_account_info.clone(), mint_pubkey.clone(), pubkey_01_associated_token_account_info.clone(), pubkey_00_account_info.clone(), token_program.clone()],
-            signers,
-        );
+        )?;
     }
     
     Ok(())
