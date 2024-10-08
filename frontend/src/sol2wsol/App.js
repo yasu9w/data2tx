@@ -126,7 +126,7 @@ function SOL2WSOLApp() {
                 return;
             }
 
-            const [associatedTokenAddress, seed] = await PublicKey.findProgramAddressSync(
+            const [associatedTokenAddress] = await PublicKey.findProgramAddressSync(
                 [
                     publicKey.toBuffer(),
                     new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA").toBuffer(),
@@ -144,7 +144,7 @@ function SOL2WSOLApp() {
             } catch (error) {
                 console.error("Account check error:", error);
             }
-            let ix_data = [seed, existsFlag];
+            let ix_data = [existsFlag];
 
             const modifyComputeUnits = ComputeBudgetProgram.setComputeUnitLimit({
                 units: 1400000
