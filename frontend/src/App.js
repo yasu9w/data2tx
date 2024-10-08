@@ -38,9 +38,9 @@ function Navigation() {
                     <li style={styles.li}>
                         <Link to="/download" style={styles.link}>Download</Link>
                     </li>
-                    <li style={styles.li}>
+                    {/* <li style={styles.li}>
                         <Link to="/sol2wsol" style={styles.link}>SOL2WSOL</Link>
-                    </li>
+                    </li> */}
                 </ul>
             </nav>
         </div>
@@ -76,7 +76,7 @@ function App() {
                     />
                     <Route path="/purchase" element={<PurchaseMain />} />
                     <Route path="/download" element={<DownloadMain />} />
-                    <Route path="/sol2wsol" element={<SOL2WSOLMain />} />
+                    {/*<Route path="/sol2wsol" element={<SOL2WSOLMain />} />*/}
                 </Routes>
             </div>
         </Router>
