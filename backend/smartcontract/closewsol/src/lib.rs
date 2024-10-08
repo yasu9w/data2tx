@@ -6,7 +6,7 @@ use solana_program::{
     entrypoint::ProgramResult,
     msg,
     program_error::{PrintProgramError, ProgramError},
-    program::invoke_signed,
+    program::invoke,
     pubkey::Pubkey,
     decode_error::DecodeError,
 };
@@ -22,30 +22,14 @@ use spl_associated_token_account::{instruction::create_associated_token_account}
 
 entrypoint!(process_instruction);
 
-
-fn invoke_signed_wrapper<T>(
-    instruction: &Instruction,
-    account_infos: &[AccountInfo],
-    signers_seeds: &[&[&[u8]]],
-) -> Result<(), ProgramError>
-where
-    T: 'static + PrintProgramError + DecodeError<T> + FromPrimitive + Error,
-{
-    invoke_signed(instruction, account_infos, signers_seeds).map_err(|err| {
-        err.print::<T>();
-        err
-    })
-}
-
-
+// Program entrypoint's implementation
 pub fn process_instruction(
     program_id: &Pubkey,
     accounts: &[AccountInfo],
     _instruction_data: &[u8],
 ) -> ProgramResult {
     
-    let seed = _instruction_data[0]; //seed
-    let exists_flag = _instruction_data[1]; //1 account no exists, 0 account exist
+    let exists_flag = _instruction_data[0]; //1 account no exists, 0 account exist
 
     let accounts_iter = &mut accounts.iter();
     
@@ -55,10 +39,6 @@ pub fn process_instruction(
     let owner_pubkey = next_account_info(accounts_iter)?;
     let associated_token_address = next_account_info(accounts_iter)?;
     let wsol_mint_pubkey = next_account_info(accounts_iter)?;
-
-    let swap_bytes = owner_pubkey.key.to_bytes();
-    let authority_signature_seeds = [&swap_bytes[..32], &[seed]];
-    let signers = &[&authority_signature_seeds[..]];
 
     if exists_flag == 0 {
         msg!("Creating associated token account...");
@@ -70,7 +50,7 @@ pub fn process_instruction(
             token_program.key
         );
 
-        invoke_signed_wrapper::<TokenError>(
+        invoke(
             &ix_create_account,
             &[
                 owner_pubkey.clone(), 
@@ -81,30 +61,27 @@ pub fn process_instruction(
                 token_program.clone(), 
                 associated_token_program.clone()
             ],
-            signers,
         )?;
         msg!("Associated token account created.");
     }
     
-    // Close the associated token account to unwrap wSOL into SOL
     msg!("Closing wrapped SOL account...");
 
     let close_ix = close_account(
-        token_program.key,             // token program
-        associated_token_address.key,   // close associated token account
-        owner_pubkey.key,              // receiver publickey
-        owner_pubkey.key,              // owner publickey
-        &[],                          // additional signature
+        token_program.key,
+        associated_token_address.key,
+        owner_pubkey.key,
+        owner_pubkey.key,
+        &[],
     )?;
     
-    invoke_signed_wrapper::<TokenError>(
+    invoke(
         &close_ix,
         &[
-            associated_token_address.clone(),  // close associated token account
-            owner_pubkey.clone(),             // receiver, owner publickey
-            token_program.clone(),            // token program
+            associated_token_address.clone(),
+            owner_pubkey.clone(),
+            token_program.clone(),
         ],
-        signers,
     )?;
 
     Ok(())
