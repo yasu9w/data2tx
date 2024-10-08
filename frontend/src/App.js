@@ -33,6 +33,11 @@ function Navigation() {
             <nav style={styles.nav}>
                 <ul style={styles.ul}>
                     <li style={styles.li}>
+                        <a href="https://youtu.be/S23UncbOrpw" style={styles.link} target="_blank" rel="noopener noreferrer">
+                            Tutorial
+                        </a>
+                    </li>
+                    <li style={styles.li}>
                         <Link to="/upload" style={styles.link}>
                             {isMobile ? "Upload Mobile" : "Upload"}
                         </Link>
